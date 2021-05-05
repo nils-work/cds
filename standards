@@ -1,6 +1,7 @@
 Logo
 Search
 Introduction
+Future Dated Obligations
 Standards
 Security Profile
 Consumer Experience
@@ -15,8 +16,6 @@ Change Log
 Consumer Data Standards Home
 CDR Standards on GitHub
 CDR Register
-CX Standards
-CX Guidelines
 Swagger (JSON)
 Swagger (YAML)
 Introduction
@@ -27,10 +26,24 @@ The Consumer Data Right (CDR) is intended to be applied sector by sector across 
 
 CSIRO’s Data61 has been appointed as the Data Standards Body (DSB) for the CDR regime. These standards have been prepared by the DSB. The work of the team is overseen by the Data Standards Chair, Mr. Andrew Stevens, with industry and consumer advice provided by an Advisory Committee. The work of standards development is conducted in close consultation with the Australian Competition and Consumer Commission (ACCC) as lead regulator of the Consumer Data Right, supported by the Office of the Australian Information Commissioner (OAIC).
 
-These standards are binding data standards for the purposes of s56FA and in accordance with the Consumer Data Right rules made by the ACCC. The making and commencement of the data standards and the CDR rules is subject to the Consumer Data Right legislation.
+The standards are required to be published. The obligations on CDR participants to apply the published standards commence on the commencement of the Consumer Data Right rules:
 
+where the rules require compliance with the standards, non-compliance with the standards may constitute a breach of the rules.
+where the standards are specified as binding standards as required by the Consumer Data Right rules for the purposes of s56FA of the legislation, they apply as under contract between a data holder and an accredited data recipient. The legal effect of binding standards as between data holders and accredited data recipients is fully set out in s56FD and s56FE of the legislation.
+Future Dated Obligations
+The standards, as published from time to time, may include specific statements indicating that a specific section of the standards will not take effect until a future date or may cease to have effect on some future date.
+
+The table below highlights these areas of the standards.
+
+Section	Description	Applicable Date
+Non-functional Requirements	The non-functional requirements for the CDR regime are documented but are not yet binding with no specific future binding date being set as yet	Not yet specified
+Get Products V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 2020
+Get Products V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
+Get Product Detail V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 2020
+Get Product Detail V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
+Request Object Section	The target state concurrent consent solution is being phased in at a later date. Further consultation will be conducted before the full target solution takes effect	November 2020
 Standards
-These standards represent version 1.0.0 of the high level standards which will support the creation of version 1. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.2.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
 
@@ -128,12 +141,12 @@ Resources that are collections, and members of collections, will follow the JSON
 
 Under this model, collections, individual members and collection sub-resources would be accessed as follows:
 
-GET …\accounts	Returns an array of accounts
-GET …\accounts\{id}	Returns the detail of a specific account
-GET …\accounts\transactions	Returns the transactions of multiple accounts
-GET …\accounts\{id}\transactions	Returns the transactions of a specific account
-POST …\accounts	Create a new account
-POST …\accounts\search	Returns an array of accounts based on a complex query
+GET …/accounts	Returns an array of accounts
+GET …/accounts/{id}	Returns the detail of a specific account
+GET …/accounts/transactions	Returns the transactions of multiple accounts
+GET …/accounts/{id}/transactions	Returns the transactions of a specific account
+POST …/accounts	Create a new account
+POST …/accounts/search	Returns an array of accounts based on a complex query
 The final example above represents a complex query accessed via a POST request. In this situation the POST URI should be applied to a sub-resource of the collection. A POST to a collection is reserved for the creation of a new collection member.
 
 If no valid sub-resource exists then a dedicated sub-resource should be created, such as the “search” URI listed in the example above.
@@ -143,14 +156,17 @@ Supported HTTP headers, and their usage, for the standards are as laid out in th
 
 Request Headers
 A sample set of headers requesting version 3 to 5:
-Content-Type = application/json
-Accept = application/json
-x-v = 5
-x-min-v = 3
-x-fapi-interaction-id = 6ba7b814-9dad-11d1-80b4-00c04fd430c8
+Content-Type : application/json
+Accept : application/json
+x-v : 5
+x-min-v : 3
+x-fapi-interaction-id : 6ba7b814-9dad-11d1-80b4-00c04fd430c8
+x-fapi-auth_date : 2020-01-16 16:50:15.507399
+x-fapi-customer-ip-address : 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+x-cds-client-headers : TW96aWxsYS81LjAgKFgxMTsgTGludXggeDg2XzY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvNzkuMC4zOTQ1Ljg4IFNhZmFyaS81MzcuMzY=
 
 Header Field	Description	Mandatory?
-Content-Type	Standard HTTP Header. Represents the format of the payload provided in the request. Must be set to application/json.	Mandatory
+Content-Type	Standard HTTP Header. Represents the format of the payload provided in the request. Must be set to application/json. Mandatory for PUT and POST calls.	Conditional
 Accept	Standard HTTP Header. Specify the Content-Type that is required from the Server.
 If specified, must be set to application/json unless otherwise specified in the resource end point standard.
 If set to an unacceptable value the holder must respond with a 406 Not Acceptable. If not specified, default is application/json.	Optional
@@ -159,18 +175,21 @@ If all versions requested are not supported then the holder should respond with 
 x-min-v	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent.
 If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.	Optional
 x-<HID>-v	A holder specific version of extension fields. Should not be used in conjunction with x-min-v.	Optional
-x-fapi-interaction-id	An optional RFC4122 UID used as a correlation id. If provided, the data holder must "play back" this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction	Optional
+x-fapi-interaction-id	An optional [RFC4122] UUID used as a correlation id. If provided, the data holder must "play back" this value in the x-fapi-interaction-id response header.	Optional
 x-fapi-auth-date	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.	Conditional
 x-fapi-customer-ip-address	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.	Conditional
-x-cds-User-Agent	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.	Conditional
-x-cds-subject	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.	Conditional
+x-cds-client-headers	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+This header is not required to include:
+Headers containing security information
+Custom or proprietary headers used to facilitate the client application
+Conditional
 Response headers
 Header Field	Description	Mandatory?
 Content-Type	Standard HTTP Header. Represents the format of the payload returned in the response.
 Must be application/json unless otherwise specified in the resource end point standard.	Mandatory
 Retry-After	Header indicating the time (in seconds) that the client should wait before retrying an operation. The holder should include this header along with responses with the HTTP status code of 429 Too many requests.	Optional
 x-v	The version of the API end point that the holder has responded with.	Mandatory
-x-fapi-interaction-id	An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.	Mandatory
+x-fapi-interaction-id	An [RFC4122] UUID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding request header or to a new [RFC4122] UUID value if the request header was not provided.	Mandatory
 Additional Headers
 Generally understood headers used in HTTP transactions to provide caching guidance and the use of the compression are not specified but are considered acceptable. It is at the discretion of the data holder if these headers are used for a specific implementation. Data holders should not require these headers for successful API access, however.
 
@@ -380,24 +399,23 @@ Number	A standard floating point number. Can be positive, negative or zero	0.1
 10
 90.09
 Base64	Base64 encoded string as per RFC 4648	Q29uc3VtZXIgRGF0YSBSaWdodA==
-DateTimeString	Combined Date and Time string as per RFC- 3339 (labelled date-time in the RFC)	“2007-05-01T15:43:00.12345Z”
+DateTimeString	Combined Date and Time string as per RFC- 3339 (labelled date-time in the RFC). As specified in RFC-3339 times should be offset relative to UTC	“2007-05-01T15:43:00.12345Z”
 “2012-12-25T15:43:00-08:00”
 “1997-01-12T15:43:00.121Z”
-DateString	Date string as per RFC-3339 (labelled full-date in the RFC). UTC time should always be used	“2007-05-01”
+DateString	Date string as per RFC-3339 (labelled full-date in the RFC)	“2007-05-01”
 “2012-12-25”
-TimeString	Time string as per RFC-3339 (labelled full-time in the RFC). UTC time should always be used	“15:43:00.12345Z”
+TimeString	Time string as per RFC-3339 (labelled full-time in the RFC). As specified in RFC-3339 times should be offset relative to UTC	“15:43:00.12345Z”
 “15:43:00-12:00”
 CurrencyString	Standard 3 character currency codes as per ISO-4217	“AUD”
 “USD”
 “GBP”
 RateString	A string representing an interest rate. A rate of 100% would be represented by the value 1.0 and a rate of -100% by -1.0
-- A number constrained to the range [-1.0, 1.0]
 - At least 1 and up to a total of 16 significant digits before decimal point
 - Up to 16 digits following the decimal point
-- No formatting, eg thousand separating commas	“82”
-“0.05”
+- No formatting, eg thousand separating commas	“0.05”
+“-0.05”
 “12.3456789”
-“99.123456789123”
+“-99.123456789123”
 AmountString	A string representing an amount of currency.
 - A positive, zero or negative number
 - Negative numbers identified with a ‘-‘
@@ -547,7 +565,6 @@ API: Application Programming Interface
 CA: Certificate Authority
 CDR: Consumer Data Right
 CDR-SP: Consumer Data Right Security Profile
-CIBA: Client Initiated Backchannel Authentication
 CL: Credential Level
 DH: Data Holder
 DR: Data Recipient
@@ -572,7 +589,6 @@ PPID: Pairwise Pseudonymous Identifier
 REST: Representational State Transfer
 TDIF: Trusted Digital Identity Framework
 TLS: Transport Layer Security
-VoT: Vector of Trust
 CDR Federation
 The CDR Federation will facilitate the secure exchange of consumer data and federation metadata between multiple system entities which will assume one or more of the following roles:
 
@@ -707,7 +723,7 @@ grant_type=authorization_code&
 }
 The private_key_jwt authentication method is enabled through the delivery of an encoded [JWT] signed using the Data Recipient's private key and thus facilitates non-repudiation.
 
-Client public keys MUST only be obtained from the CDR Register.
+Client public keys are obtained from the [JWKS] endpoints.
 
 The [JWT] represents an assertion that MUST include the following claims:
 
@@ -721,7 +737,7 @@ The following claims MAY be included:
 iat: A JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC issued at time.
 When invoking a protected end point, the aforementioned assertion MUST be sent with the POST method and MUST include the following parameters:
 
-grant_type: This parameter MUST only be included when invoking the Token End point and MUST be set to authorisation_code or client_credentials.
+grant_type: This parameter MUST only be included when invoking the Token End point and MUST be set to authorisation_code or client_credentials. The value refresh_token is also valid when refreshing an access token.
 code: This parameter MUST only be included when invoking the Token End point after utilising the Hybrid Authentication flow. This is the value of the code parameter returned in the authorisation response.
 client_id: The ID of the calling Client.
 client_assertion_type: This MUST be set to urn:ietf:params:oauth:client-assertion-type:jwt-bearer.
@@ -746,8 +762,6 @@ Consent requirements will be communicated between the Data Recipient and Data Ho
 
 Other patterns for the establishment of consent may be considered in the future, including the incorporation of fine-grained consent for specific use cases.
 
-A data holder MUST support only one extant consent arrangement (being an arrangement between a single Customer, a single Data Recipient and a single Data Holder) at a time. If a second consent is authorised then the tokens associated with the previous consent MUST be revoked.
-
 Scopes and Claims
 OIDC Scopes
 In addition to CDR data scopes the following scopes MUST be supported:
@@ -764,10 +778,6 @@ name: End-User's full name in displayable form including all name parts.
 given_name: Given name(s) or first name(s) of the End-User.
 family_name: Surname(s) or last name(s) of the End-User.
 updated_at: Time the End-User's information was last updated. Its value is a JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC updated_at time.
-The following [VOT] claims MAY be supported:
-
-vot: MUST contain a valid VoT value.
-vtm: The [VOT] trustmark URI.
 The following additional claims MUST be supported:
 
 refresh_token_expires_at: indicates the date-time at which the most recently provided refresh token will expire. Its value MUST be a number containing a NumericDate value, as specified in section 2 of section 2 [JWT]. If no refresh token has been provided then a zero value should be returned.
@@ -785,20 +795,9 @@ Non-Normative Example - acr
   "iat": 1311280970,
   "nbf": 1311280970,
   "auth_time": 1311280969,
-  "acr": "urn:cds.au:cdr:3"
-}
-Non-Normative Example - vot
-
-{
-  "iss": "https://www.holder.com.au",
-  "sub": "a9ebbef6-1f0b-44eb-96cf-0c5b51b37ab2",
-  "aud": "12345",
-  "nonce": "n-0S6_WzA2Mj",
-  "exp": 1311281970,
-  "iat": 1311280970,
-  "auth_time": 1311280969,
-  "vot": "CL2",
-  "vtm": "https://vector.com/trustmark".
+  "acr": "urn:cds.au:cdr:3",
+  "refresh_token_expires_at": "1311281970",
+  "sharing_expires_at": "1311281970"
 }
 ID Tokens are specified in section 2 of the [OIDC] standard. In accordance with [FAPI-RW], ID Tokens must be signed and encrypted when returned to a Data Recipient from both the Authorisation End Point and Token End Point.
 
@@ -811,11 +810,6 @@ ID Tokens MUST be signed by Data Holders as specified in section 8.6 of [FAPI-RW
 
 The ID Token returned from the Authorisation End Point MUST NOT contain any Personal Information (PI) claims.
 
-An ID Token MUST not contain both a vot claim (see Vectors of Trust) and an acr claim .
-
-If the ID Token contains a vot claim, it MUST also contain a vtm claim:
-
-vtm: The trustmark URI as specified in section 5 of [VOT] .
 Hashing value for state and authorisation code
 The c_hash value MUST be generated according to section 3.3.2.11 of [OIDC].
 
@@ -891,7 +885,7 @@ End points for transferring CDR Data that are classified as not requiring authen
 Holder of Key Mechanism
 [MTLS] MUST be supported as a Holder of Key (HoK) Mechanism.
 
-Note that, by implication, resource requests MUST be validated to ensure the client certificate and access token match. This is an equivalent position to section 6.2.1 of the UK Open Banking Information Security Profile.
+Note that, by implication, resource requests MUST be validated to ensure the client certificate and access token match.
 
 OAUTB SHALL NOT be supported due to a lack industry support.
 
@@ -904,6 +898,13 @@ TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
 TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+CORS
+Cross-origin resource sharing (CORS) must be enabled (ie. Access-Control-Allow-Origin set to "*") for the following end points:
+
+Get Status
+Get Outages
+Get Products
+Get Product Detail
 
 Request Object
 Non-Normative Example - acr as an Essential Claim
@@ -924,7 +925,7 @@ Non-Normative Example - acr as an Essential Claim
   "state": "af0ifjsldkj",
   "nonce": "n-0S6_WzA2Mj",
   "claims": {
-    "sharing_duration": "7776000",
+    "sharing_duration": 7776000,
     "id_token": {
       "acr": {
         "essential": true,
@@ -948,6 +949,7 @@ To facilitate the specification of the duration for consent to share CDR data th
 
 To accomplish this, the Data Holder MUST support an additional claim in the authorisation request object named sharing_duration. The sharing_duration claim MUST be handled as follows:
 
+The sharing_duration parameter is a number
 The value of the sharing_duration parameter will contain the requested duration for sharing, in seconds.
 If the sharing_duration value exceeds one year then a duration of one year will be assumed.
 If the sharing_duration value is zero or absent then once off access will be assumed and only an Access Token (without a Refresh Token) will be provided on successful authorisation.
@@ -956,6 +958,15 @@ Note that the period of one year in the above statements should be interpreted a
 
 The Data Recipient is able to obtain the expiration of sharing via the sharing_expires_at claim.
 
+Specifying An Existing Refresh Token
+To allow for an existing consent to be reliably revoked upon the establishment of a new consent intended as a replacement data holders MUST support an additional claim in the authorisation request object named existing_refresh_token that the data recipient may optionally include with the value set to the active refresh token for an existing consent.
+
+The existing_refresh_token claim MUST be handled as follows:
+
+Until November 2020 data holders are not required to take any action if existing_refresh_token is supplied but MUST NOT respond with an error.
+From November 2020 data holders MUST revoke a token provided in the existing_refresh_token claim in the request object once the new consent is successfully established and a new set of tokens has been provided to the data recipient.
+Until November 2020 data recipients MUST NOT implement scenarios that support concurrent consent. Only single, extant consent scenarios should be implemented until this date.
+Until November 2020 data recipients MUST actively revoke previously supplied refresh tokens, immediately after receiving the tokens for a newly established consent, using the revocation end point.
 End Points
  NOTE: This section does not yet include any end points that will be defined by the design of the CDR Register. This includes end points related to Data Recipient registration, certificate revocation, Data Recipient discovery or Data Holder discovery.
 OpenID Provider Configuration End Point
@@ -984,22 +995,19 @@ Content-Type: application/json
   "response_modes_supported": ["fragment"],
   "grant_types_supported": ["authorization_code", "client_credentials", "urn:openid:params:modrna:grant-type:backchannel_request"],
   "acr_values_supported": ["urn:cds.au:cdr:2","urn:cds.au:cdr:3"],
-  "vot_values_supported": ["CL1","CL2"],
   "subject_types_supported": ["pairwise"],
   "id_token_signing_alg_values_supported": ["ES256", "PS256"],
   "request_object_signing_alg_values_supported": ["ES256", "PS256"],
   "token_endpoint_auth_methods_supported": ["private_key_jwt"],
   "mutual_tls_sender_constrained_access_tokens": "true",
-  "claims_supported": ["name", "given_name", "family_name", "vot", "acr", "auth_time", "sub", "refresh_token_expires_at", "sharing_expires_at"]
+  "claims_supported": ["name", "given_name", "family_name", "acr", "auth_time", "sub", "refresh_token_expires_at", "sharing_expires_at"]
 }
 Description	Value
 Hosted By	Data Holder
-Transport Security	MTLS
+Transport Security	TLS
 Client Authentication Required	No
 Bearer Token Required	No
 Data Holders MUST make their OpenID Provider Metadata available via a configuration end point as outlined in Section 3 and 4 of the OpenID Connect Discovery standards [OIDD].
-
-Where a Data Holder is supporting Vectors of Trust [VOT] or FAPI-CIBA [FAPI-CIBA], the published OpenID Provider metadata SHALL reflect that support.
 
 At a minimum, the Data Holder metadata MUST include:
 
@@ -1009,13 +1017,11 @@ token_endpoint: URL of the Token End Point.
 introspection_endpoint: URL of the Introspection End Point.
 revocation_endpoint: URL of the Revocation End Point.
 userinfo_endpoint: URL of the UserInfo End Point.
+registration_endpoint: URL of the Client Registration End Point.
 scopes_supported: This list of supported scopes.
 claims_supported: The list of supported claims.
 acr_values_supported: The supported ACR values.
 jwks_uri: The JSON Web Key Set for the data holder.
-Data Holders that support Vectors of Trust [VOT] MUST include:
-
-vot_values_supported: The list of supported component values.
 
 Authorisation End Point
 Non-Normative Example
@@ -1048,7 +1054,7 @@ Host: www.holder.com.au
   "state": "af0ifjsldkj",
   "nonce": "n-0S6_WzA2Mj",
   "claims": {
-    "sharing_duration": "7776000",
+    "sharing_duration": 7776000,
     "userinfo": {
       "given_name": null,
       "family_name": null
@@ -1070,16 +1076,22 @@ The requirements for the Authorisation End Point are specified in section 3.3.2 
 
 JSON Web Key Set End Point
 Description	Value
-Hosted By	Data Holder
-Transport Security	MTLS
+Hosted By	Data Holder & Data Recipient
+Transport Security	TLS
 Client Authentication Required	No
 Bearer Token Required	No
 The requirements for the JWKS End Point are specified in various sections of [OIDC].
 
 This end point is used by the Data Holder to provide the public keys they will use when required.
 
-Data Holders MUST support a Token End Point.### Token End Point | Description | Value | |---|---| | Hosted By | Data Holder | | Transport Security | MTLS | | Client Authentication Required| Yes| | Bearer Token Required| No|
+Data Holders MUST support a JWKS End Point.
 
+Token End Point
+Description	Value
+Hosted By	Data Holder
+Transport Security	MTLS
+Client Authentication Required	Yes
+Bearer Token Required	No
 The requirements for the Token End Point are specified in section 3.3.3 of [OIDC].
 
 To obtain an Access Token, an ID Token, and a Refresh Token, the Data Recipient sends a Token Request to the Token End Point.
@@ -1115,7 +1127,7 @@ exp: A JSON number representing the number of seconds from 1970-01-01T00:00:00Z 
 Revocation End Point
 Description	Value
 Hosted By	Data Holder & Data Recipient
-Transport Security	MTLS
+Transport Security	MTLS for Data Holders, TLS for Data Recipients
 Client Authentication Required	Yes
 Bearer Token Required	No
 Data Holders and Data Recipients MUST implement a Token Revocation End Point as described in section 2 of [RFC7009].
@@ -1137,25 +1149,24 @@ Revocation of Refresh Tokens MUST be supported and will be used to notify the Da
 If consent is withdrawn by a Customer in writing or by using the Data Recipient’s dashboard the Data Recipient MUST use the Data Holder’s implementation of the revocation end point with the current Refresh Token to notify the Data Holder.
 
 Normative References
-Reference	Description
-[FAPI-R]	Financial-grade API - Part 1: Read Only API Security Profile: https://openid.net/specs/openid-financial-api-part-1.html
-[FAPI-RW]	Financial-grade API - Part 2: Read and Write API Security Profile: https://openid.net/specs/openid-financial-api-part-2.html
-[JSON]	The JavaScript Object Notation (JSON) Data Interchange Format: https://tools.ietf.org/html/rfc7159
-[JWA]	JSON Web Algorithms (JWA): https://tools.ietf.org/html/draft-ietf-jose-json-web-algorithms-40
-[JWK]	JSON Web Key (JWK): https://tools.ietf.org/html/rfc7517
-[JWT]	JSON Web Token (JWT): https://tools.ietf.org/html/draft-ietf-oauth-json-web-token-32
-[JWS]	JSON Web Signature (JWS): http://tools.ietf.org/html/draft-ietf-jose-json-web-signature
-[JWE]	JSON Web Encryption (JWE): http://tools.ietf.org/html/draft-ietf-jose-json-web-encryption
-[MTLS]	OAuth 2.0 Mutual TLS Client Authentication and Certificate Bound Access Tokens: https://tools.ietf.org/id/draft-ietf-oauth-mtls-07.html
-[OAUTH2]	The OAuth 2.0 Authorization Framework: https://tools.ietf.org/html/rfc6749
-[OIDC]	OpenID Connect Core 1.0 incorporating errata set 1: http://openid.net/specs/openid-connect-core-1_0.html
-[OIDD]	OpenID Connect Discovery 1.0 incorporating errata set 1: http://openid.net/specs/openid-connect-discovery-1_0.html
-[TDIF]	Digital Transformation Agency - Trusted Digital Identity Framework https://www.dta.gov.au/our-projects/digital-identity/join-identity-federation/accreditation-and-onboarding/trusted-digital-identity-framework
-[RFC2119]	Key words for use in RFCs to Indicate Requirement Levels https://tools.ietf.org/html/rfc2119
-[RFC7009]	OAuth 2.0 Token Revocation: https://tools.ietf.org/html/rfc7009
-[RFC7523]	JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants: https://tools.ietf.org/html/rfc7523
-[RFC7662]	OAuth 2.0 Token Introspection: https://tools.ietf.org/html/rfc7662
-[VOT]	Vectors of Trust, draft-richer-vectors-of-trust-15 https://tools.ietf.org/html/draft-richer-vectors-of-trust-15
+Reference	Description	Version
+[FAPI-R]	Financial-grade API - Part 1: Read Only API Security Profile: https://openid.net/specs/openid-financial-api-part-1.html	Draft-06
+[FAPI-RW]	Financial-grade API - Part 2: Read and Write API Security Profile: https://openid.net/specs/openid-financial-api-part-2.html	Draft-06
+[JSON]	The JavaScript Object Notation (JSON) Data Interchange Format: https://tools.ietf.org/html/rfc8259	Dec 2017
+[JWA]	JSON Web Algorithms (JWA): https://tools.ietf.org/html/rfc7518	May 2015
+[JWK]	JSON Web Key (JWK): https://tools.ietf.org/html/rfc7517	May 2015
+[JWT]	JSON Web Token (JWT): https://tools.ietf.org/html/rfc7519	May 2015
+[JWS]	JSON Web Signature (JWS): https://tools.ietf.org/html/rfc7797	Feb 2016
+[JWE]	JSON Web Encryption (JWE): https://tools.ietf.org/html/rfc7516	May 2015
+[MTLS]	OAuth 2.0 Mutual TLS Client Authentication and Certificate Bound Access Tokens: https://tools.ietf.org/html/draft-ietf-oauth-mtls-17	Aug 2019
+[OAUTH2]	The OAuth 2.0 Authorization Framework: https://tools.ietf.org/html/rfc6749	Oct 2012
+[OIDC]	OpenID Connect Core 1.0 incorporating errata set 1: http://openid.net/specs/openid-connect-core-1_0.html	Nov 2014
+[OIDD]	OpenID Connect Discovery 1.0 incorporating errata set 1: http://openid.net/specs/openid-connect-discovery-1_0.html	Nov 2014
+[TDIF]	Digital Transformation Agency - Trusted Digital Identity Framework https://www.dta.gov.au/our-projects/digital-identity/join-identity-federation/accreditation-and-onboarding/trusted-digital-identity-framework	Apr 2019
+[RFC2119]	Key words for use in RFCs to Indicate Requirement Levels https://tools.ietf.org/html/rfc2119	Mar 1997
+[RFC7009]	OAuth 2.0 Token Revocation: https://tools.ietf.org/html/rfc7009	Aug 2013
+[RFC7523]	JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants: https://tools.ietf.org/html/rfc7523	May 2015
+[RFC7662]	OAuth 2.0 Token Introspection: https://tools.ietf.org/html/rfc7662	Oct 2015
 Informative References
 Reference	Description
 [BCP195]	Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS): https://tools.ietf.org/html/bcp195
@@ -1164,10 +1175,11 @@ Reference	Description
 [RFC4122]	A Universally Unique Identifier (UUID) URN Namespace: https://tools.ietf.org/html/rfc4122
 [X.1254]	X.1254 - Entity authentication assurance framework: https://www.itu.int/rec/T-REC-X1254-201209-I/en
 Consumer Experience
-The Consumer Experience (CX) standards, containing requirements and guidelines for the creation of conformant implementatations by both Data Recipients and Data Holders can be found at the following location:
-CX Standards
+The Consumer Experience (CX) standards, containing requirements and guidelines for the creation of conformant implementatations by both Data Recipients and Data Holders, are split into two documents. This first defines mandatory standards and the second includes guidelines for ensuring compliance with the CDR rules:
 
-Additional CX guidelines and commentary can be found at:
+CX Standards
+CX Guidelines
+Additional CX commentary can be found at:
 CDR CX Stream Web Site.
 
 Banking APIs
@@ -1183,8 +1195,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -1193,8 +1204,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -1223,11 +1233,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
@@ -1283,7 +1292,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Bulk Balances
 
@@ -1297,8 +1306,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -1307,8 +1315,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -1337,10 +1344,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
@@ -1399,7 +1406,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Balances For Specific Accounts
 
@@ -1414,8 +1421,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Content-Type':'application/json',
@@ -1425,8 +1431,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -1462,11 +1467,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 body	body	RequestAccountIds	mandatory	The list of account IDs to obtain balances for
 Example responses
 
@@ -1510,8 +1514,8 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-422	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+422	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Account Balance
 
@@ -1525,8 +1529,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -1535,8 +1538,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -1561,11 +1563,10 @@ Name	In	Type	Required	Description
 accountId	path	ASCIIString	mandatory	ID of the specific account requested
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -1596,7 +1597,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Account Detail
 
@@ -1610,8 +1611,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -1620,8 +1620,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -1646,11 +1645,10 @@ Name	In	Type	Required	Description
 accountId	path	ASCIIString	mandatory	A tokenised identifier for the account which is unique but not shareable
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -1670,13 +1668,15 @@ Example responses
     "accountNumber": "string",
     "bundleName": "string",
     "specificAccountUType": "termDeposit",
-    "termDeposit": {
-      "lodgementDate": "string",
-      "maturityDate": "string",
-      "maturityAmount": "string",
-      "maturityCurrency": "string",
-      "maturityInstructions": "ROLLED_OVER"
-    },
+    "termDeposit": [
+      {
+        "lodgementDate": "string",
+        "maturityDate": "string",
+        "maturityAmount": "string",
+        "maturityCurrency": "string",
+        "maturityInstructions": "ROLLED_OVER"
+      }
+    ],
     "creditCard": {
       "minPaymentAmount": "string",
       "paymentDueAmount": "string",
@@ -1873,7 +1873,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.detail:read
 Get Transactions For Account
 
@@ -1887,8 +1887,6 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
 
 var headers = {
   'Accept':'application/json',
@@ -1896,9 +1894,7 @@ var headers = {
   'x-min-v':'string',
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
-  'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-fapi-customer-ip-address':'string'
 
 };
 
@@ -1921,6 +1917,7 @@ Some general notes that apply to all end points that retrieve transactions:
 Where multiple transactions are returned, transactions should be ordered according to effective date in descending order
 As the date and time for a transaction can alter depending on status and transaction type two separate date/times are included in the payload. There are still some scenarios where neither of these time stamps is available. For the purpose of filtering and ordering it is expected that the data holder will use the “effective” date/time which will be defined as: - Posted date/time if available, then - Execution date/time if available, then - A reasonable date/time nominated by the data holder using internal data structures
 For transaction amounts it should be assumed that a negative value indicates a reduction of the available balance on the account while a positive value indicates an increase in the available balance on the account
+For aggregated transactions (ie. groups of sub transactions reported as a single entry for the account) only the aggregated information, with as much consistent information accross the subsidiary transactions as possible, is required to be shared
 Endpoint Version
 Version	1
 Parameters
@@ -1935,11 +1932,9 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -1987,7 +1982,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:transactions:read
 Get Transaction Detail
 
@@ -2001,8 +1996,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -2011,8 +2005,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -2038,11 +2031,10 @@ accountId	path	ASCIIString	mandatory	ID of the account to get transactions for. 
 transactionId	path	ASCIIString	mandatory	ID of the transaction obtained from a previous call to one of the other transaction end points
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -2090,7 +2082,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:transactions:read
 Get Direct Debits For Account
 
@@ -2104,8 +2096,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -2114,8 +2105,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -2142,11 +2132,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -2186,7 +2175,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Bulk Direct Debits
 
@@ -2200,8 +2189,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -2210,8 +2198,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -2240,11 +2227,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
@@ -2301,7 +2287,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Direct Debits For Specific Accounts
 
@@ -2316,8 +2302,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Content-Type':'application/json',
@@ -2327,8 +2312,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -2364,11 +2348,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 body	body	RequestAccountIds	mandatory	Array of specific accountIds to obtain authorisations for
 Example responses
 
@@ -2410,8 +2393,8 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
-422	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+422	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments for Account
 
@@ -2425,8 +2408,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -2435,8 +2417,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -2463,11 +2444,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -2559,7 +2539,8 @@ Example responses
             "finalPaymentDate": "string",
             "paymentsRemaining": 0,
             "interval": "string",
-            "lastWeekDay": 0
+            "lastWeekDay": "MON",
+            "nonBusinessDayTreatment": "ON"
           },
           "eventBased": {
             "description": "string"
@@ -2586,7 +2567,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments Bulk
 
@@ -2600,8 +2581,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -2610,8 +2590,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -2640,11 +2619,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
@@ -2753,7 +2731,8 @@ Example responses
             "finalPaymentDate": "string",
             "paymentsRemaining": 0,
             "interval": "string",
-            "lastWeekDay": 0
+            "lastWeekDay": "MON",
+            "nonBusinessDayTreatment": "ON"
           },
           "eventBased": {
             "description": "string"
@@ -2780,7 +2759,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments For Specific Accounts
 
@@ -2795,8 +2774,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Content-Type':'application/json',
@@ -2806,8 +2784,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -2843,11 +2820,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 body	body	RequestAccountIds	mandatory	Array of specific accountIds to obtain scheduled payments for. The accounts specified are the source of funds for the payments returned
 Example responses
 
@@ -2940,7 +2916,8 @@ Example responses
             "finalPaymentDate": "string",
             "paymentsRemaining": 0,
             "interval": "string",
-            "lastWeekDay": 0
+            "lastWeekDay": "MON",
+            "nonBusinessDayTreatment": "ON"
           },
           "eventBased": {
             "description": "string"
@@ -2968,8 +2945,8 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
-422	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+422	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Payees
 
@@ -2983,8 +2960,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -2993,8 +2969,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -3021,11 +2996,10 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
 type	DOMESTIC
@@ -3066,7 +3040,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:payees:read
 Get Payee Detail
 
@@ -3080,8 +3054,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -3090,8 +3063,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -3107,7 +3079,9 @@ $.ajax({
 
 GET /banking/payees/{payeeId}
 
-Obtain detailed information on a single payee
+Obtain detailed information on a single payee.
+
+Note that the payee sub-structure should be selected to represent the payment destination only rather than any known characteristics of the payment recipient
 
 Endpoint Version
 Version	1
@@ -3116,11 +3090,10 @@ Name	In	Type	Required	Description
 payeeId	path	ASCIIString	mandatory	The ID used to locate the details of a particular payee
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -3187,7 +3160,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:payees:read
 Get Products
 
@@ -3251,8 +3224,12 @@ It is expected that data consumers needing this data will call relatively freque
 
 In addition, the concept of effective date and time has also been included. This allows for a product to be marked for obsolescence, or introduction, from a certain time without the need for an update to show that a product has been changed. The inclusion of these dates also removes the need to represent deleted products in the payload. Products that are no long offered can be marked not effective for a few weeks before they are then removed from the product set as an option entirely.
 
+NOTE: This version must be implemented by July 2020
+
+Obsolete versions: v1
+
 Endpoint Version
-Version	1
+Version	2
 Parameters
 Name	In	Type	Required	Description
 effective	query	string	optional	Allows for the filtering of products based on whether the current time is within the period of time defined as effective by the effectiveFrom and effectiveTo fields. Valid values are ‘CURRENT’, ‘FUTURE’ and ‘ALL’. If absent defaults to 'CURRENT'
@@ -3305,7 +3282,13 @@ Example responses
           "eligibilityUri": "string",
           "feesAndPricingUri": "string",
           "bundleUri": "string"
-        }
+        },
+        "cardArt": [
+          {
+            "title": "string",
+            "imageUri": "string"
+          }
+        ]
       }
     ]
   },
@@ -3357,10 +3340,14 @@ $.ajax({
 
 GET /banking/products/{productId}
 
-Obtain detailed information on a single product offered openly to the market
+Obtain detailed information on a single product offered openly to the market.
+
+NOTE: This version must be implemented by July 2020
+
+Obsolete versions: v1
 
 Endpoint Version
-Version	1
+Version	2
 Parameters
 Name	In	Type	Required	Description
 productId	path	ASCIIString	mandatory	ID of the specific product requested
@@ -3390,6 +3377,12 @@ Example responses
       "feesAndPricingUri": "string",
       "bundleUri": "string"
     },
+    "cardArt": [
+      {
+        "title": "string",
+        "imageUri": "string"
+      }
+    ],
     "bundles": [
       {
         "name": "string",
@@ -3560,8 +3553,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -3570,8 +3562,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -3595,11 +3586,10 @@ Parameters
 Name	In	Type	Required	Description
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -3659,8 +3649,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
-x-cds-User-Agent: string
-x-cds-subject: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -3669,8 +3658,7 @@ var headers = {
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
   'x-fapi-customer-ip-address':'string',
-  'x-cds-User-Agent':'string',
-  'x-cds-subject':'string'
+  'x-cds-client-headers':'string'
 
 };
 
@@ -3694,11 +3682,10 @@ Parameters
 Name	In	Type	Required	Description
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An RFC4122 UID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
-x-cds-User-Agent	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
-x-cds-subject	header	string	optional	Subject identifier. Locally unique and never reassigned identifier within the Holder for the End-User. Mandatory for authenticated calls. Not required for unattended or unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -3843,7 +3830,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-200	x-fapi-interaction-id	string		An RFC4122 UID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: common:customer.detail:read
 Get Status
 
@@ -3901,7 +3888,7 @@ Example responses
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Success	CommonDiscoveryStatus
+200	OK	Success	ResponseCommonDiscoveryStatus
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -4010,7 +3997,13 @@ ResponseBankingProductList
           "eligibilityUri": "string",
           "feesAndPricingUri": "string",
           "bundleUri": "string"
-        }
+        },
+        "cardArt": [
+          {
+            "title": "string",
+            "imageUri": "string"
+          }
+        ]
       }
     ]
   },
@@ -4030,10 +4023,10 @@ ResponseBankingProductList
 Properties
 Name	Type	Required	Restrictions	Description
 data	object	mandatory	none	none
-» products	[BankingProduct]	mandatory	none	The list of products returned. If the filter results in an empty set then this array may have no records
+» products	[BankingProductV2]	mandatory	none	The list of products returned. If the filter results in an empty set then this array may have no records
 links	LinksPaginated	mandatory	none	none
 meta	MetaPaginated	mandatory	none	none
-BankingProduct
+BankingProductV2
 
 {
   "productId": "string",
@@ -4053,7 +4046,13 @@ BankingProduct
     "eligibilityUri": "string",
     "feesAndPricingUri": "string",
     "bundleUri": "string"
-  }
+  },
+  "cardArt": [
+    {
+      "title": "string",
+      "imageUri": "string"
+    }
+  ]
 }
 
 Properties
@@ -4075,6 +4074,9 @@ additionalInformation	object	optional	none	Object that contains links to additio
 » eligibilityUri	URIString	optional	none	Eligibility rules and criteria for the product
 » feesAndPricingUri	URIString	optional	none	Description of fees, pricing, discounts, exemptions and bonuses for the product
 » bundleUri	URIString	optional	none	Description of a bundle that this product can be part of
+cardArt	[object]	optional	none	An array of card art images
+» title	string	optional	none	Display label for the specific image
+» imageUri	URIString	mandatory	none	Link to a PNG, JPG or GIF image with proportions defined by ISO 7810 ID-1 and width no greater than 512 pixels
 ResponseBankingProductById
 
 {
@@ -4097,6 +4099,12 @@ ResponseBankingProductById
       "feesAndPricingUri": "string",
       "bundleUri": "string"
     },
+    "cardArt": [
+      {
+        "title": "string",
+        "imageUri": "string"
+      }
+    ],
     "bundles": [
       {
         "name": "string",
@@ -4274,6 +4282,12 @@ BankingProductDetail
     "feesAndPricingUri": "string",
     "bundleUri": "string"
   },
+  "cardArt": [
+    {
+      "title": "string",
+      "imageUri": "string"
+    }
+  ],
   "bundles": [
     {
       "name": "string",
@@ -4424,11 +4438,11 @@ Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	BankingProduct	optional	none	none
+anonymous	BankingProductV2	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-anonymous	object	optional	none	none
+anonymous	object	mandatory	none	none
 » bundles	[BankingProductBundle]	optional	none	An array of bundles that this product participates in. Each bundle is described by free form information but also by a list of product IDs of the other products that are included in the bundle. It is assumed that the current product is included in the bundle also
 » features	[BankingProductFeature]	optional	none	Array of features available for the product
 » constraints	[BankingProductConstraint]	optional	none	Constraints on the application for or operation of the product such as minimum balances or limit thresholds
@@ -4592,7 +4606,7 @@ amount	AmountString	conditional	none	The amount charged for the fee. One of amou
 balanceRate	RateString	conditional	none	A fee rate calculated based on a proportion of the balance. One of amount, balanceRate, transactionRate and accruedRate is mandatory
 transactionRate	RateString	conditional	none	A fee rate calculated based on a proportion of a transaction. One of amount, balanceRate, transactionRate and accruedRate is mandatory
 accruedRate	RateString	conditional	none	A fee rate calculated based on a proportion of the calculated interest accrued on the account. One of amount, balanceRate, transactionRate and accruedRate is mandatory
-accrualFrequency	ExternalRef	optional	none	The indicative frequency with which the fee is calculated on the account. Only applies if balanceRate or accruedRate is also present. Formatted according to ISO 8601 Durations
+accrualFrequency	ExternalRef	optional	none	The indicative frequency with which the fee is calculated on the account. Only applies if balanceRate or accruedRate is also present. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
 currency	CurrencyString	optional	none	The currency the fee will be charged in. Assumes AUD if absent
 additionalValue	string	conditional	none	Generic field containing additional information relevant to the feeType specified. Whether mandatory or not is dependent on the value of feeType
 additionalInfo	string	optional	none	Display text providing more information on the fee
@@ -4722,8 +4736,8 @@ Properties
 Name	Type	Required	Restrictions	Description
 depositRateType	string	mandatory	none	The type of rate (base, bonus, etc). See the next section for an overview of valid values and their meaning
 rate	RateString	mandatory	none	The rate to be applied
-calculationFrequency	ExternalRef	optional	none	The period after which the rate is applied to the balance to calculate the amount due for the period. Calculation of the amount is often daily (as balances may change) but accumulated until the total amount is 'applied' to the account (see applicationFrequency). Formatted according to ISO 8601 Durations
-applicationFrequency	ExternalRef	optional	none	The period after which the calculated amount(s) (see calculationFrequency) are 'applied' (i.e. debited or credited) to the account. Formatted according to ISO 8601 Durations
+calculationFrequency	ExternalRef	optional	none	The period after which the rate is applied to the balance to calculate the amount due for the period. Calculation of the amount is often daily (as balances may change) but accumulated until the total amount is 'applied' to the account (see applicationFrequency). Formatted according to ISO 8601 Durations (excludes recurrence syntax)
+applicationFrequency	ExternalRef	optional	none	The period after which the calculated amount(s) (see calculationFrequency) are 'applied' (i.e. debited or credited) to the account. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
 tiers	[BankingProductRateTier]	optional	none	Rate tiers applicable for this rate
 additionalValue	string	conditional	none	Generic field containing additional information relevant to the depositRateType specified. Whether mandatory or not is dependent on the value of depositRateType
 additionalInfo	string	optional	none	Display text providing more information on the rate
@@ -4780,8 +4794,8 @@ Name	Type	Required	Restrictions	Description
 lendingRateType	string	mandatory	none	The type of rate (fixed, variable, etc). See the next section for an overview of valid values and their meaning
 rate	RateString	mandatory	none	The rate to be applied
 comparisonRate	RateString	optional	none	A comparison rate equivalent for this rate
-calculationFrequency	ExternalRef	optional	none	The period after which the rate is applied to the balance to calculate the amount due for the period. Calculation of the amount is often daily (as balances may change) but accumulated until the total amount is 'applied' to the account (see applicationFrequency). Formatted according to ISO 8601 Durations
-applicationFrequency	ExternalRef	optional	none	The period after which the calculated amount(s) (see calculationFrequency) are 'applied' (i.e. debited or credited) to the account. Formatted according to ISO 8601 Durations
+calculationFrequency	ExternalRef	optional	none	The period after which the rate is applied to the balance to calculate the amount due for the period. Calculation of the amount is often daily (as balances may change) but accumulated until the total amount is 'applied' to the account (see applicationFrequency). Formatted according to ISO 8601 Durations (excludes recurrence syntax)
+applicationFrequency	ExternalRef	optional	none	The period after which the calculated amount(s) (see calculationFrequency) are 'applied' (i.e. debited or credited) to the account. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
 interestPaymentDue	string	optional	none	When loan payments are due to be paid within each period. The investment benefit of earlier payments affect the rate that can be offered
 tiers	[BankingProductRateTier]	optional	none	Rate tiers applicable for this rate
 additionalValue	string	conditional	none	Generic field containing additional information relevant to the lendingRateType specified. Whether mandatory or not is dependent on the value of lendingRateType
@@ -4832,14 +4846,14 @@ Defines the criteria and conditions for which a rate applies
 Properties
 Name	Type	Required	Restrictions	Description
 name	string	mandatory	none	A display name for the tier
-unitOfMeasure	string	mandatory	none	The unit of measure that applies to the tierValueMinimum and tierValueMaximum values e.g. 'DOLLAR', 'MONTH' (in the case of term deposit tiers), 'PERCENT' (in the case of loan-to-value ratio or LVR)
+unitOfMeasure	string	mandatory	none	The unit of measure that applies to the tierValueMinimum and tierValueMaximum values e.g. a DOLLAR amount. PERCENT (in the case of loan-to-value ratio or LVR). Tier term period representing a discrete number of MONTH's or DAY's (in the case of term deposit tiers)
 minimumValue	number	mandatory	none	The number of tierUnitOfMeasure units that form the lower bound of the tier. The tier should be inclusive of this value
 maximumValue	number	optional	none	The number of tierUnitOfMeasure units that form the upper bound of the tier or band. For a tier with a discrete value (as opposed to a range of values e.g. 1 month) this must be the same as tierValueMinimum. Where this is the same as the tierValueMinimum value of the next-higher tier the referenced tier should be exclusive of this value. For example a term deposit of 2 months falls into the upper tier of the following tiers: (1 – 2 months, 2 – 3 months). If absent the tier's range has no upper bound.
 rateApplicationMethod	string	optional	none	The method used to calculate the amount to be applied using one or more tiers. A single rate may be applied to the entire balance or each applicable tier rate is applied to the portion of the balance that falls into that tier (referred to as 'bands' or 'steps')
 applicabilityConditions	BankingProductRateCondition	optional	none	Defines a condition for the applicability of a tiered rate
 subTier	object	optional	none	Defines the sub-tier criteria and conditions for which a rate applies
 » name	string	mandatory	none	A display name for the tier
-» unitOfMeasure	string	mandatory	none	The unit of measure that applies to the tierValueMinimum and tierValueMaximum values e.g. 'DOLLAR', 'MONTH' (in the case of term deposit tiers), 'PERCENT' (in the case of loan-to-value ratio or LVR)
+» unitOfMeasure	string	mandatory	none	The unit of measure that applies to the tierValueMinimum and tierValueMaximum values e.g. a DOLLAR amount. PERCENT (in the case of loan-to-value ratio or LVR). Tier term period representing a discrete number of MONTH's or DAY's (in the case of term deposit tiers)
 » minimumValue	number	mandatory	none	The number of tierUnitOfMeasure units that form the lower bound of the tier. The tier should be inclusive of this value
 » maximumValue	number	mandatory	none	The number of tierUnitOfMeasure units that form the upper bound of the tier or band. For a tier with a discrete value (as opposed to a range of values e.g. 1 month) this must be the same as tierValueMinimum. Where this is the same as the tierValueMinimum value of the next-higher tier the referenced tier should be exclusive of this value. For example a term deposit of 2 months falls into the upper tier of the following tiers: (1 – 2 months, 2 – 3 months)
 » rateApplicationMethod	string	optional	none	The method used to calculate the amount to be applied using one or more tiers. A single rate may be applied to the entire balance or each applicable tier rate is applied to the portion of the balance that falls into that tier (referred to as 'bands' or 'steps')
@@ -4932,7 +4946,7 @@ openStatus	string	optional	none	Open or closed status for the account. If not pr
 isOwned	Boolean	optional	none	Flag indicating that the customer associated with the authorisation is an owner of the account. Does not indicate sole ownership, however. If not present then 'true' is assumed
 maskedNumber	MaskedAccountString	mandatory	none	A masked version of the account. Whether BSB/Account Number, Credit Card PAN or another number
 productCategory	BankingProductCategory	mandatory	none	The category to which a product or account belongs. See here for more details
-productName	string	mandatory	none	The unique identifier of the account as defined by the account holder (akin to model number for the account)
+productName	string	mandatory	none	The unique identifier of the account as defined by the data holder (akin to model number for the account)
 Enumerated Values
 Property	Value
 openStatus	OPEN
@@ -4954,13 +4968,15 @@ ResponseBankingAccountById
     "accountNumber": "string",
     "bundleName": "string",
     "specificAccountUType": "termDeposit",
-    "termDeposit": {
-      "lodgementDate": "string",
-      "maturityDate": "string",
-      "maturityAmount": "string",
-      "maturityCurrency": "string",
-      "maturityInstructions": "ROLLED_OVER"
-    },
+    "termDeposit": [
+      {
+        "lodgementDate": "string",
+        "maturityDate": "string",
+        "maturityAmount": "string",
+        "maturityCurrency": "string",
+        "maturityInstructions": "ROLLED_OVER"
+      }
+    ],
     "creditCard": {
       "minPaymentAmount": "string",
       "paymentDueAmount": "string",
@@ -5173,13 +5189,15 @@ BankingAccountDetail
   "accountNumber": "string",
   "bundleName": "string",
   "specificAccountUType": "termDeposit",
-  "termDeposit": {
-    "lodgementDate": "string",
-    "maturityDate": "string",
-    "maturityAmount": "string",
-    "maturityCurrency": "string",
-    "maturityInstructions": "ROLLED_OVER"
-  },
+  "termDeposit": [
+    {
+      "lodgementDate": "string",
+      "maturityDate": "string",
+      "maturityAmount": "string",
+      "maturityCurrency": "string",
+      "maturityInstructions": "ROLLED_OVER"
+    }
+  ],
   "creditCard": {
     "minPaymentAmount": "string",
     "paymentDueAmount": "string",
@@ -5370,16 +5388,16 @@ Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	BankingAccount	optional	none	none
+anonymous	BankingAccount	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-anonymous	object	optional	none	none
+anonymous	object	mandatory	none	none
 » bsb	string	optional	none	The unmasked BSB for the account. Is expected to be formatted as digits only with leading zeros included and no punctuation or spaces
 » accountNumber	string	optional	none	The unmasked account number for the account. Should not be supplied if the account number is a PAN requiring PCI compliance. Is expected to be formatted as digits only with leading zeros included and no punctuation or spaces
 » bundleName	string	optional	none	Optional field to indicate if this account is part of a bundle that is providing additional benefit for to the customer
 » specificAccountUType	string	optional	none	The type of structure to present account specific fields.
-» termDeposit	BankingTermDepositAccount	conditional	none	none
+» termDeposit	[BankingTermDepositAccount]	conditional	none	none
 » creditCard	BankingCreditCardAccount	conditional	none	none
 » loan	BankingLoanAccount	conditional	none	none
 » depositRate	RateString	optional	none	current rate to calculate interest earned being applied to deposit balances as it stands at the time of the API call
@@ -5390,11 +5408,11 @@ anonymous	object	optional	none	none
 allOf
 
 Name	Type	Required	Restrictions	Description
-»» anonymous	BankingProductFeature	optional	none	none
+»» anonymous	BankingProductFeature	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-»» anonymous	object	optional	none	none
+»» anonymous	object	mandatory	none	none
 »»» isActivated	Boolean	optional	none	True if the feature is already activated and false if the feature is available for activation. Defaults to true if absent. (note this is an additional field appended to the feature object defined in the Product Reference payload)
 continued
 
@@ -5480,7 +5498,7 @@ minRedrawCurrency	CurrencyString	optional	none	If absent assumes AUD
 offsetAccountEnabled	Boolean	optional	none	Set to true if one or more offset accounts are configured for this loan account
 offsetAccountIds	[string]	optional	none	The accountIDs of the configured offset accounts attached to this loan. Only offset accounts that can be accessed under the current authorisation should be included. It is expected behaviour that offsetAccountEnabled is set to true but the offsetAccountIds field is absent or empty. This represents a situation where an offset account exists but details can not be accessed under the current authorisation
 repaymentType	string	optional	none	Options in place for repayments. If absent defaults to PRINCIPAL_AND_INTEREST
-repaymentFrequency	ExternalRef	mandatory	none	The expected or required repayment frequency. Formatted according to ISO 8601 Durations
+repaymentFrequency	ExternalRef	mandatory	none	The expected or required repayment frequency. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
 Enumerated Values
 Property	Value
 repaymentType	INTEREST_ONLY
@@ -5669,11 +5687,11 @@ Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	BankingTransaction	optional	none	none
+anonymous	BankingTransaction	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-anonymous	object	optional	none	none
+anonymous	object	mandatory	none	none
 » extendedData	object	mandatory	none	none
 »» payer	string	conditional	none	Label of the originating payer. Mandatory for inbound payment
 »» payee	string	conditional	none	Label of the target PayID. Mandatory for an outbound payment. The name assigned to the BSB/Account Number or PayID (by the owner of the PayID)
@@ -5968,11 +5986,11 @@ Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	BankingPayee	optional	none	none
+anonymous	BankingPayee	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-anonymous	object	optional	none	none
+anonymous	object	mandatory	none	none
 » payeeUType	string	mandatory	none	Type of object included that describes the payee in detail
 » domestic	BankingDomesticPayee	conditional	none	none
 » biller	BankingBillerPayee	conditional	none	none
@@ -6003,7 +6021,7 @@ BankingDomesticPayee
 
 Properties
 Name	Type	Required	Restrictions	Description
-payeeAccountUType	string	mandatory	none	Type of account object included. Valid values are: { payeeAccountUType - - account A standard Australian account defined by BSB/Account Number payId A PayID recognised by NPP
+payeeAccountUType	string	mandatory	none	Type of account object included. Valid values are: account A standard Australian account defined by BSB/Account Number. card A credit or charge card to pay to (note that PANs are masked). payId A PayID recognised by NPP
 account	BankingDomesticPayeeAccount	conditional	none	none
 card	BankingDomesticPayeeCard	conditional	none	none
 payId	BankingDomesticPayeePayId	conditional	none	none
@@ -6022,7 +6040,7 @@ BankingDomesticPayeeAccount
 
 Properties
 Name	Type	Required	Restrictions	Description
-accountName	string	mandatory	none	Name of the account to pay to
+accountName	string	optional	none	Name of the account to pay to
 bsb	string	mandatory	none	BSB of the account to pay to
 accountNumber	string	mandatory	none	Number of the account to pay to
 BankingDomesticPayeeCard
@@ -6273,7 +6291,8 @@ ResponseBankingScheduledPaymentsList
             "finalPaymentDate": "string",
             "paymentsRemaining": 0,
             "interval": "string",
-            "lastWeekDay": 0
+            "lastWeekDay": "MON",
+            "nonBusinessDayTreatment": "ON"
           },
           "eventBased": {
             "description": "string"
@@ -6387,7 +6406,8 @@ BankingScheduledPayment
       "finalPaymentDate": "string",
       "paymentsRemaining": 0,
       "interval": "string",
-      "lastWeekDay": 0
+      "lastWeekDay": "MON",
+      "nonBusinessDayTreatment": "ON"
     },
     "eventBased": {
       "description": "string"
@@ -6471,7 +6491,7 @@ Properties
 Name	Type	Required	Restrictions	Description
 to	BankingScheduledPaymentTo	mandatory	none	Object containing details of the destination of the payment. Used to specify a variety of payment destination types
 isAmountCalculated	Boolean	optional	none	Flag indicating whether the amount of the payment is calculated based on the context of the event. For instance a payment to reduce the balance of a credit card to zero. If absent then false is assumed
-amount	AmountString	conditional	none	Flag indicating whether the amount of the payment is calculated based on the context of the event. For instance a payment to reduce the balance of a credit card to zero. If absent then false is assumed
+amount	AmountString	conditional	none	The amount of the next payment if known. Mandatory unless the isAmountCalculated field is set to true. Must be zero or positive if present
 currency	CurrencyString	optional	none	The currency for the payment. AUD assumed if not present
 BankingScheduledPaymentTo
 
@@ -6574,7 +6594,8 @@ BankingScheduledPaymentRecurrence
     "finalPaymentDate": "string",
     "paymentsRemaining": 0,
     "interval": "string",
-    "lastWeekDay": 0
+    "lastWeekDay": "MON",
+    "nonBusinessDayTreatment": "ON"
   },
   "eventBased": {
     "description": "string"
@@ -6628,7 +6649,11 @@ Properties
 Name	Type	Required	Restrictions	Description
 finalPaymentDate	DateString	optional	none	The limit date after which no more payments should be made using this schedule. If both finalPaymentDate and paymentsRemaining are present then payments will stop according to the most constraining value. If neither field is present the payments will continue indefinitely
 paymentsRemaining	PositiveInteger	optional	none	Indicates the number of payments remaining in the schedule. If both finalPaymentDate and paymentsRemaining are present then payments will stop according to the most constraining value, If neither field is present the payments will continue indefinitely
-nonBusinessDayTreatment	string	optional	none	Enumerated field giving the treatment where a scheduled payment date is not a business day. If absent assumed to be ON
+nonBusinessDayTreatment	string	optional	none	Enumerated field giving the treatment where a scheduled payment date is not a business day. If absent assumed to be ON.
+AFTER - If a scheduled payment date is a non-business day the payment will be made on the first business day after the scheduled payment date.
+BEFORE - If a scheduled payment date is a non-business day the payment will be made on the first business day before the scheduled payment date.
+ON - If a scheduled payment date is a non-business day the payment will be made on that day regardless.
+ONLY - Payments only occur on business days. If a scheduled payment date is a non-business day the payment will be ignored
 intervals	[BankingScheduledPaymentInterval]	mandatory	none	An array of interval objects defining the payment schedule. Each entry in the array is additive, in that it adds payments to the overall payment schedule. If multiple intervals result in a payment on the same day then only one payment will be made. Must have at least one entry
 Enumerated Values
 Property	Value
@@ -6645,15 +6670,16 @@ BankingScheduledPaymentInterval
 
 Properties
 Name	Type	Required	Restrictions	Description
-interval	ExternalRef	mandatory	none	An interval for the payment. Formatted according to ISO 8601 Durations with components less than a day in length ignored. This duration defines the period between payments starting with nextPaymentDate
-dayInInterval	ExternalRef	optional	none	Uses an interval to define the ordinal day within the interval defined by the interval field on which the payment occurs. If the resulting duration is 0 days in length or larger than the number of days in the interval then the payment will occur on the last day of the interval. A duration of 1 day indicates the first day of the interval. If absent the assumed value is P1D. Formatted according to ISO 8601 Durations with components less than a day in length ignored. The first day of a week is considered to be Monday.
+interval	ExternalRef	mandatory	none	An interval for the payment. Formatted according to ISO 8601 Durations (excludes recurrence syntax) with components less than a day in length ignored. This duration defines the period between payments starting with nextPaymentDate
+dayInInterval	ExternalRef	optional	none	Uses an interval to define the ordinal day within the interval defined by the interval field on which the payment occurs. If the resulting duration is 0 days in length or larger than the number of days in the interval then the payment will occur on the last day of the interval. A duration of 1 day indicates the first day of the interval. If absent the assumed value is P1D. Formatted according to ISO 8601 Durations (excludes recurrence syntax) with components less than a day in length ignored. The first day of a week is considered to be Monday.
 BankingScheduledPaymentRecurrenceLastWeekday
 
 {
   "finalPaymentDate": "string",
   "paymentsRemaining": 0,
   "interval": "string",
-  "lastWeekDay": 0
+  "lastWeekDay": "MON",
+  "nonBusinessDayTreatment": "ON"
 }
 
 Indicates that the schedule of payments is defined according to the last occurrence of a specific weekday in an interval. Mandatory if recurrenceUType is set to lastWeekDay
@@ -6662,8 +6688,26 @@ Properties
 Name	Type	Required	Restrictions	Description
 finalPaymentDate	DateString	optional	none	The limit date after which no more payments should be made using this schedule. If both finalPaymentDate and paymentsRemaining are present then payments will stop according to the most constraining value. If neither field is present the payments will continue indefinitely
 paymentsRemaining	PositiveInteger	optional	none	Indicates the number of payments remaining in the schedule. If both finalPaymentDate and paymentsRemaining are present then payments will stop according to the most constraining value. If neither field is present the payments will continue indefinitely
-interval	ExternalRef	mandatory	none	The interval for the payment. Formatted according to ISO 8601 Durations with components less than a day in length ignored. This duration defines the period between payments starting with nextPaymentDate
-lastWeekDay	PositiveInteger	mandatory	none	The weekDay specified. The payment will occur on the last occurrence of this weekday in the interval. Value is constrained to 1 to 7 with 1 indicating Monday.
+interval	ExternalRef	mandatory	none	The interval for the payment. Formatted according to ISO 8601 Durations (excludes recurrence syntax) with components less than a day in length ignored. This duration defines the period between payments starting with nextPaymentDate
+lastWeekDay	string	mandatory	none	The weekDay specified. The payment will occur on the last occurrence of this weekday in the interval.
+nonBusinessDayTreatment	string	optional	none	Enumerated field giving the treatment where a scheduled payment date is not a business day. If absent assumed to be ON.
+AFTER - If a scheduled payment date is a non-business day the payment will be made on the first business day after the scheduled payment date.
+BEFORE - If a scheduled payment date is a non-business day the payment will be made on the first business day before the scheduled payment date.
+ON - If a scheduled payment date is a non-business day the payment will be made on that day regardless.
+ONLY - Payments only occur on business days. If a scheduled payment date is a non-business day the payment will be ignored
+Enumerated Values
+Property	Value
+lastWeekDay	MON
+lastWeekDay	TUE
+lastWeekDay	WED
+lastWeekDay	THU
+lastWeekDay	FRI
+lastWeekDay	SAT
+lastWeekDay	SUN
+nonBusinessDayTreatment	AFTER
+nonBusinessDayTreatment	BEFORE
+nonBusinessDayTreatment	ON
+nonBusinessDayTreatment	ONLY
 BankingScheduledPaymentRecurrenceEventBased
 
 {
@@ -6675,7 +6719,7 @@ Indicates that the schedule of payments is defined according to an external even
 Properties
 Name	Type	Required	Restrictions	Description
 description	string	mandatory	none	Description of the event and conditions that will result in the payment. Expected to be formatted for display to a customer
-CommonDiscoveryStatus
+ResponseCommonDiscoveryStatus
 
 {
   "data": {
@@ -6744,7 +6788,7 @@ DiscoveryOutage
 Properties
 Name	Type	Required	Restrictions	Description
 outageTime	DateTimeString	mandatory	none	Date and time that the outage is scheduled to begin
-duration	ExternalRef	mandatory	none	Planned duration of the outage. Formatted according to ISO 8601 Durations
+duration	ExternalRef	mandatory	none	Planned duration of the outage. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
 isPartial	boolean	optional	none	Flag that indicates, if present and set to true, that the outage is only partial meaning that only a subset of normally available end points will be affected by the outage
 explanation	string	mandatory	none	Provides an explanation of the current outage that can be displayed to an end customer
 ResponseCommonCustomer
@@ -6969,7 +7013,7 @@ lastName	string	mandatory	none	For people with single names the single name shou
 middleNames	[string]	mandatory	none	Field is mandatory but array may be empty
 prefix	string	optional	none	Also known as title or salutation. The prefix to the name (e.g. Mr, Mrs, Ms, Miss, Sir, etc)
 suffix	string	optional	none	Used for a trailing suffix to the name (e.g. Jr)
-occupationCode	string	optional	none	Value is a valid ANZCO v1.2 Standard Occupation classification.
+occupationCode	string	optional	none	Value is a valid ANZSCO v1.2 Standard Occupation classification.
 CommonPersonDetail
 
 {
@@ -7046,11 +7090,11 @@ Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	CommonPerson	optional	none	none
+anonymous	CommonPerson	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-anonymous	object	optional	none	none
+anonymous	object	mandatory	none	none
 » phoneNumbers	[CommonPhoneNumber]	mandatory	none	Array is mandatory but may be empty if no phone numbers are held
 » emailAddresses	[CommonEmailAddress]	mandatory	none	May be empty
 » physicalAddresses	[CommonPhysicalAddressWithPurpose]	mandatory	none	Must contain at least one address. One and only one address may have the purpose of REGISTERED. Zero or one, and no more than one, record may have the purpose of MAIL. If zero then the REGISTERED address is to be used for mail
@@ -7078,7 +7122,7 @@ Name	Type	Required	Restrictions	Description
 lastUpdateTime	DateTimeString	optional	none	The date and time that this record was last updated by the customer. If no update has occurred then this date should reflect the initial creation date for the data
 agentFirstName	string	optional	none	The first name of the individual providing access on behalf of the organisation. For people with single names this field need not be present. The single name should be in the lastName field
 agentLastName	string	mandatory	none	The last name of the individual providing access on behalf of the organisation. For people with single names the single name should be in this field
-agentRole	string	mandatory	none	The role of the individual identified as the agent who is providing authorisation. Expected to be used for display. Default to “Unspecified” if the role is not known
+agentRole	string	mandatory	none	The role of the individual identified as the agent who is providing authorisation. Expected to be used for display. Default to Unspecified if the role is not known
 businessName	string	mandatory	none	Name of the organisation
 legalName	string	optional	none	Legal name, if different to the business name
 shortName	string	optional	none	Short name used for communication, if different to the business name
@@ -7160,11 +7204,11 @@ Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	CommonOrganisation	optional	none	none
+anonymous	CommonOrganisation	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-anonymous	object	optional	none	none
+anonymous	object	mandatory	none	none
 » physicalAddresses	[CommonPhysicalAddressWithPurpose]	mandatory	none	Must contain at least one address. One and only one address may have the purpose of REGISTERED. Zero or one, and no more than one, record may have the purpose of MAIL. If zero then the REGISTERED address is to be used for mail
 CommonPhoneNumber
 
@@ -7259,11 +7303,11 @@ Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	CommonPhysicalAddress	optional	none	none
+anonymous	CommonPhysicalAddress	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-anonymous	object	optional	none	none
+anonymous	object	mandatory	none	none
 » purpose	string	mandatory	none	Enumeration of values indicating the purpose of the physical address
 Enumerated Values
 Property	Value
@@ -7469,7 +7513,7 @@ The category to which a product or account belongs. See here for more details
 
 Properties
 Name	Type	Required	Restrictions	Description
-anonymous	string	optional	none	The category to which a product or account belongs. See here for more details
+anonymous	string	mandatory	none	The category to which a product or account belongs. See here for more details
 Enumerated Values
 Property	Value
 anonymous	TRANS_AND_SAVINGS_ACCOUNTS
@@ -8331,12 +8375,14 @@ Tier	Response Time	Applies To…
 Unauthenticated	1500ms	All unauthenticated end points
 High Priority	1000ms	Customer Present calls to the following end points:
 InfoSec end points
-Health Check (to be included in Admin end points)
+Get Status
+Get Outages
 Get Accounts
 Get Customer
 Get Customer Detail
 Low Priority	1500ms	Customer Present calls to the following end points:
 Get Account Detail
+Get Account Balance
 Get Bulk Balances
 Get Balances For Specific Accounts
 Get Transactions For Account
@@ -8344,6 +8390,9 @@ Get Transaction Detail
 Get Payees
 Get Payee Detail
 Get Direct Debits For Account
+Get Scheduled Payments For Account
+Get Scheduled Payments Bulk
+Get Scheduled Payments For Specific Accounts
 Unattended	4000ms	Unattended calls to High Priority or Low Priority end points.
 Additional Admin end points.
 Large Payload	6000ms	Any call to the following end points:
@@ -8429,18 +8478,20 @@ Periods of time when the digital channels for the data holder are the target for
 A significant increase in traffic from a poorly designed or misbehaving data recipient (this should result in http error 429 Too Many Requests being returned).
 If the data holder identifies a situation where there is the potential for physical or financial harm or abuse (this should result in http error 403 Forbidden being returned).
 Known Issues
-There are certain aspects of the standards that are actively under review. These known issues are articulated in the following table.
+This version of the standards currently has no known issues
 
-Issue	Description
-Swagger limitations	Due to the use of Swagger 2 and limitations in swagger related to representation of OIDC flows and explicit formats for common types consideration is being given how best to represent this information
-End point version	End point versions are included in a swagger extension but are not appearing yet in the automatically generated documentation
-Example data	Addition of example data for each field needs to be added to the swagger to improve the automatically generated sample json snippets
-Specific error codes	Feedback has been provided that additional specific errors would be of value. This is under consideration
-Additional link fields	The inclusion of additional links to aid traversal of the end points has been suggested. This is under consideration.
 Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+31/1/2020	1.2.0	Phase 2 Baseline	Baseline version for the Phase 2 implementation of the CDR regime
+See release notes for detail
+20/1/2020	1.1.1	Maintenance updates	Error Fixes
+See release notes for detail
+10/12/2019	1.1.0	Banking Maintenance Iteration 1 Changes	Changes arising from iteration 1 of the banking maintenance cadence.
+See release notes for detail
+12/11/2019	1.0.1	Patch update	Minor defect changes and clarifications.
+See release notes for detail
 30/9/2019	1.0.0	Baseline version 1	This release is the baseline release for the standards that are intended for implementation February 2020 and contains minor updates as well as changes to align to the locked down CDR Rules and the updated CDR Register design
 4/9/2019	0.9.6	Defect fix release	This release addresses a series of documentation issues and other clarifications as identified via GitHub feedback
 15/7/2019	0.9.5	Incorporated May 2019 Feedback	This version incorporates the decisions arising from the consultation feedback obtained on the May 2019 draft of the standards (v0.9.3)
