@@ -2,6 +2,7 @@ Logo
 Search
 Introduction
 Future Dated Obligations
+Endpoint Version Schedule
 Standards
 Security Profile
 Consumer Experience
@@ -15,6 +16,7 @@ Known Issues
 Change Log
 Archives
 Consumer Data Standards Home
+CDR Support Portal
 CDR Standards on GitHub
 CDR Maintenance on GitHub
 CDR Register
@@ -53,8 +55,16 @@ Get Metrics V2	Version 2 of this end point must be made available by affected da
 Token Introspection claims	Whilst Data Holders must conform with the FAPI normative references, requiring the scope claim, the standards were clarified in v1.5.0 to clarify the minimum required set of claims to be supported by the Token Introspection end point. Data holders must support the scope claim not later than February 1st 2021	February 1st 2021
 Client Authentication for Data Recipients calling Data Holder	Client Authentication has been updated to align to upstream standards. From March 30th 2021, Data Holders must support multiple valid values for the audience claim for Data Recipient client authentication as outlined in that section. Data Recipients may continue to supply the URL of the endpoint being invoked, however according to upstream standards, it is recommended according to [RFC8414] that issuer identifier URL of the authorisation server should be used as the value of the audience.
 Until March 31st 2021, Data Recipients must continue to use the URL of the endpoint being invoked as the audience claim value. Data Holders must continue to accept and validate the URL of the endpoint being invoked.	March 30th 2021
+Get Customer V1	Data Holders providing valid ANZSIC and ANZSCO codes whose version is not ANZSIC_1292.0_2006_V2.0 and ANZSCO_1220.0_2013_V1.2 respectively must supply the appropriate version enumeration no later than July 1st 2021. The version codes allow data holders to reference the applicable document versions for the codes they hold.	July 1st 2021
+Banking Term Deposit Account Types	Data Holders who support maturity instructions for term deposits whereby funds are held in a facility or similar mechanism upon maturity must update relevant product data no later than July 1st 2021	July 1st 2021
+Token Introspection Endpoint claims	Mandatory claims were updated in accordance with RFC7662	November 1st 2020
+Endpoint Version Schedule
+A table-view of all endpoint versioning is available here.
+
+Please note this is currently experimental.
+
 Standards
-These standards represent version 1.6.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.7.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
 
@@ -200,7 +210,7 @@ Accept : application/json;charset=UTF-8
 x-v : 5
 x-min-v : 3
 x-fapi-interaction-id : 6ba7b814-9dad-11d1-80b4-00c04fd430c8
-x-fapi-auth_date : 2020-01-16 16:50:15.507399
+x-fapi-auth-date : Thu, 16 Jan 2020 16:50:15 GMT
 x-fapi-customer-ip-address : 2001:0db8:85a3:0000:0000:8a2e:0370:7334
 x-cds-client-headers : TW96aWxsYS81LjAgKFgxMTsgTGludXggeDg2XzY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvNzkuMC4zOTQ1Ljg4IFNhZmFyaS81MzcuMzY=
 
@@ -1175,7 +1185,9 @@ To accomplish this, the Data Holder MUST support an additional claim in the auth
 The sharing_duration parameter is a number
 The value of the sharing_duration parameter will contain the requested duration for sharing, in seconds.
 If the sharing_duration value exceeds one year then a duration of one year will be assumed.
+If the sharing_duration value is less than or equal to 24 hours, then one-time collection will be assumed, and a Refresh Token should be provided by the Data Holder
 If the sharing_duration value is zero or absent then once off access will be assumed and only an Access Token (without a Refresh Token) will be provided on successful authorisation.
+If a Refresh Token is issued for one-time collection the Data Recipient must call the Data Holder’s revocation endpoint after successful collection of the CDR data.
 If the sharing_duration value is negative then the authorisation should fail.
 Note that the period of one year in the above statements should be interpreted as 365, 24 hour days (or 31,536,000 seconds).
 
@@ -1568,13 +1580,146 @@ Reference	Description
 [RFC4122]	A Universally Unique Identifier (UUID) URN Namespace: https://tools.ietf.org/html/rfc4122
 [X.1254]	X.1254 - Entity authentication assurance framework: https://www.itu.int/rec/T-REC-X1254-201209-I/en
 Consumer Experience
-The Consumer Experience (CX) standards, containing requirements and guidelines for the creation of implementatations by both Data Recipients and Data Holders, are split into two documents. This first defines mandatory standards and the second includes guidelines for facilitating the implementation of rules and standards that relate to the consumer experience:
+The Consumer Experience (CX) Standards contain requirements for the creation of implementations by both Data Recipients and Data Holders. The full list of CX Standards can be found below.
 
-CX Standards
+The CX Guidelines provide examples and recommendations for how to implement key rules and standards that relate to the consumer experience. They can be found along with additional CX commentary at:
+
 CX Guidelines
-Additional CX commentary can be found at:
-CDR CX Stream Web Site.
+Consumer Experience Standards
+Data Language Standards
 
+Example of data language standards presented in a consumer-facing interaction
+
+In accordance with CDR Rule 8.11 (1)(d), a data standard must be made to provide descriptions of the types of data to be used by CDR participants in making and responding to requests. Adherence to this language will help ensure there is a consistent interpretation and description of the consumer data that will be shared across different CDR implementations.
+
+#	Area	CX Standard
+1	Data Language Standards: Language to be used	Data Recipients and Data Holders MUST use data language standards to describe data clusters and permissions in consumer-facing interactions as outlined in Table 1 Data language standards MUST be used when CDR data is being requested, reviewed, or access to such data is withdrawn.
+Data language standards MUST be used when CDR data is being requested, reviewed, or access to such data is withdrawn.
+Data Recipients and Data Holders MUST use the appropriate data standards language for business consumers as denoted with an ‘*’ in Table 1
+Data Recipients and Data Holders SHOULD expand on the proposed language where appropriate to communicate further details of what is being shared.
+Additional details MAY include additional information in context, such as in-line help or tool tips, and/or additional permissions where they may exist. denoted with an ‘†’ in Table 1
+Examples of permission details that MAY be used and provided as in-line help are denoted with an ‘†’ in Table 1
+2	Data Language Standards: Detailed scope requests	If a scenario requires it, Data Holders and Data Recipients MUST merge and amend Basic and Detailed data cluster and permission language to show that Detailed scopes include Basic data.
+Data Holders and Data Recipients MUST use the alternative language denoted with an ‘‡’ in Table 1 (rows greyed out for clarity).
+Table 1.
+
+Individual Consumer
+Data cluster language	Permission language	Authorisation Scopes
+Name and occupation	Name
+Occupation	common:customer.basic:read
+Contact Details	Phone;
+Email address;
+Mail address;
+Residential address;	common:customer.detail:read
+Name, occupation, contact details:	Name;
+Occupation;
+Phone;
+Email address;
+Mail address;
+Residential address;	common:customer.detail:read
+Business consumer
+Data cluster language	Permission language	Authorisation Scopes
+Organisation profile *	Agent name and role;
+Organisation name;
+Organisation numbers (ABN or ACN);
+Charity status;
+Establishment date;
+Industry;
+Organisation type
+Country of registration;	common:customer.basic:read
+Organisation contact details *	Organisation address;
+Organisation address;
+Phone number;	common:customer.detail:read
+Organisation profile and contact details *‡	Agent >name and role;
+Organisation name;
+Organisation numbers (ABN or ACN);†
+Charity status;
+Establishment date;
+Industry;
+Organisation type;
+Country of registration;
+Organisation address;
+Mail address
+address;
+Phone number;
+common:customer.detail:read
+Common
+Data cluster language	Permission language	Authorisation Scopes
+Account name, type and balance	Name of account;
+Type of account;
+Account balance;	bank:accounts.basic:read
+Account numbers and features	Account number;
+Interest rates;
+Fees;
+Discounts;
+Account terms;
+Account mail address;	bank:accounts.detail:read
+Account balance and details‡	Name of account;
+Type of account;
+Account balance;
+Account number;
+Interest rates;
+Fees;
+Discounts;
+Account terms;
+Account mail address;	bank:accounts.detail:read
+Transaction details	Incoming and outgoing transactions;
+Amounts;
+Dates;
+Descriptions of transactions;
+Who you have sent money to and received money from; (e.g. their name)†	bank:transactions:read
+Direct debits and scheduled payments	Direct debits;
+Scheduled payments;	bank:regular_payments:read
+Saved payees	Names and details of accounts you have saved; (e.g. their BSB and Account Number, BPay CRN and Biller code, or NPP PayID)†	bank:payees:read
+Accessibility Standards
+#	Area	CX Standard
+3	Accessibility	At a minimum, all CDR participants MUST seek to comply with the following accessibility guidelines throughout the Consent Model.
+These standards SHOULD be assessed, tested, and refined further by accessibility consultants directly involved in implementation.
+4	Accessibility
+Content distinction	Data recipients and data holders MUST seek to have all aspects of the Consent Model comply with WCAG 1.4 Data recipients and data holders MUST seek to have all aspects of the Consent Model comply with. This will make it easier to see and hear content, including separate foreground information from the background. This will make it easier to see and hear content, including separate foreground information from the background.
+5	Accessibility
+Keyboard functionality	Data recipients and data holders MUST seek to have all aspects of the Consent Model comply with WCAG 2.1. This will make all functionality available from a keyboard.
+6	Accessibility
+Pointer interactions	Data recipients and data holders MUST seek to have all aspects of the Consent Model comply with WCAG 2.5. This will make it easier to operate functionality using various input devices
+7	Accessibility
+Reading experiences	Data recipients and data holders MUST seek to have all aspects of the Consent Model comply with WCAG 3.1. This will make text content readable and understandable
+8	Accessibility
+Input assistance	Data recipients and data holders MUST seek to have all aspects of the Consent Model comply with WCAG 3.3. This will help users avoid and correct mistakes.
+Consent, Authenticate, and Authorise Standards
+#	Area	CX Standard
+9	Seeking consent	Data recipients MUST notify consumers of redirection prior to authentication.
+10	Authentication:
+‘One Time Password’	Data holders and data recipients MUST clearly refer to a “One Time Password” in consumer-facing interactions and communications. The use of the term “One Time Password” MAY be presented alongside an existing term used by a data holder (e.g. Netcode, one time pin etc.).
+11	Authentication:
+Passwords	Data holders and data recipients MUST state in consumer-facing interactions and communications that services utilising the CDR do not need access to consumer passwords for the purposes of sharing data. The exact phrasing of this is at the discretion of the data holder and data recipient.
+12	Authentication:
+Password link	Data holders MUST NOT include forgotten details links in redirect screens. The inclusion of such links is considered to increase the likelihood of phishing attacks.
+13	Authentication:
+OTP expiry	Data holders MUST communicate the expiry period of the OTP to the consumer in the authentication flow.
+14	Authorisation & Account selection	Data holders MUST allow the consumer to select which of their accounts to share data from if the data request includes account-specific data and if there are multiple accounts available. The Data holder MAY omit this step if none of the data being requested is specific to an account (e.g. Saved Payees).
+
+Data holders MAY add a ‘profile selection’ step or equivalent prior to the account selection step if a single identifier provides access to different customer accounts. For example, one customer ID may give access to business customer and individual customer accounts. The ‘profile selection’ step SHOULD only be considered if it is an existing customer experience, and SHOULD be as minimal as possible to avoid introducing unwarranted friction (having regard to CDR Rule 4.24).
+If certain accounts are unavailable to share, data holders SHOULD show these unavailable accounts in the account-selection step.
+Data holders SHOULD communicate why these accounts cannot be selected, and this SHOULD be communicated as in-line help or as a modal to reduce on-screen content.
+Data holders MAY provide instructions on how to make these accounts available to share, and this SHOULD be communicated as in-line help or as a modal to reduce on-screen content.
+Note: Unavailable accounts are to be interpreted in accordance with the rules on eligible consumers and required consumer data.
+15	Authorisation:
+Account confirm	Data holders MUST show which accounts the data is being shared from prior to confirming authorisation if the data request includes account-specific data. The data holder MAY omit this information if none of the data being requested is specific to an account (e.g. Saved Payees).
+Withdrawal Standards
+#	Area	CX Standard
+16	Withdrawing consent	If a data recipient does not have a general policy to delete redundant data, and the consumer has not already requested that their redundant data be deleted:
+Data recipients MUST allow consumers to elect to have their redundant data deleted as part of the withdrawal process prior to the final withdrawal step.
+Data recipients SHOULD consider prompting consumers to exercise this right at appropriate times (e.g. when inaction on the part of the consumer may cause them to lose the opportunity to exercise the right to delete their redundant data).
+17	Withdrawing authorisation:
+Consequences	As part of the withdrawal process, the data holder MUST advise the consumer to review the consequences of withdrawal with the data recipient before they stop sharing their data.
+The data holder MAY consider using or paraphrasing the following message(s):
+‘You should check with [Data Recipient] before you stop sharing to understand the consequences.’
+‘You should check with [Data Recipient] to see if your service will be impacted before you stop sharing.’
+18	Withdrawing authorisation:
+Redundant data	As part of the withdrawal process, the data holder MUST inform the consumer about the handling of redundant data and the right to delete.
+The Data Holder MAY consider using or paraphrasing the following message(s):
+‘CDR data is either deleted or de-identified when it is no longer required.’
+‘[Data recipient] will have specific policies on how to handle your data once it’s no longer required.’
 Banking APIs
 Get Accounts
 
@@ -1642,11 +1787,11 @@ product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
 product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	TRAVEL_CARDS
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
-open-status	OPEN
-open-status	CLOSED
+product-category	TRAVEL_CARDS
 open-status	ALL
+open-status	CLOSED
+open-status	OPEN
 Example responses
 
 200 Response
@@ -1753,11 +1898,11 @@ product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
 product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	TRAVEL_CARDS
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
-open-status	OPEN
-open-status	CLOSED
+product-category	TRAVEL_CARDS
 open-status	ALL
+open-status	CLOSED
+open-status	OPEN
 Example responses
 
 200 Response
@@ -2060,14 +2205,14 @@ Example responses
     "bsb": "string",
     "accountNumber": "string",
     "bundleName": "string",
-    "specificAccountUType": "termDeposit",
+    "specificAccountUType": "creditCard",
     "termDeposit": [
       {
         "lodgementDate": "string",
         "maturityDate": "string",
         "maturityAmount": "string",
         "maturityCurrency": "string",
-        "maturityInstructions": "ROLLED_OVER"
+        "maturityInstructions": "HOLD_ON_MATURITY"
       }
     ],
     "creditCard": {
@@ -2106,7 +2251,7 @@ Example responses
         "tiers": [
           {
             "name": "string",
-            "unitOfMeasure": "DOLLAR",
+            "unitOfMeasure": "DAY",
             "minimumValue": 0,
             "maximumValue": 0,
             "rateApplicationMethod": "PER_TIER",
@@ -2132,11 +2277,11 @@ Example responses
         "applicationFrequency": "string",
         "interestPaymentDue": "IN_ADVANCE",
         "repaymentType": "INTEREST_ONLY",
-        "loanPurpose": "OWNER_OCCUPIED",
+        "loanPurpose": "INVESTMENT",
         "tiers": [
           {
             "name": "string",
-            "unitOfMeasure": "DOLLAR",
+            "unitOfMeasure": "DAY",
             "minimumValue": 0,
             "maximumValue": 0,
             "rateApplicationMethod": "PER_TIER",
@@ -2201,7 +2346,7 @@ Example responses
     ],
     "addresses": [
       {
-        "addressUType": "simple",
+        "addressUType": "paf",
         "simple": {
           "mailingName": "string",
           "addressLine1": "string",
@@ -2626,11 +2771,11 @@ product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
 product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	TRAVEL_CARDS
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
-open-status	OPEN
-open-status	CLOSED
+product-category	TRAVEL_CARDS
 open-status	ALL
+open-status	CLOSED
+open-status	OPEN
 Example responses
 
 200 Response
@@ -2853,6 +2998,8 @@ Example responses
               "toUType": "accountId",
               "accountId": "string",
               "payeeId": "string",
+              "nickname": "string",
+              "payeeReference": "string",
               "domestic": {
                 "payeeAccountUType": "account",
                 "account": {
@@ -2903,13 +3050,13 @@ Example responses
         ],
         "recurrence": {
           "nextPaymentDate": "string",
-          "recurrenceUType": "onceOff",
+          "recurrenceUType": "eventBased",
           "onceOff": {
             "paymentDate": "string"
           },
           "intervalSchedule": {
             "finalPaymentDate": "string",
-            "paymentsRemaining": 0,
+            "paymentsRemaining": 1,
             "nonBusinessDayTreatment": "ON",
             "intervals": [
               {
@@ -2920,9 +3067,9 @@ Example responses
           },
           "lastWeekDay": {
             "finalPaymentDate": "string",
-            "paymentsRemaining": 0,
+            "paymentsRemaining": 1,
             "interval": "string",
-            "lastWeekDay": "MON",
+            "lastWeekDay": "FRI",
             "nonBusinessDayTreatment": "ON"
           },
           "eventBased": {
@@ -3018,11 +3165,11 @@ product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
 product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	TRAVEL_CARDS
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
-open-status	OPEN
-open-status	CLOSED
+product-category	TRAVEL_CARDS
 open-status	ALL
+open-status	CLOSED
+open-status	OPEN
 Example responses
 
 200 Response
@@ -3045,6 +3192,8 @@ Example responses
               "toUType": "accountId",
               "accountId": "string",
               "payeeId": "string",
+              "nickname": "string",
+              "payeeReference": "string",
               "domestic": {
                 "payeeAccountUType": "account",
                 "account": {
@@ -3095,13 +3244,13 @@ Example responses
         ],
         "recurrence": {
           "nextPaymentDate": "string",
-          "recurrenceUType": "onceOff",
+          "recurrenceUType": "eventBased",
           "onceOff": {
             "paymentDate": "string"
           },
           "intervalSchedule": {
             "finalPaymentDate": "string",
-            "paymentsRemaining": 0,
+            "paymentsRemaining": 1,
             "nonBusinessDayTreatment": "ON",
             "intervals": [
               {
@@ -3112,9 +3261,9 @@ Example responses
           },
           "lastWeekDay": {
             "finalPaymentDate": "string",
-            "paymentsRemaining": 0,
+            "paymentsRemaining": 1,
             "interval": "string",
-            "lastWeekDay": "MON",
+            "lastWeekDay": "FRI",
             "nonBusinessDayTreatment": "ON"
           },
           "eventBased": {
@@ -3230,6 +3379,8 @@ Example responses
               "toUType": "accountId",
               "accountId": "string",
               "payeeId": "string",
+              "nickname": "string",
+              "payeeReference": "string",
               "domestic": {
                 "payeeAccountUType": "account",
                 "account": {
@@ -3280,13 +3431,13 @@ Example responses
         ],
         "recurrence": {
           "nextPaymentDate": "string",
-          "recurrenceUType": "onceOff",
+          "recurrenceUType": "eventBased",
           "onceOff": {
             "paymentDate": "string"
           },
           "intervalSchedule": {
             "finalPaymentDate": "string",
-            "paymentsRemaining": 0,
+            "paymentsRemaining": 1,
             "nonBusinessDayTreatment": "ON",
             "intervals": [
               {
@@ -3297,9 +3448,9 @@ Example responses
           },
           "lastWeekDay": {
             "finalPaymentDate": "string",
-            "paymentsRemaining": 0,
+            "paymentsRemaining": 1,
             "interval": "string",
-            "lastWeekDay": "MON",
+            "lastWeekDay": "FRI",
             "nonBusinessDayTreatment": "ON"
           },
           "eventBased": {
@@ -3385,10 +3536,10 @@ x-fapi-customer-ip-address	header	string	optional	The customer's original IP add
 x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
+type	ALL
 type	BILLER
 type	DOMESTIC
 type	INTERNATIONAL
-type	ALL
 Example responses
 
 200 Response
@@ -3488,7 +3639,7 @@ Example responses
     "description": "string",
     "type": "BILLER",
     "creationDate": "string",
-    "payeeUType": "domestic",
+    "payeeUType": "biller",
     "domestic": {
       "payeeAccountUType": "account",
       "account": {
@@ -3625,9 +3776,9 @@ x-v	header	string	mandatory	Version of the API end point requested by the client
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 Enumerated Values
 Parameter	Value
+effective	ALL
 effective	CURRENT
 effective	FUTURE
-effective	ALL
 product-category	BUSINESS_LOANS
 product-category	CRED_AND_CHRG_CARDS
 product-category	LEASES
@@ -3638,8 +3789,8 @@ product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
 product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	TRAVEL_CARDS
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
+product-category	TRAVEL_CARDS
 Example responses
 
 200 Response
@@ -3787,7 +3938,7 @@ Example responses
     ],
     "constraints": [
       {
-        "constraintType": "MIN_BALANCE",
+        "constraintType": "MAX_BALANCE",
         "additionalValue": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string"
@@ -3847,7 +3998,7 @@ Example responses
         "tiers": [
           {
             "name": "string",
-            "unitOfMeasure": "DOLLAR",
+            "unitOfMeasure": "DAY",
             "minimumValue": 0,
             "maximumValue": 0,
             "rateApplicationMethod": "PER_TIER",
@@ -3873,11 +4024,11 @@ Example responses
         "applicationFrequency": "string",
         "interestPaymentDue": "IN_ADVANCE",
         "repaymentType": "INTEREST_ONLY",
-        "loanPurpose": "OWNER_OCCUPIED",
+        "loanPurpose": "INVESTMENT",
         "tiers": [
           {
             "name": "string",
-            "unitOfMeasure": "DOLLAR",
+            "unitOfMeasure": "DAY",
             "minimumValue": 0,
             "maximumValue": 0,
             "rateApplicationMethod": "PER_TIER",
@@ -3963,7 +4114,7 @@ Example responses
 
 {
   "data": {
-    "customerUType": "person",
+    "customerUType": "organisation",
     "person": {
       "lastUpdateTime": "string",
       "firstName": "string",
@@ -4062,7 +4213,7 @@ Example responses
 
 {
   "data": {
-    "customerUType": "person",
+    "customerUType": "organisation",
     "person": {
       "lastUpdateTime": "string",
       "firstName": "string",
@@ -4077,7 +4228,7 @@ Example responses
       "phoneNumbers": [
         {
           "isPreferred": true,
-          "purpose": "MOBILE",
+          "purpose": "HOME",
           "countryCode": "string",
           "areaCode": "string",
           "number": "string",
@@ -4088,13 +4239,13 @@ Example responses
       "emailAddresses": [
         {
           "isPreferred": true,
-          "purpose": "WORK",
+          "purpose": "HOME",
           "address": "string"
         }
       ],
       "physicalAddresses": [
         {
-          "addressUType": "simple",
+          "addressUType": "paf",
           "simple": {
             "mailingName": "string",
             "addressLine1": "string",
@@ -4151,7 +4302,7 @@ Example responses
       "establishmentDate": "string",
       "physicalAddresses": [
         {
-          "addressUType": "simple",
+          "addressUType": "paf",
           "simple": {
             "mailingName": "string",
             "addressLine1": "string",
@@ -4498,7 +4649,7 @@ ResponseBankingProductById
     ],
     "constraints": [
       {
-        "constraintType": "MIN_BALANCE",
+        "constraintType": "MAX_BALANCE",
         "additionalValue": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string"
@@ -4558,7 +4709,7 @@ ResponseBankingProductById
         "tiers": [
           {
             "name": "string",
-            "unitOfMeasure": "DOLLAR",
+            "unitOfMeasure": "DAY",
             "minimumValue": 0,
             "maximumValue": 0,
             "rateApplicationMethod": "PER_TIER",
@@ -4584,11 +4735,11 @@ ResponseBankingProductById
         "applicationFrequency": "string",
         "interestPaymentDue": "IN_ADVANCE",
         "repaymentType": "INTEREST_ONLY",
-        "loanPurpose": "OWNER_OCCUPIED",
+        "loanPurpose": "INVESTMENT",
         "tiers": [
           {
             "name": "string",
-            "unitOfMeasure": "DOLLAR",
+            "unitOfMeasure": "DAY",
             "minimumValue": 0,
             "maximumValue": 0,
             "rateApplicationMethod": "PER_TIER",
@@ -4665,7 +4816,7 @@ BankingProductDetailV3
   ],
   "constraints": [
     {
-      "constraintType": "MIN_BALANCE",
+      "constraintType": "MAX_BALANCE",
       "additionalValue": "string",
       "additionalInfo": "string",
       "additionalInfoUri": "string"
@@ -4725,7 +4876,7 @@ BankingProductDetailV3
       "tiers": [
         {
           "name": "string",
-          "unitOfMeasure": "DOLLAR",
+          "unitOfMeasure": "DAY",
           "minimumValue": 0,
           "maximumValue": 0,
           "rateApplicationMethod": "PER_TIER",
@@ -4751,11 +4902,11 @@ BankingProductDetailV3
       "applicationFrequency": "string",
       "interestPaymentDue": "IN_ADVANCE",
       "repaymentType": "INTEREST_ONLY",
-      "loanPurpose": "OWNER_OCCUPIED",
+      "loanPurpose": "INVESTMENT",
       "tiers": [
         {
           "name": "string",
-          "unitOfMeasure": "DOLLAR",
+          "unitOfMeasure": "DAY",
           "minimumValue": 0,
           "maximumValue": 0,
           "rateApplicationMethod": "PER_TIER",
@@ -4845,14 +4996,14 @@ featureType	NOTIFICATIONS
 featureType	NPP_ENABLED
 featureType	NPP_PAYID
 featureType	OFFSET
+featureType	OTHER
 featureType	OVERDRAFT
 featureType	REDRAW
 featureType	UNLIMITED_TXNS
-featureType	OTHER
 BankingProductConstraint
 
 {
-  "constraintType": "MIN_BALANCE",
+  "constraintType": "MAX_BALANCE",
   "additionalValue": "string",
   "additionalInfo": "string",
   "additionalInfoUri": "string"
@@ -4866,10 +5017,10 @@ additionalInfo	string	optional	none	Display text providing more information the 
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on the constraint
 Enumerated Values
 Property	Value
-constraintType	MIN_BALANCE
-constraintType	MIN_LIMIT
 constraintType	MAX_BALANCE
 constraintType	MAX_LIMIT
+constraintType	MIN_BALANCE
+constraintType	MIN_LIMIT
 constraintType	OPENING_BALANCE
 BankingProductEligibility
 
@@ -4895,11 +5046,11 @@ eligibilityType	MIN_AGE
 eligibilityType	MIN_INCOME
 eligibilityType	MIN_TURNOVER
 eligibilityType	NATURAL_PERSON
+eligibilityType	OTHER
 eligibilityType	PENSION_RECIPIENT
 eligibilityType	RESIDENCY_STATUS
 eligibilityType	STAFF
 eligibilityType	STUDENT
-eligibilityType	OTHER
 BankingProductFee
 
 {
@@ -5032,11 +5183,11 @@ discountEligibilityType	MIN_AGE
 discountEligibilityType	MIN_INCOME
 discountEligibilityType	MIN_TURNOVER
 discountEligibilityType	NATURAL_PERSON
+discountEligibilityType	OTHER
 discountEligibilityType	PENSION_RECIPIENT
 discountEligibilityType	RESIDENCY_STATUS
 discountEligibilityType	STAFF
 discountEligibilityType	STUDENT
-discountEligibilityType	OTHER
 BankingProductDepositRate
 
 {
@@ -5047,7 +5198,7 @@ BankingProductDepositRate
   "tiers": [
     {
       "name": "string",
-      "unitOfMeasure": "DOLLAR",
+      "unitOfMeasure": "DAY",
       "minimumValue": 0,
       "maximumValue": 0,
       "rateApplicationMethod": "PER_TIER",
@@ -5093,11 +5244,11 @@ BankingProductLendingRateV2
   "applicationFrequency": "string",
   "interestPaymentDue": "IN_ADVANCE",
   "repaymentType": "INTEREST_ONLY",
-  "loanPurpose": "OWNER_OCCUPIED",
+  "loanPurpose": "INVESTMENT",
   "tiers": [
     {
       "name": "string",
-      "unitOfMeasure": "DOLLAR",
+      "unitOfMeasure": "DAY",
       "minimumValue": 0,
       "maximumValue": 0,
       "rateApplicationMethod": "PER_TIER",
@@ -5134,24 +5285,24 @@ lendingRateType	BUNDLE_DISCOUNT_FIXED
 lendingRateType	BUNDLE_DISCOUNT_VARIABLE
 lendingRateType	CASH_ADVANCE
 lendingRateType	DISCOUNT
+lendingRateType	FIXED
 lendingRateType	FLOATING
 lendingRateType	INTRODUCTORY
 lendingRateType	MARKET_LINKED
 lendingRateType	PENALTY
 lendingRateType	PURCHASE
 lendingRateType	VARIABLE
-lendingRateType	FIXED
 interestPaymentDue	IN_ADVANCE
 interestPaymentDue	IN_ARREARS
 repaymentType	INTEREST_ONLY
 repaymentType	PRINCIPAL_AND_INTEREST
-loanPurpose	OWNER_OCCUPIED
 loanPurpose	INVESTMENT
+loanPurpose	OWNER_OCCUPIED
 BankingProductRateTierV3
 
 {
   "name": "string",
-  "unitOfMeasure": "DOLLAR",
+  "unitOfMeasure": "DAY",
   "minimumValue": 0,
   "maximumValue": 0,
   "rateApplicationMethod": "PER_TIER",
@@ -5177,10 +5328,10 @@ additionalInfo	string	optional	none	Display text providing more information on t
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on this rate tier
 Enumerated Values
 Property	Value
-unitOfMeasure	DOLLAR
-unitOfMeasure	PERCENT
 unitOfMeasure	DAY
+unitOfMeasure	DOLLAR
 unitOfMeasure	MONTH
+unitOfMeasure	PERCENT
 rateApplicationMethod	PER_TIER
 rateApplicationMethod	WHOLE_BALANCE
 BankingProductRateCondition
@@ -5260,8 +5411,8 @@ productCategory	BankingProductCategory	mandatory	none	The category to which a pr
 productName	string	mandatory	none	The unique identifier of the account as defined by the data holder (akin to model number for the account)
 Enumerated Values
 Property	Value
-openStatus	OPEN
 openStatus	CLOSED
+openStatus	OPEN
 ResponseBankingAccountById
 
 {
@@ -5278,14 +5429,14 @@ ResponseBankingAccountById
     "bsb": "string",
     "accountNumber": "string",
     "bundleName": "string",
-    "specificAccountUType": "termDeposit",
+    "specificAccountUType": "creditCard",
     "termDeposit": [
       {
         "lodgementDate": "string",
         "maturityDate": "string",
         "maturityAmount": "string",
         "maturityCurrency": "string",
-        "maturityInstructions": "ROLLED_OVER"
+        "maturityInstructions": "HOLD_ON_MATURITY"
       }
     ],
     "creditCard": {
@@ -5324,7 +5475,7 @@ ResponseBankingAccountById
         "tiers": [
           {
             "name": "string",
-            "unitOfMeasure": "DOLLAR",
+            "unitOfMeasure": "DAY",
             "minimumValue": 0,
             "maximumValue": 0,
             "rateApplicationMethod": "PER_TIER",
@@ -5350,11 +5501,11 @@ ResponseBankingAccountById
         "applicationFrequency": "string",
         "interestPaymentDue": "IN_ADVANCE",
         "repaymentType": "INTEREST_ONLY",
-        "loanPurpose": "OWNER_OCCUPIED",
+        "loanPurpose": "INVESTMENT",
         "tiers": [
           {
             "name": "string",
-            "unitOfMeasure": "DOLLAR",
+            "unitOfMeasure": "DAY",
             "minimumValue": 0,
             "maximumValue": 0,
             "rateApplicationMethod": "PER_TIER",
@@ -5419,7 +5570,7 @@ ResponseBankingAccountById
     ],
     "addresses": [
       {
-        "addressUType": "simple",
+        "addressUType": "paf",
         "simple": {
           "mailingName": "string",
           "addressLine1": "string",
@@ -5483,14 +5634,14 @@ BankingAccountDetail
   "bsb": "string",
   "accountNumber": "string",
   "bundleName": "string",
-  "specificAccountUType": "termDeposit",
+  "specificAccountUType": "creditCard",
   "termDeposit": [
     {
       "lodgementDate": "string",
       "maturityDate": "string",
       "maturityAmount": "string",
       "maturityCurrency": "string",
-      "maturityInstructions": "ROLLED_OVER"
+      "maturityInstructions": "HOLD_ON_MATURITY"
     }
   ],
   "creditCard": {
@@ -5529,7 +5680,7 @@ BankingAccountDetail
       "tiers": [
         {
           "name": "string",
-          "unitOfMeasure": "DOLLAR",
+          "unitOfMeasure": "DAY",
           "minimumValue": 0,
           "maximumValue": 0,
           "rateApplicationMethod": "PER_TIER",
@@ -5555,11 +5706,11 @@ BankingAccountDetail
       "applicationFrequency": "string",
       "interestPaymentDue": "IN_ADVANCE",
       "repaymentType": "INTEREST_ONLY",
-      "loanPurpose": "OWNER_OCCUPIED",
+      "loanPurpose": "INVESTMENT",
       "tiers": [
         {
           "name": "string",
-          "unitOfMeasure": "DOLLAR",
+          "unitOfMeasure": "DAY",
           "minimumValue": 0,
           "maximumValue": 0,
           "rateApplicationMethod": "PER_TIER",
@@ -5624,7 +5775,7 @@ BankingAccountDetail
   ],
   "addresses": [
     {
-      "addressUType": "simple",
+      "addressUType": "paf",
       "simple": {
         "mailingName": "string",
         "addressLine1": "string",
@@ -5700,9 +5851,9 @@ Name	Type	Required	Restrictions	Description
 »» addresses	[CommonPhysicalAddress]	optional	none	The addresses for the account to be used for correspondence
 Enumerated Values
 Property	Value
-specificAccountUType	termDeposit
 specificAccountUType	creditCard
 specificAccountUType	loan
+specificAccountUType	termDeposit
 BankingTermDepositAccount
 
 {
@@ -5710,7 +5861,7 @@ BankingTermDepositAccount
   "maturityDate": "string",
   "maturityAmount": "string",
   "maturityCurrency": "string",
-  "maturityInstructions": "ROLLED_OVER"
+  "maturityInstructions": "HOLD_ON_MATURITY"
 }
 
 Properties
@@ -5722,9 +5873,9 @@ maturityCurrency	CurrencyString	optional	none	If absent assumes AUD
 maturityInstructions	string	mandatory	none	Current instructions on action to be taken at maturity. This includes default actions that may be specified in the terms and conditions for the product e.g. roll-over to the same term and frequency of interest payments
 Enumerated Values
 Property	Value
-maturityInstructions	ROLLED_OVER
-maturityInstructions	PAID_OUT_AT_MATURITY
 maturityInstructions	HOLD_ON_MATURITY
+maturityInstructions	PAID_OUT_AT_MATURITY
+maturityInstructions	ROLLED_OVER
 BankingCreditCardAccount
 
 {
@@ -5870,7 +6021,8 @@ merchantName	string	optional	none	Name of the merchant for an outgoing payment t
 merchantCategoryCode	string	optional	none	The merchant category code (or MCC) for an outgoing payment to a merchant
 billerCode	string	optional	none	BPAY Biller Code for the transaction (if available)
 billerName	string	optional	none	Name of the BPAY biller for the transaction (if available)
-crn	string	optional	none	BPAY CRN for the transaction (if available)
+crn	string	conditional	none	BPAY CRN for the transaction (if available).
+Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
 apcaNumber	string	optional	none	6 Digit APCA number for the initiating institution. The field is fixed-width and padded with leading zeros if applicable.
 Enumerated Values
 Property	Value
@@ -5878,10 +6030,10 @@ type	DIRECT_DEBIT
 type	FEE
 type	INTEREST_CHARGED
 type	INTEREST_PAID
-type	PAYMENT
-type	TRANSFER_OUTGOING
-type	TRANSFER_INCOMING
 type	OTHER
+type	PAYMENT
+type	TRANSFER_INCOMING
+type	TRANSFER_OUTGOING
 status	PENDING
 status	POSTED
 ResponseBankingTransactionById
@@ -6132,7 +6284,7 @@ ResponseBankingPayeeById
     "description": "string",
     "type": "BILLER",
     "creationDate": "string",
-    "payeeUType": "domestic",
+    "payeeUType": "biller",
     "domestic": {
       "payeeAccountUType": "account",
       "account": {
@@ -6217,7 +6369,7 @@ BankingPayeeDetail
   "description": "string",
   "type": "BILLER",
   "creationDate": "string",
-  "payeeUType": "domestic",
+  "payeeUType": "biller",
   "domestic": {
     "payeeAccountUType": "account",
     "account": {
@@ -6277,8 +6429,8 @@ anonymous	object	mandatory	none	none
 » international	BankingInternationalPayee	conditional	none	none
 Enumerated Values
 Property	Value
-payeeUType	domestic
 payeeUType	biller
+payeeUType	domestic
 payeeUType	international
 BankingDomesticPayee
 
@@ -6362,7 +6514,8 @@ BankingBillerPayee
 Properties
 Name	Type	Required	Restrictions	Description
 billerCode	string	mandatory	none	BPAY Biller Code of the Biller
-crn	string	conditional	none	BPAY CRN of the Biller. If the contents of the CRN match the format of a Credit Card PAN then it should be masked using the rules applicable for the MaskedPANString common type
+crn	string	conditional	none	BPAY CRN of the Biller (if available).
+Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
 billerName	string	mandatory	none	Name of the Biller
 BankingInternationalPayee
 
@@ -6502,6 +6655,8 @@ ResponseBankingScheduledPaymentsList
               "toUType": "accountId",
               "accountId": "string",
               "payeeId": "string",
+              "nickname": "string",
+              "payeeReference": "string",
               "domestic": {
                 "payeeAccountUType": "account",
                 "account": {
@@ -6552,13 +6707,13 @@ ResponseBankingScheduledPaymentsList
         ],
         "recurrence": {
           "nextPaymentDate": "string",
-          "recurrenceUType": "onceOff",
+          "recurrenceUType": "eventBased",
           "onceOff": {
             "paymentDate": "string"
           },
           "intervalSchedule": {
             "finalPaymentDate": "string",
-            "paymentsRemaining": 0,
+            "paymentsRemaining": 1,
             "nonBusinessDayTreatment": "ON",
             "intervals": [
               {
@@ -6569,9 +6724,9 @@ ResponseBankingScheduledPaymentsList
           },
           "lastWeekDay": {
             "finalPaymentDate": "string",
-            "paymentsRemaining": 0,
+            "paymentsRemaining": 1,
             "interval": "string",
-            "lastWeekDay": "MON",
+            "lastWeekDay": "FRI",
             "nonBusinessDayTreatment": "ON"
           },
           "eventBased": {
@@ -6617,6 +6772,8 @@ BankingScheduledPayment
         "toUType": "accountId",
         "accountId": "string",
         "payeeId": "string",
+        "nickname": "string",
+        "payeeReference": "string",
         "domestic": {
           "payeeAccountUType": "account",
           "account": {
@@ -6667,13 +6824,13 @@ BankingScheduledPayment
   ],
   "recurrence": {
     "nextPaymentDate": "string",
-    "recurrenceUType": "onceOff",
+    "recurrenceUType": "eventBased",
     "onceOff": {
       "paymentDate": "string"
     },
     "intervalSchedule": {
       "finalPaymentDate": "string",
-      "paymentsRemaining": 0,
+      "paymentsRemaining": 1,
       "nonBusinessDayTreatment": "ON",
       "intervals": [
         {
@@ -6684,9 +6841,9 @@ BankingScheduledPayment
     },
     "lastWeekDay": {
       "finalPaymentDate": "string",
-      "paymentsRemaining": 0,
+      "paymentsRemaining": 1,
       "interval": "string",
-      "lastWeekDay": "MON",
+      "lastWeekDay": "FRI",
       "nonBusinessDayTreatment": "ON"
     },
     "eventBased": {
@@ -6698,9 +6855,9 @@ BankingScheduledPayment
 Properties
 Name	Type	Required	Restrictions	Description
 scheduledPaymentId	ASCIIString	mandatory	none	A unique ID of the scheduled payment adhering to the standards for ID permanence
-nickname	string	optional	none	The short display name of the payee as provided by the customer
+nickname	string	optional	none	The short display name of the scheduled payment as provided by the customer if provided. Where a customer has not provided a nickname, a display name derived by the bank for the scheduled payment should be provided that is consistent with existing digital banking channels
 payerReference	string	mandatory	none	The reference for the transaction that will be used by the originating institution for the purposes of constructing a statement narrative on the payer’s account. Empty string if no data provided
-payeeReference	string	mandatory	none	The reference for the transaction that will be provided by the originating institution. Empty string if no data provided
+payeeReference	string	conditional	none	The reference for the transaction, if applicable, that will be provided by the originating institution for all payments in the payment set. Empty string if no data provided
 status	string	mandatory	none	Indicates whether the schedule is currently active. The value SKIP is equivalent to ACTIVE except that the customer has requested the next normal occurrence to be skipped.
 from	BankingScheduledPaymentFrom	mandatory	none	Object containing details of the source of the payment. Currently only specifies an account ID but provided as an object to facilitate future extensibility and consistency with the to object
 paymentSet	[BankingScheduledPaymentSet]	mandatory	none	[The set of payment amounts and destination accounts for this payment accommodating multi-part payments. A single entry indicates a simple payment with one destination account. Must have at least one entry]
@@ -6717,6 +6874,8 @@ BankingScheduledPaymentSet
     "toUType": "accountId",
     "accountId": "string",
     "payeeId": "string",
+    "nickname": "string",
+    "payeeReference": "string",
     "domestic": {
       "payeeAccountUType": "account",
       "account": {
@@ -6779,6 +6938,8 @@ BankingScheduledPaymentTo
   "toUType": "accountId",
   "accountId": "string",
   "payeeId": "string",
+  "nickname": "string",
+  "payeeReference": "string",
   "domestic": {
     "payeeAccountUType": "account",
     "account": {
@@ -6830,16 +6991,18 @@ Name	Type	Required	Restrictions	Description
 toUType	string	mandatory	none	The type of object provided that specifies the destination of the funds for the payment.
 accountId	ASCIIString	conditional	none	Present if toUType is set to accountId. Indicates that the payment is to another account that is accessible under the current consent
 payeeId	ASCIIString	conditional	none	Present if toUType is set to payeeId. Indicates that the payment is to registered payee that can be accessed using the payee end point. If the Bank Payees scope has not been consented to then a payeeId should not be provided and the full payee details should be provided instead
+nickname	string	conditional	none	The short display name of the payee as provided by the customer unless toUType is set to payeeId. Where a customer has not provided a nickname, a display name derived by the bank for payee should be provided that is consistent with existing digital banking channels
+payeeReference	string	conditional	none	The reference for the transaction, if applicable, that will be provided by the originating institution for the specific payment. If not empty, it overrides the value provided at the BankingScheduledPayment level.
 domestic	BankingDomesticPayee	conditional	none	none
 biller	BankingBillerPayee	conditional	none	none
 international	BankingInternationalPayee	conditional	none	none
 Enumerated Values
 Property	Value
 toUType	accountId
-toUType	payeeId
-toUType	domestic
 toUType	biller
+toUType	domestic
 toUType	international
+toUType	payeeId
 BankingScheduledPaymentFrom
 
 {
@@ -6855,13 +7018,13 @@ BankingScheduledPaymentRecurrence
 
 {
   "nextPaymentDate": "string",
-  "recurrenceUType": "onceOff",
+  "recurrenceUType": "eventBased",
   "onceOff": {
     "paymentDate": "string"
   },
   "intervalSchedule": {
     "finalPaymentDate": "string",
-    "paymentsRemaining": 0,
+    "paymentsRemaining": 1,
     "nonBusinessDayTreatment": "ON",
     "intervals": [
       {
@@ -6872,9 +7035,9 @@ BankingScheduledPaymentRecurrence
   },
   "lastWeekDay": {
     "finalPaymentDate": "string",
-    "paymentsRemaining": 0,
+    "paymentsRemaining": 1,
     "interval": "string",
-    "lastWeekDay": "MON",
+    "lastWeekDay": "FRI",
     "nonBusinessDayTreatment": "ON"
   },
   "eventBased": {
@@ -6894,10 +7057,10 @@ lastWeekDay	BankingScheduledPaymentRecurrenceLastWeekday	conditional	none	Indica
 eventBased	BankingScheduledPaymentRecurrenceEventBased	conditional	none	Indicates that the schedule of payments is defined according to an external event that cannot be predetermined. Mandatory if recurrenceUType is set to eventBased
 Enumerated Values
 Property	Value
-recurrenceUType	onceOff
+recurrenceUType	eventBased
 recurrenceUType	intervalSchedule
 recurrenceUType	lastWeekDay
-recurrenceUType	eventBased
+recurrenceUType	onceOff
 BankingScheduledPaymentRecurrenceOnceOff
 
 {
@@ -6913,7 +7076,7 @@ BankingScheduledPaymentRecurrenceIntervalSchedule
 
 {
   "finalPaymentDate": "string",
-  "paymentsRemaining": 0,
+  "paymentsRemaining": 1,
   "nonBusinessDayTreatment": "ON",
   "intervals": [
     {
@@ -6956,9 +7119,9 @@ BankingScheduledPaymentRecurrenceLastWeekday
 
 {
   "finalPaymentDate": "string",
-  "paymentsRemaining": 0,
+  "paymentsRemaining": 1,
   "interval": "string",
-  "lastWeekDay": "MON",
+  "lastWeekDay": "FRI",
   "nonBusinessDayTreatment": "ON"
 }
 
@@ -6977,13 +7140,13 @@ ON - If a scheduled payment date is a non-business day the payment will be made 
 ONLY - Payments only occur on business days. If a scheduled payment date is a non-business day the payment will be ignored
 Enumerated Values
 Property	Value
-lastWeekDay	MON
-lastWeekDay	TUE
-lastWeekDay	WED
-lastWeekDay	THU
 lastWeekDay	FRI
+lastWeekDay	MON
 lastWeekDay	SAT
 lastWeekDay	SUN
+lastWeekDay	THU
+lastWeekDay	TUE
+lastWeekDay	WED
 nonBusinessDayTreatment	AFTER
 nonBusinessDayTreatment	BEFORE
 nonBusinessDayTreatment	ON
@@ -7075,7 +7238,7 @@ ResponseCommonCustomer
 
 {
   "data": {
-    "customerUType": "person",
+    "customerUType": "organisation",
     "person": {
       "lastUpdateTime": "string",
       "firstName": "string",
@@ -7122,13 +7285,13 @@ links	Links	mandatory	none	none
 meta	Meta	optional	none	none
 Enumerated Values
 Property	Value
-customerUType	person
 customerUType	organisation
+customerUType	person
 ResponseCommonCustomerDetail
 
 {
   "data": {
-    "customerUType": "person",
+    "customerUType": "organisation",
     "person": {
       "lastUpdateTime": "string",
       "firstName": "string",
@@ -7143,7 +7306,7 @@ ResponseCommonCustomerDetail
       "phoneNumbers": [
         {
           "isPreferred": true,
-          "purpose": "MOBILE",
+          "purpose": "HOME",
           "countryCode": "string",
           "areaCode": "string",
           "number": "string",
@@ -7154,13 +7317,13 @@ ResponseCommonCustomerDetail
       "emailAddresses": [
         {
           "isPreferred": true,
-          "purpose": "WORK",
+          "purpose": "HOME",
           "address": "string"
         }
       ],
       "physicalAddresses": [
         {
-          "addressUType": "simple",
+          "addressUType": "paf",
           "simple": {
             "mailingName": "string",
             "addressLine1": "string",
@@ -7217,7 +7380,7 @@ ResponseCommonCustomerDetail
       "establishmentDate": "string",
       "physicalAddresses": [
         {
-          "addressUType": "simple",
+          "addressUType": "paf",
           "simple": {
             "mailingName": "string",
             "addressLine1": "string",
@@ -7273,8 +7436,8 @@ links	Links	mandatory	none	none
 meta	Meta	optional	none	none
 Enumerated Values
 Property	Value
-customerUType	person
 customerUType	organisation
+customerUType	person
 CommonPerson
 
 {
@@ -7302,10 +7465,10 @@ occupationCode	ExternalRef	optional	none	Value is a valid ANZSCO Standard Occupa
 occupationCodeVersion	string	conditional	none	The applicable ANZSCO release version of the occupation code provided. Mandatory if an occupationCode is supplied. If occupationCode is supplied but occupationCodeVersion is absent, default is ANZSCO_1220.0_2013_V1.2
 Enumerated Values
 Property	Value
-occupationCodeVersion	ANZSCO_1220.0_2013_V1.3
-occupationCodeVersion	ANZSCO_1220.0_2013_V1.2
-occupationCodeVersion	ANZSCO_1220.0_2006_V1.1
 occupationCodeVersion	ANZSCO_1220.0_2006_V1.0
+occupationCodeVersion	ANZSCO_1220.0_2006_V1.1
+occupationCodeVersion	ANZSCO_1220.0_2013_V1.2
+occupationCodeVersion	ANZSCO_1220.0_2013_V1.3
 CommonPersonDetail
 
 {
@@ -7322,7 +7485,7 @@ CommonPersonDetail
   "phoneNumbers": [
     {
       "isPreferred": true,
-      "purpose": "MOBILE",
+      "purpose": "HOME",
       "countryCode": "string",
       "areaCode": "string",
       "number": "string",
@@ -7333,13 +7496,13 @@ CommonPersonDetail
   "emailAddresses": [
     {
       "isPreferred": true,
-      "purpose": "WORK",
+      "purpose": "HOME",
       "address": "string"
     }
   ],
   "physicalAddresses": [
     {
-      "addressUType": "simple",
+      "addressUType": "paf",
       "simple": {
         "mailingName": "string",
         "addressLine1": "string",
@@ -7430,14 +7593,14 @@ registeredCountry	ExternalRef	optional	none	Enumeration with values from ISO 316
 establishmentDate	DateString	optional	none	The date the organisation described was established
 Enumerated Values
 Property	Value
-industryCodeVersion	ANZSIC_1292.0_2006_V2.0
 industryCodeVersion	ANZSIC_1292.0_2006_V1.0
+industryCodeVersion	ANZSIC_1292.0_2006_V2.0
 organisationType	COMPANY
 organisationType	GOVERNMENT_ENTITY
+organisationType	OTHER
 organisationType	PARTNERSHIP
 organisationType	SOLE_TRADER
 organisationType	TRUST
-organisationType	OTHER
 CommonOrganisationDetail
 
 {
@@ -7458,7 +7621,7 @@ CommonOrganisationDetail
   "establishmentDate": "string",
   "physicalAddresses": [
     {
-      "addressUType": "simple",
+      "addressUType": "paf",
       "simple": {
         "mailingName": "string",
         "addressLine1": "string",
@@ -7512,7 +7675,7 @@ CommonPhoneNumber
 
 {
   "isPreferred": true,
-  "purpose": "MOBILE",
+  "purpose": "HOME",
   "countryCode": "string",
   "areaCode": "string",
   "number": "string",
@@ -7531,17 +7694,17 @@ extension	string	optional	none	An extension number (if applicable)
 fullNumber	ExternalRef	mandatory	none	Fully formatted phone number with country code, area code, number and extension incorporated. Formatted according to section 5.1.4. of RFC 3966
 Enumerated Values
 Property	Value
-purpose	MOBILE
 purpose	HOME
 purpose	INTERNATIONAL
-purpose	WORK
+purpose	MOBILE
 purpose	OTHER
 purpose	UNSPECIFIED
+purpose	WORK
 CommonEmailAddress
 
 {
   "isPreferred": true,
-  "purpose": "WORK",
+  "purpose": "HOME",
   "address": "string"
 }
 
@@ -7552,14 +7715,14 @@ purpose	string	mandatory	none	The purpose for the email, as specified by the cus
 address	ExternalRef	mandatory	none	A correctly formatted email address, as defined by the addr_spec format in RFC 5322
 Enumerated Values
 Property	Value
-purpose	WORK
 purpose	HOME
 purpose	OTHER
 purpose	UNSPECIFIED
+purpose	WORK
 CommonPhysicalAddressWithPurpose
 
 {
-  "addressUType": "simple",
+  "addressUType": "paf",
   "simple": {
     "mailingName": "string",
     "addressLine1": "string",
@@ -7610,14 +7773,14 @@ anonymous	object	mandatory	none	none
 Enumerated Values
 Property	Value
 purpose	MAIL
+purpose	OTHER
 purpose	PHYSICAL
 purpose	REGISTERED
 purpose	WORK
-purpose	OTHER
 CommonPhysicalAddress
 
 {
-  "addressUType": "simple",
+  "addressUType": "paf",
   "simple": {
     "mailingName": "string",
     "addressLine1": "string",
@@ -7661,8 +7824,8 @@ simple	CommonSimpleAddress	conditional	none	none
 paf	CommonPAFAddress	conditional	none	Australian address formatted according to the file format defined by the PAF file format
 Enumerated Values
 Property	Value
-addressUType	simple
 addressUType	paf
+addressUType	simple
 CommonSimpleAddress
 
 {
@@ -7824,8 +7987,8 @@ anonymous	REGULATED_TRUST_ACCOUNTS
 anonymous	RESIDENTIAL_MORTGAGES
 anonymous	TERM_DEPOSITS
 anonymous	TRADE_FINANCE
-anonymous	TRAVEL_CARDS
 anonymous	TRANS_AND_SAVINGS_ACCOUNTS
+anonymous	TRAVEL_CARDS
 Product Categories
 The Product Category enumeration lists the available product categories for categorising products and accounts. These are explained in the following tables:
 
@@ -7862,29 +8025,29 @@ COMPLEMENTARY_PRODUCT_DISCOUNTS	Indicates that complementary, discounted offerin
 DIGITAL_BANKING	Access is available to online banking features for the product	NA
 DIGITAL_WALLET	A Digital wallet can be attached to the product	The name or brand of the wallet
 DONATE_INTEREST	Indicates that interest generated from the product can be automatically donated to a charity or community group	NA
-FREE_TXNS_ALLOWANCE	A set amount of transaction fee value that is discounted per month	The amount of transaction fee discounted (in AUD)
 FREE_TXNS	A set number of free transactions available per month	The number of free transactions
+FREE_TXNS_ALLOWANCE	A set amount of transaction fee value that is discounted per month	The amount of transaction fee discounted (in AUD)
 INSURANCE	Insurance is provided as an additional feature of the product	Text description of the type of insurance (e.g. Travel Insurance)
-INTEREST_FREE_TRANSFERS	Interest free period for balance transfers	Interest free period. Formatted according to ISO 8601 Durations
 INTEREST_FREE	Interest free period for purchases	Interest free period. Formatted according to ISO 8601 Durations
+INTEREST_FREE_TRANSFERS	Interest free period for balance transfers	Interest free period. Formatted according to ISO 8601 Durations
 LOYALTY_PROGRAM	A points based loyalty program is available	Name of the loyalty program
 NOTIFICATIONS	Advanced notifications are available for the product	Description of the notification capability
 NPP_ENABLED	An account of this product type can be used to receive funds as a result of a BSB/Number based NPP payment	NA
 NPP_PAYID	An account of this product type can be used as the target of an NPP PayID	NA
 OFFSET	An offset account can be connected to the product	NA
+OTHER	Another feature that can not be included in any of the other categories. The additionalInfo field is mandatory for this type	NA
 OVERDRAFT	An overdraft can be applied for	NA
 REDRAW	Redraw of repaid principal above minimum required is available	NA
 UNLIMITED_TXNS	Unlimited free transactions available	NA
-OTHER	Another feature that can not be included in any of the other categories. The additionalInfo field is mandatory for this type	NA
 
 Product Constraint Types
 Description of the usage of the constraintType field as it applies to products.
 
 Value	Description	Use of additionalValue Field
-MIN_BALANCE	A minimum balance is required for the product	The minimum balance in AmountString format
-MIN_LIMIT	A minimum limit exists (such as a minimum loan balance denoting the borrowable amount or minimum credit limit)	The minimum limit in AmountString format
 MAX_BALANCE	A maximum balance is required for the product	The maximum balance in AmountString format
 MAX_LIMIT	A maximum limit exists (such as a maximum loan balance denoting the borrowable amount or maximum allowable credit limit)	The maximum limit in AmountString format
+MIN_BALANCE	A minimum balance is required for the product	The minimum balance in AmountString format
+MIN_LIMIT	A minimum limit exists (such as a minimum loan balance denoting the borrowable amount or minimum credit limit)	The minimum limit in AmountString format
 OPENING_BALANCE	An opening balance is required for the product	The minimum opening balance in AmountString format
 
 Product Eligibility Types
@@ -7898,11 +8061,11 @@ MIN_AGE	Only customers older than a minimum age may apply	The minimum age in yea
 MIN_INCOME	The customer must have an income greater than a specified threshold to obtain the product	Minimum income in AmountString format
 MIN_TURNOVER	Only a business with greater than a minimum turnover may apply	Minimum turnover in AmountString format
 NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
+OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
 PENSION_RECIPIENT	A recipient of a government pension may apply for the product	NA
 RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
 STAFF	Only a staff member of the provider may apply	NA
 STUDENT	Only students may apply for the product	NA
-OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
 
 Product Fee Types
 Description of the usage of the feeType field as it applies to products.
@@ -7941,11 +8104,11 @@ MIN_AGE	Only customers older than a minimum age receive the discount	The minimum
 MIN_INCOME	The customer must have an income greater than a specified threshold to obtain the discount	Minimum income in AmountString format
 MIN_TURNOVER	Only a business with greater than a minimum turnover is eligible	Minimum turnover in AmountString format
 NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
+OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
 PENSION_RECIPIENT	A recipient of a government pension may receive the discount	Optional. Should contain a description of which pensions qualify
 RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
 STAFF	Only a staff member of the provider may receive the discount	NA
 STUDENT	Only students may receive the discount	Optional. Should contain a description of who qualifies as a student, e.g. do apprentices qualify?
-OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
 
 Product Deposit Rate Types
 Description of the usage of the depositRateType field as it applies to products.
@@ -7980,14 +8143,6 @@ Description of the usage of the maturityInstructions field as it applies to acco
 
 Value	Description	Use of additionalValue Field
 HOLD_ON_MATURITY	Funds are held in a facility or similar mechanism managed by the data holder for a period of time until the customer provides instructions or the maximum period of the hold has elapsed. Funds may be renewed or withdrawn upon instructions by the customer	NA
-
-Banking CRN Types
-Description of the usage of the crn types.
-
-Value	Description	Use of additionalValue Field
-FIXED_CRN	A unique reference number such as a credit card or a fixed reference number identifying a customer's account that does not change with each bill	NA
-VARIABLE_CRN	Biller generated reference number provided to the customer that is unique to each bill	NA
-INTELLIGENT_CRN	Biller generated reference number provided to the customer that is unique to each bill which fixes the amount of the bill being paid, expiry date or both	NA
 Admin APIs
 This provides an overview of CDS Administration Endpoints. Please note this API is intended for Data Holders/ Recipients only.
 
@@ -8833,6 +8988,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+10/03/2021	1.7.0	Changes arising from the fifth Banking Maintenance Iteration	See release notes and Decision 159 for details
 23/12/2020	1.6.0	DP325 to address urgent community request regarding audience claim for client authentication for data recipients calling data holders	See release notes for details
 25/9/2020	1.5.1	Revert 1.5.0 CRN update	See release notes for details
 16/9/2020	1.5.0	Second Banking Maintenance Iteration 4 Release	See release notes for details
@@ -8922,6 +9078,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+23/12/2020	1.6.0	Update to audience claim for client authentication arising from Decision Proposal 325
 25/9/2020	1.5.1	Revert 1.5.0 CRN update
 16/9/2020	1.5.0	Banking Maintenance Iteration 4 Release
 12/8/2020	1.4.0	Banking Maintenance Iteration 3 Release
