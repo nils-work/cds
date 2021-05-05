@@ -49,7 +49,7 @@ Get Product Detail V2	Version 2 of this end point must be made available by affe
 Get Product Detail V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
 Concurrent Consent	The target state concurrent consent solution covers various components of the Information Security profile is being phased in with alignment to the November 2020 implementation milestone set by the ACCC. If this milestone moves then this obligation will also move.	November 2020
 Standards
-These standards represent version 1.3.1 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.4.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
 
@@ -189,8 +189,9 @@ Supported HTTP headers, and their usage, for the standards are as laid out in th
 
 Request Headers
 A sample set of headers requesting version 3 to 5:
-Content-Type : application/json
-Accept : application/json
+
+Content-Type : application/json;charset=UTF-8
+Accept : application/json;charset=UTF-8
 x-v : 5
 x-min-v : 3
 x-fapi-interaction-id : 6ba7b814-9dad-11d1-80b4-00c04fd430c8
@@ -198,11 +199,23 @@ x-fapi-auth_date : 2020-01-16 16:50:15.507399
 x-fapi-customer-ip-address : 2001:0db8:85a3:0000:0000:8a2e:0370:7334
 x-cds-client-headers : TW96aWxsYS81LjAgKFgxMTsgTGludXggeDg2XzY0KSBBcHBsZVdlYktpdC81MzcuMzYgKEtIVE1MLCBsaWtlIEdlY2tvKSBDaHJvbWUvNzkuMC4zOTQ1Ljg4IFNhZmFyaS81MzcuMzY=
 
+A Data Holder must be able to process Content-Type headers in accordance with [RFC7231]. The following would be valid:
+
+Content-Type: application/json;charset=UTF-8
+Content-Type: application/json
+Content-Type: AppliCAtion/JSon;Charset=uTf-8
+
+A Data Holder must be able to process Accept headers in accordance with [RFC7231]. The following would be valid:
+
+Accept: */*
+Accept: application/json;charset=UTF-8
+Accept: application/json
+Accept-Encoding: charset=UTF-8
+Accept: AppliCAtion/JSon;Charset=uTf-8
+
 Header Field	Description	Mandatory?
-Content-Type	Standard HTTP Header. Represents the format of the payload provided in the request. Must be set to application/json. Mandatory for PUT and POST calls.	Conditional
-Accept	Standard HTTP Header. Specify the Content-Type that is required from the Server.
-If specified, must be set to application/json unless otherwise specified in the resource end point standard.
-If set to an unacceptable value the holder must respond with a 406 Not Acceptable. If not specified, default is application/json.	Optional
+Content-Type	Standard HTTP Header. Represents the format of the payload provided in the request. The media type must be set to application/json. Mandatory for PUT and POST calls.	Conditional
+Accept	If specified, the media type must be set to application/json, unless otherwise specified in the resource end point standard. \n\n If set to an unacceptable value the holder must respond with a 406 Not Acceptable. If not specified, or a wildcard (/) is provided, the default media type is application/json.	Optional
 x-v	Version of the API end point requested by the client. Must be set to a positive integer. The holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent.
 If all versions requested are not supported then the holder must respond with a 406 Not Acceptable.	Mandatory
 x-min-v	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent.
@@ -254,7 +267,7 @@ A sample request would be structured as follows:
 {
   “data”: {
     ...
-  }
+  },
   “meta”: {
     ...
   }
@@ -271,10 +284,10 @@ A sample successful response:
 {
   “data”: {
     ...
-  }
+  },
   “links”: {
     “self”: “...”
-  }
+  },
   “meta”: {
     ...
   }
@@ -525,7 +538,7 @@ Data holder offering entirely new API categories that are not covered by the API
 Data holder offering additional end points to an API category that is already covered by the standards
 Data holder offering additional fields to the response payloads for an end point defined in the standards
 Holder Identifier
-For example, the prefixes for the four major Banks required to implement by 1st July 2019 would be:
+For example, the prefixes for the four major Banks included in the first phases of implementation would be:
 
 CBA – Commonwealth Bank
 WBC – Westpac Banking Corporation
@@ -707,7 +720,6 @@ Non-Normative Example - CDR Register calls the Data holder's Get Metrics end poi
 
 GET https://admin.data.holder.com.au/cds-au/v1/admin/metrics HTTP:/1.1
 Host: admin.data.holder.com.au
-Accept: application/json
 x-v: string
 x-min-v: string
 Authorization: Bearer eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey ...
@@ -809,7 +821,7 @@ The [JWT] represents an assertion that MUST include the following claims:
 
 iss: The client ID of the bearer.
 sub: The client ID of the bearer.
-aud: The URL of the end point being invoked.
+aud: The Token Endpoint URL.
 exp: A JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC expiry time.
 jti: A unique identifier generated by the client for this authentication.
 The following claims MAY be included:
@@ -980,29 +992,19 @@ Content-Type: application/x-www-form-urlencoded
 client_id=s6BhdRkqt3
 &client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
 &client_assertion=eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey ...
-&grant_type=refresh_token
-&refresh_token=8xLOxBtZp8
-&scope=openid
+&token=tGzv3JOkF0XG5Qx2TlKWIA
+&token_type_hint=refresh_token
 Response
 
 {
-  "iss": "https://data.holder.com.au",
-  "sub": "a9ebbef6-1f0b-44eb-96cf-0c5b51b37ab2",
-  "aud": "12345",
-  "nonce": "n-0S6_WzA2Mj",
+  "active": true,
   "exp": 1311281970,
-  "iat": 1311280970,
-  "nbf": 1311280970,
-  "auth_time": 1311280969,
-  "acr": "urn:cds.au:cdr:3",
-  "refresh_token_expires_at": 1311281970,
-  "sharing_expires_at": 1311281970,
   "cdr_arrangement_id": "02e7c9d9-cfe7-4c3e-8f64-e91173c84ecb"
 }
 Statements related to the CDR Arrangement ID:
 
 The CDR Arrangement ID is a string representing a unique sharing arrangement between a data recipient and data holder for a given consumer
-The CDR Arrangement ID is represented as a claim "cdr_arrangement_id" in the ID Token
+The CDR Arrangement ID is represented as a claim "cdr_arrangement_id" returned in the Token endpoint and Token Introspection endpoint response JSON
 The CDR Arrangement ID MUST be unique to a Data Holder
 The CDR Arrangement ID MUST be non-guessable and must not identify a consumer
 A CDR Arrangement ID MUST be bound to only one active consent at a time but may have no active consent
@@ -1079,21 +1081,19 @@ Non-Normative Example - acr as an Essential Claim
 #Decoded Request Object JWT
 
 {
-  "alg": "PS256",
-  "typ": "JWT",
-  "kid": "123"
-}
-{
+  "iss": "s6BhdRkqt3",
+  "exp": 1516239322,
   "aud": "https://www.recipient.com.au",
   "response_type": "code id_token",
-  "client_id": "12345",
+  "client_id": "s6BhdRkqt3",
   "redirect_uri": "https://www.recipient.com.au/coolstuff",
-  "scope": "openid profile",
-  "state": "af0ifjsldkj",
+  "scope": "openid profile bank:accounts.basic:read
+            bank:accounts.detail:read",
   "nonce": "n-0S6_WzA2Mj",
-  "exp": 1311281970,
+  "state": "af0ifjsldkj",
   "claims": {
     "sharing_duration": 7776000,
+    "cdr_arrangement_id": "02e7c9d9-cfe7-4c3e-8f64-e91173c84ecb",
     "id_token": {
       "acr": {
         "essential": true,
@@ -1126,7 +1126,7 @@ Note that the period of one year in the above statements should be interpreted a
 
 The Data Recipient is able to obtain the expiration of sharing via the sharing_expires_at claim.
 
-Specifying An existing arrangement
+Specifying an existing arrangement
 To allow for an existing consent to be reliably revoked upon the establishment of a new consent intended as a replacement data holders MUST support an additional claim in the authorisation request object named cdr_arrangement_id that the data recipient may optionally include with the value set to the arrangement ID for a previously established sharing arrangement.
 
 The cdr_arrangement_id claim MUST be handled as follows:
@@ -1136,7 +1136,7 @@ From November 2020 data holders MUST revoke all existing tokens related to the a
 Until November 2020 data recipients MUST NOT implement scenarios that support concurrent consent. Only single, extant consent scenarios should be implemented until this date.
 Until November 2020 data recipients MUST actively revoke previously supplied refresh tokens, immediately after receiving the tokens for a newly established consent, using the revocation end point.
 End Points
- NOTE: This section does not yet include any end points that will be defined by the design of the CDR Register. This includes end points related to Data Recipient registration, certificate revocation, Data Recipient discovery or Data Holder discovery.
+ NOTE: This section does not include any end points that will be defined by the design of the CDR Register. End points related to Data Recipient registration, certificate revocation, Data Recipient discovery or Data Holder discovery are documented in the CDR Register technical documentation.
 OpenID Provider Configuration End Point
 Non-Normative Example
 
@@ -1165,7 +1165,7 @@ Content-Type: application/json
   "acr_values_supported": ["urn:cds.au:cdr:2","urn:cds.au:cdr:3"],
   "subject_types_supported": ["pairwise"],
   "id_token_signing_alg_values_supported": ["ES256", "PS256"],
-  "id_token_encryption_alg_values_supported": [ "RSA1_5", "RSA-OAEP",  "RSA-OAEP-256", "dir", "ECDH-ES", "ECDH-ES+A128KW", "ECDH-ES+A192KW", "ECDH-ES+A256KW", "A128KW", "A192KW", "A256KW", "A128GCMKW", "A192GCMKW", "A256GCMKW" ],
+  "id_token_encryption_alg_values_supported": [ "RSA-OAEP", "RSA-OAEP-256", "dir", "ECDH-ES", "ECDH-ES+A128KW", "ECDH-ES+A192KW", "ECDH-ES+A256KW", "A128KW", "A192KW", "A256KW", "A128GCMKW", "A192GCMKW", "A256GCMKW" ],
   "id_token_encryption_enc_values_supported": [ "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512", "A128GCM", "A192GCM", "A256GCM" ],
   "cdr_arrangement_endpoint": "https://data.holder.com.au/arrangements",
   "pushed_authorization_request_endpoint": "https://data.holder.com.au/par",
@@ -1194,7 +1194,7 @@ scopes_supported: This list of supported scopes.
 claims_supported: The list of supported claims.
 acr_values_supported: The supported ACR values.
 jwks_uri: The JSON Web Key Set for the data holder.
-id_token_encryption_alg_values_supported: The list of the supported JWE algorithms for securing the issued ID tokens.
+id_token_encryption_alg_values_supported: The list of the supported JWE algorithms for securing the issued ID tokens. Must conform to FAPI-RW and OIDD.
 id_token_encryption_enc_values_supported: The list of the supported JWE encryption methods for securing the issued ID tokens.
 From November 2020, the Data Holder metadata MUST include:
 
@@ -1207,13 +1207,10 @@ Non-Normative Example
 ## Request
 
 GET /authorise?
- response_type=code%20id_token
-   &client_id=12345
-   &redirect_uri=https%3A%2F%2Fwww.recipient.com.au%2Fcoolstuff
-   &scope=openid%20profile
-   &nonce=n-0S6_WzA2Mj
-   &state=af0ifjsldkj HTTP/1.1
-   &request=eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyMyJ9.ey ...
+   response_type=code%20id_token&client_id=12345&
+   scope=openid%20profile%20bank:accounts.basic:read%20bank:accounts.detail:read&
+   request=eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyMyJ9.ey ...
+HTTP/1.1
 Host: www.holder.com.au
 
 ## Decoded request JWT
@@ -1224,11 +1221,12 @@ Host: www.holder.com.au
 }
 {
   "iss": "12345",
+  "exp": 1516239322,
   "aud": "https://www.recipient.com.au",
   "response_type": "code id_token",
   "client_id": "12345",
   "redirect_uri": "https://www.recipient.com.au/coolstuff",
-  "scope": "openid",
+  "scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read",
   "state": "af0ifjsldkj",
   "nonce": "n-0S6_WzA2Mj",
   "claims": {
@@ -1239,6 +1237,7 @@ Host: www.holder.com.au
     },
     "id_token": {
       "acr": {
+        "essential": true,
         "values": ["urn:cds.au:cdr:3"]
       }
     }
@@ -1302,6 +1301,7 @@ An Introspection End Point Response SHALL only include the following fields:
 
 active: Boolean indicator of whether or not the presented token is currently active.
 exp: A JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC expiry time.
+cdr_arrangement_id: A unique identifier of the CDR arrangement related to the authorisation.
 Revocation End Point
 Description	Value
 Hosted By	Data Holder and Data Recipient (Data Recipient required until November 2020)
@@ -1346,11 +1346,11 @@ HTTP Method: DELETE
 Data Holder Path: Defined using OIDC Discovery
 Data Recipient Path: /arrangements/{cdr_arrangement_id}
 
-From November 2020, Data Holders and Data Recipients MUST implement an arrangement management end point that can be used to revoke an existing sharing arranagement.
+From November 2020, Data Holders and Data Recipients MUST implement an arrangement management end point that can be used to revoke an existing sharing arrangement.
 
 This end point will be implemented according to the following:
 
-Consent management MUST be managed through the new CDR Arrangement Management API. The CDR Arrangement Management API only supports DELETE for revocation of consent for the scope of concurrent consent.
+Consent management MUST be managed through the new CDR Arrangement Management End PointCDR Arrangement Management API. The CDR Arrangement Management API only supports DELETE for revocation of consent for the scope of concurrent consent.
 Data Recipients and Data Holders MUST revoke consent by calling the CDR Arrangement Management API with a valid CDR Arrangement Identifier
 Data Holders MUST publish their CDR Arrangement Management API using their OpenID Provider Metadata discovery endpoint
 Data Recipients MUST expose their CDR Arrangement Management API under their Recipient Base URI published in their Software Statement Assertion
@@ -1379,17 +1379,30 @@ request=eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyMyJ9.ey...
 Decoded Request
 
 {
-  "iss": "https://data.holder.com.au",
-  "aud": "a7AfcPcsl2",
-  "exp": 1311281970,
-  “client_id”: s6BhdRkqt3,
-  “response_type”: ”code id_token”,
-  “client_id”: 12345,
-  “redirect_uri”: ”https://www.recipient.com.au%2Fcoolstuff”,
-  “scope”: “openid profile bank:accounts.basic:read
-            bank:accounts.detail:read”,
-  “nonce”: “n-0S6_WzA2Mj”,
-  “state”: “af0ifjsldkj”
+  "iss": "s6BhdRkqt3",
+  "exp": 1516239322,
+  "aud": "https://www.recipient.com.au",
+  "response_type": "code id_token",
+  "client_id": "s6BhdRkqt3",
+  "redirect_uri": "https://www.recipient.com.au/coolstuff",
+  "scope": "openid profile bank:accounts.basic:read
+            bank:accounts.detail:read",
+  "nonce": "n-0S6_WzA2Mj",
+  "state": "af0ifjsldkj",
+  "claims": {
+    "sharing_duration": 7776000,
+    "cdr_arrangement_id": "02e7c9d9-cfe7-4c3e-8f64-e91173c84ecb",
+    "id_token": {
+      "acr": {
+        "essential": true,
+        "values": ["urn:cds.au:cdr:3"]
+      }
+    },
+    "userinfo": {
+      "given_name": null,
+      "family_name": null
+    }
+  }
 }
 Response
 
@@ -1400,6 +1413,18 @@ Cache-Control: no-cache, no-store
   "request_uri": "urn:data.holder.com.au:bwc4JK-ESC0w8acc191e-Y1LTC2",
   "expires_in": 3600
 }
+Authorise
+
+## This is used by the ADR in the subsequent authorisation request as follows
+## (note that until PAR is an RFC standard, the mandatory oAuth parameters as
+## per FAPI R/W for confidential clients must be replayed in the request URL):
+
+GET /authorise?client_id=s6BhdRkqt3&
+   response_type=code%20id_token&
+   scope=openid%20profile%20bank:accounts.basic:read%20bank:accounts.detail:read&
+   request_uri=urn%3Adata.holder.com.au%3Abwc4JK-ESC0w8acc191e-Y1LTC2
+HTTP/1.1
+Host: data.holder.com.au
 Description	Value
 Hosted By	Data Holder
 Transport Security	MTLS
@@ -1447,12 +1472,13 @@ Reference	Description	Version
 Informative References
 Reference	Description
 [BCP195]	Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS): https://tools.ietf.org/html/bcp195
+[RFC7231]	Hypertext Transfer Protocol (HTTP/1.1): Semantics and Content: https://tools.ietf.org/html/rfc7231
 [CDR]	Consumer Data Right: https://www.accc.gov.au/focus-areas/consumer-data-right
 [FAPI]	Financial-Grade API - Home Page https://openid.net/wg/fapi/
 [RFC4122]	A Universally Unique Identifier (UUID) URN Namespace: https://tools.ietf.org/html/rfc4122
 [X.1254]	X.1254 - Entity authentication assurance framework: https://www.itu.int/rec/T-REC-X1254-201209-I/en
 Consumer Experience
-The Consumer Experience (CX) standards, containing requirements and guidelines for the creation of conformant implementatations by both Data Recipients and Data Holders, are split into two documents. This first defines mandatory standards and the second includes guidelines for facilitating the implementation of rules and standards that relate to the consumer experience:
+The Consumer Experience (CX) standards, containing requirements and guidelines for the creation of implementatations by both Data Recipients and Data Holders, are split into two documents. This first defines mandatory standards and the second includes guidelines for facilitating the implementation of rules and standards that relate to the consumer experience:
 
 CX Standards
 CX Guidelines
@@ -3460,7 +3486,7 @@ GET /banking/products
 
 Obtain a list of products that are currently openly offered to the market
 
-Note that the results returned by this end point are expected to be ordered according to updated-since
+Note that the results returned by this end point are expected to be ordered in descending order according to lastUpdated.
 
 Conventions
 In the product reference payloads there are a number of recurring conventions that are explained here, in one place.
@@ -3609,7 +3635,7 @@ GET /banking/products/{productId}
 
 Obtain detailed information on a single product offered openly to the market.
 
-NOTE: This version must be implemented by July 2020
+NOTE: This version must be implemented by February 2021
 
 Obsolete versions: v1 v2
 
@@ -4669,7 +4695,7 @@ anonymous	object	mandatory	none	none
 » eligibility	[BankingProductEligibility]	optional	none	Eligibility criteria for the product
 » fees	[BankingProductFee]	optional	none	Fees applicable for the product
 » depositRates	[BankingProductDepositRate]	optional	none	Interest rates available for deposits
-» lendingRates	[BankingProductLendingRate]	optional	none	Interest rates charged against lending balances
+» lendingRates	[BankingProductLendingRateV2]	optional	none	Interest rates charged against lending balances
 BankingProductBundle
 
 {
@@ -4822,10 +4848,10 @@ Properties
 Name	Type	Required	Restrictions	Description
 name	string	mandatory	none	Name of the fee
 feeType	string	mandatory	none	The type of fee
-amount	AmountString	conditional	none	The amount charged for the fee. One of amount, balanceRate, transactionRate and accruedRate is mandatory
-balanceRate	RateString	conditional	none	A fee rate calculated based on a proportion of the balance. One of amount, balanceRate, transactionRate and accruedRate is mandatory
-transactionRate	RateString	conditional	none	A fee rate calculated based on a proportion of a transaction. One of amount, balanceRate, transactionRate and accruedRate is mandatory
-accruedRate	RateString	conditional	none	A fee rate calculated based on a proportion of the calculated interest accrued on the account. One of amount, balanceRate, transactionRate and accruedRate is mandatory
+amount	AmountString	conditional	none	The amount charged for the fee. One of amount, balanceRate, transactionRate and accruedRate is mandatory unless the feeType "VARIABLE" is supplied
+balanceRate	RateString	conditional	none	A fee rate calculated based on a proportion of the balance. One of amount, balanceRate, transactionRate and accruedRate is mandatory unless the feeType "VARIABLE" is supplied.
+transactionRate	RateString	conditional	none	A fee rate calculated based on a proportion of a transaction. One of amount, balanceRate, transactionRate and accruedRate is mandatory unless the feeType "VARIABLE" is supplied
+accruedRate	RateString	conditional	none	A fee rate calculated based on a proportion of the calculated interest accrued on the account. One of amount, balanceRate, transactionRate and accruedRate is mandatory unless the feeType "VARIABLE" is supplied
 accrualFrequency	ExternalRef	optional	none	The indicative frequency with which the fee is calculated on the account. Only applies if balanceRate or accruedRate is also present. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
 currency	CurrencyString	optional	none	The currency the fee will be charged in. Assumes AUD if absent
 additionalValue	string	conditional	none	Generic field containing additional information relevant to the feeType specified. Whether mandatory or not is dependent on the value of feeType
@@ -4843,6 +4869,7 @@ feeType	PURCHASE
 feeType	EVENT
 feeType	UPFRONT
 feeType	EXIT
+feeType	VARIABLE
 BankingProductDiscount
 
 {
@@ -4962,7 +4989,7 @@ depositRateType	VARIABLE
 depositRateType	INTRODUCTORY
 depositRateType	FLOATING
 depositRateType	MARKET_LINKED
-BankingProductLendingRate
+BankingProductLendingRateV2
 
 {
   "lendingRateType": "FIXED",
@@ -5561,7 +5588,7 @@ anonymous	object	mandatory	none	none
 » depositRate	RateString	optional	none	current rate to calculate interest earned being applied to deposit balances as it stands at the time of the API call
 » lendingRate	RateString	optional	none	The current rate to calculate interest payable being applied to lending balances as it stands at the time of the API call
 » depositRates	[BankingProductDepositRate]	optional	none	Fully described deposit rates for this account based on the equivalent structure in Product Reference
-» lendingRates	[BankingProductLendingRate]	optional	none	Fully described deposit rates for this account based on the equivalent structure in Product Reference
+» lendingRates	[BankingProductLendingRateV2]	optional	none	Fully described deposit rates for this account based on the equivalent structure in Product Reference
 » features	[allOf]	optional	none	Array of features of the account based on the equivalent structure in Product Reference with the following additional field
 allOf
 
@@ -7777,6 +7804,7 @@ PURCHASE	A fee associated with making a purchase at a merchant	NA
 EVENT	A fee in relation to a particular event (e.g. NA ordering a new card, viewing a balance or stopping a cheque)	NA
 UPFRONT	A fee paid at the beginning of the product NA lifecycle, such as an establishment fee, loyalty program fee or application fee	NA
 EXIT	A fee for closing the product	NA
+VARIABLE	An at-cost fee that is relevant to a customer's circumstances where the amount or rate may not be known until negotiated with the customer	NA
 
 Product Discount Types
 Description of the usage of the discountType field as it applies to products.
@@ -8554,8 +8582,7 @@ Get Scheduled Payments For Specific Accounts
 Unattended	4000ms	Unattended calls to High Priority or Low Priority end points.
 Additional Admin end points.
 Large Payload	6000ms	Any call to the following end points:
-Get Bulk Transactions
-Get Transactions For Specific Accounts
+Get Transactions For Account
 Get Bulk Direct Debits
 Get Direct Debits For Specific Accounts
 Note that calls initiated in excess of a traffic threshold (see next section) may be excluded from the performance requirement.
@@ -8642,6 +8669,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+12/8/2020	1.4.0	Banking Maintenance Iteration 4 Release	See release notes for details
 22/5/2020	1.3.1	Maintenance updates	Error Fixes
 See release notes for detail
 17/4/2020	1.3.0	Minor Update Release	Incorporates maintenance iteration 2 changes along with a number other CX and technical changes
@@ -8727,6 +8755,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+22/5/2020	1.3.1	May Banking Maintenance Iteration 3 Release
 17/4/2020	1.3.0	April 1.3.0 Release
 31/1/2020	1.2.0	January 1.2.0 Release
 30/9/2019	1.0.0	September 1.0.0 Release
