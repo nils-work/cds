@@ -15,6 +15,7 @@ Known Issues
 Change Log
 Consumer Data Standards Home
 CDR Standards on GitHub
+CDR Maintenance on GitHub
 CDR Register
 Swagger (JSON)
 Swagger (YAML)
@@ -37,13 +38,17 @@ The table below highlights these areas of the standards.
 
 Section	Description	Applicable Date
 Non-functional Requirements	The non-functional requirements for the CDR regime are documented but are not yet binding with no specific future binding date being set as yet	Not yet specified
+Get Product Detail V3	Version 3 of this end point must be made available by affected data holders by the end of February 2021	February 2021
+Get Product Detail V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 2020
+Get Product Detail V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
+Get Products V3	Version 3 of this end point must be made available by affected data holders by the end of February 2021	February 2021
 Get Products V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 2020
 Get Products V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
 Get Product Detail V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 2020
 Get Product Detail V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
-Request Object Section	The target state concurrent consent solution is being phased in at a later date. Further consultation will be conducted before the full target solution takes effect	November 2020
+Concurrent Consent	The target state concurrent consent solution covers various components of the Information Security profile is being phased in with alignment to the November 2020 implementation milestone set by the ACCC. If this milestone moves then this obligation will also move.	November 2020
 Standards
-These standards represent version 1.2.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.3.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
 
@@ -53,44 +58,71 @@ The following principles, classified as Outcome Principles and Technical Princip
 Outcome Principles
 These principles articulate qualitative outcomes that the API definitions should seek to deliver.
 
-Principle 1: APIs are secure
+Outcome Principle 1: APIs are secure
 The API definitions will consider and incorporate the need for a high degree of security to protect customer data. This includes the risk of technical breach but also additional concerns of inadvertent data leakage through overly broad data payloads and scopes. The security of customer data is a first order outcome that the API standards must seek to deliver.
 
-Principle 2: APIs use open standards
+Outcome Principle 2: APIs use open standards
 In order to promote widespread adoption, open standards that are robust and widely used in the industry will be used wherever possible.
 
-Principle 3: APIs provide a good customer experience
-The API definitions will consider and incorporate the customer experience implications. The APIs should support the creation of customer experiences that are simple and enticing to use.
+Outcome Principle 3: Data sharing provides a positive consumer experience
+The standards will ensure that CDR consumers have simple, informed, and trustworthy data sharing experiences that provide them with positive outcomes over the short and long term.
 
-Principle 4: APIs provide a good developer experience
+Outcome Principle 4: APIs provide a good developer experience
 To ensure that the entry hurdle for new developers is low the experience of the developers that are building clients using the APIs will be considered. The ability for a developer to easily understand and write code using the APIs in modern development environments should be facilitated by the API standards.
+
+Outcome Principle 5: Standards are consistent across sectors
+The standards will strive for consistency in patterns, structure, security mechanisms and user experience across sectors to facilitate the development of customer experiences and services that are able to integrate data from multiple sectors seamlessly and to reduce the cost of customer education for new sectors.
 
 Technical Principles
 These principles articulate specific technical outcomes that the API definitions should seek to deliver.
 
-Principle 5: APIs are RESTful
+Technical Principle 1: APIs are RESTful
 The API standards will adhere to RESTful API concepts where possible and sensible to do so. In particular the concepts of statelessness and resource orientation will be followed.
 
-Principle 6: APIs are implementation agnostic
+Technical Principle 2: APIs are implementation agnostic
 The underlying implementation of the APIs should not be constrained or driven by the API definitions and standards. Conversely, the underlying implementation choices should not be visible or derivable to the client applications using the APIs.
 
-Principle 7: APIs are simple
+Technical Principle 3: APIs are simple
 As complexity will increase implementation costs for both holders and clients as well as reduce the utility of the APIs, API definitions should seek to be as simple as possible but no simpler.
 
-Principle 8: APIs are rich in capability
+Technical Principle 4: APIs are rich in capability
 As the APIs are defined care should be taken to ensure that the data payloads defined represent rich data sets that can be used in many scenarios, including scenarios not necessarily front of mind during the design process.
 
-Principle 9: APIs are performant
+Technical Principle 5: APIs are performant
 The API definitions should consider and incorporate performance implications during design ensuring that repeated calls are not necessary for simple use cases and that payload sizes do not introduce performance issues.
 
-Principle 10: APIs are consistent
+Technical Principle 6: APIs are consistent
 The API definitions across the full suite of APIs should be consistent with each other as much as possible. Where possible common data structures and patterns should be defined and reused.
 
-Principle 11: APIs are version controlled and backwards compatible
+Technical Principle 7: APIs are version controlled and backwards compatible
 As the API definitions evolve care will be taken to ensure the operation of existing clients are protected when breaking changes occur. Breaking changes will be protected by a well-defined version control model and by a policy of maintaining previous versions for a period of time to allow for backwards compatibility.
 
-Principle 12: APIs are extensible
+Technical Principle 8: APIs are extensible
 The API definitions and standards should be built for extensibility. This extensibility should accommodate future API categories and industry sectors but it should also allow for extension by data holders to create unique, value add offerings to the ecosystem.
+
+Consumer Experience Principles
+These principles articulate qualitative outcomes for consumer experience that the standards should seek to deliver.
+
+CX Principle 1: The CDR is Consumer-centric
+The CDR consumer experience is intuitive and is centred on consumer attitudes, needs, behaviours, and expectations – noting that these may change over time.
+
+CX Principle 2: The CDR is Accessible and Inclusive
+A diverse range of people are able to access, use, and comprehend the CDR ecosystem regardless of their background, situation, experience, or personal characteristics.
+
+CX Principle 3: The CDR is Comprehensible
+When interacting with the CDR, consumers are able to understand the following:
+
+who their data is shared with;
+what information is shared;
+when sharing begins and ceases;
+where data is shared to and from;
+why their data is being requested; and
+how they can manage and control the sharing and use of their data.
+CX Principle 4: The CDR is Simple and Empowering
+Consumer interactions with the CDR are as simple as possible, but not at the expense of informed consent, consumer control, transparency, privacy, or comprehension. Consumers should be encouraged to be privacy conscious without experiencing cognitive loads that lead to disengagement. Consumers should also be empowered by the CDR without interactive burdens being placed on them.
+
+CX Principle 5: Consent is Current
+Consent is granted at a point in time and is only as current as the consumer’s original intent. Consumer attitudes and behaviours may change over time and be impacted by external events such as the expansion of the CDR or consumer awareness. Consent terms should always align to current consumer preferences.
 
 Versioning
 The standards have adopted a two level versioning strategy. The high level standards (including principles, Uniform Resource Identifier structure, payload naming conventions, etc) be versioned and each API end point will have an additional version specific to that end point.
@@ -176,7 +208,7 @@ x-min-v	Minimum version of the API end point requested by the client. Must be se
 If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.	Optional
 x-<HID>-v	A holder specific version of extension fields. Should not be used in conjunction with x-min-v.	Optional
 x-fapi-interaction-id	An optional [RFC4122] UUID used as a correlation id. If provided, the data holder must "play back" this value in the x-fapi-interaction-id response header.	Optional
-x-fapi-auth-date	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.	Conditional
+x-fapi-auth-date	The time when the customer last logged in to the data recipient as described in [FAPI-R]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.	Conditional
 x-fapi-customer-ip-address	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.	Conditional
 x-cds-client-headers	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 This header is not required to include:
@@ -583,6 +615,7 @@ LoA: Level of Assurance
 LoAs: Levels of Assurance
 MTLS: Mutually Authenticated Transport Layer Security
 OIDC: Open ID Connect
+PAR: Pushed Authorisation Requests
 PI: Personal Information
 PKI: Public Key Infrastructure
 PPID: Pairwise Pseudonymous Identifier
@@ -639,7 +672,7 @@ The [OIDC] Hybrid Flow is a type of redirection flow where the consumer's user a
 
 Only a response_type (see section 3 of [OIDC]) of code id_token SHALL be allowed.
 
-The request_uri parameter SHALL NOT be supported.
+The request_uri parameter is only supported if the Data Holder supports PAR.
 
 In addition, the following statements are applicable for this flow:
 
@@ -669,6 +702,29 @@ This section outlines how participants in the CDR regime will authenticate clien
 Note that, while [MTLS] is utilised for transaction security and as a Holder of Key mechanism, the PKI Mutual TLS OAuth Client Authentication Method SHALL NOT be supported as the mechanism for client authentication.
 
 CDR Register calling Data Holders and Data Recipients
+Non-Normative Example - CDR Register calls the Data holder's Get Metrics end point with Client Authentication (note that the “aud” claim represents the AdminBaseUri as defined in CDR Register Participant Endpoints).
+
+GET https://admin.data.holder.com.au/cds-au/v1/admin/metrics HTTP:/1.1
+Host: admin.data.holder.com.au
+Accept: application/json
+x-v: string
+x-min-v: string
+Authorization: Bearer eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey ...
+
+## Decoded Bearer token JWT
+{
+   "alg":"PS256",
+   "typ":"JWT",
+   "kid":"12456"
+}
+{
+   "iss":"cdr-register",
+   "sub":"cdr-register",
+   "aud":"https://admin.data.holder.com.au",
+   "iat":1516239022,
+   "exp":1516239322,
+   "jti":"32358102-a44f-43cc-ad7c-42443d01507a"
+}
 Data Holders and Data Recipients MUST support the authentication of the CDR Register using a signed JWT according to the following requirements:
 
 The JWT MUST contain the following REQUIRED Claim Values and MAY contain the following OPTIONAL Claim Values:
@@ -681,6 +737,29 @@ iat - OPTIONAL. Time at which the JWT was issued.
 Validation and use of the JWT and the claims described above MUST be performed in accordance with [JWT]
 The JWT should be accepted from the client using the "Authorization Request Header Field" mechanism as described in section 2.1 of RFC6750
 Data Holders calling Data Recipients
+Non-Normative Example - Data Holder calls the Data Recipient's revocation end point (note that the “aud” claim is the fully qualified path to the revocation end point because the full path is also the Base URI).
+
+POST https://data.recipient.com.au/revocation HTTP/1.1
+Host: data.recipient.com.au
+Content-Type: application/x-www-form-urlencoded
+Authorization: Bearer eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey …
+
+token=45ghiukldjahdnhzdauz&token_type_hint=refresh_token
+
+## Decoded Bearer token JWT
+{
+   "alg":"PS256",
+   "typ":"JWT",
+   "kid":"67890"
+}
+{
+   "iss":"dataholderbrand-123",
+   "sub":"dataholderbrand-123",
+   "aud":"https://data.recipient.com.au/revocation",
+   "iat":1516239022,
+   "exp":1516239322,
+   "jti":"dba86502-7cf5-4719-9638-c5339a0ddb06"
+}
 Data Recipients MUST support the authentication of Data Holders using a signed JWT according to the following requirements:
 
 The JWT MUST contain the following REQUIRED Claim Values and MAY contain the following OPTIONAL Claim Values:
@@ -695,7 +774,7 @@ The JWT should be accepted from the client using the "Authorization Request Head
 Data Recipients calling Data Holders
 Data Holders MUST support the authentication of Data Recipients using the private_key_jwt Client Authentication method specified at section 9 of [OIDC].
 
-Non-Normative Example
+Non-Normative Example - Data Recipient calls Data Holder's token end point.
 
 POST /token HTTP/1.1
 Host: www.holder.com.au
@@ -833,8 +912,6 @@ Refresh Token expiration MAY be any length of time greater than 28 days but MUST
 
 Data Holders MAY cycle Refresh Tokens when an Access Token is issued. If Refresh Token cycling is not performed then the Refresh Token MUST NOT expire before the expiration of the sharing consented by the Customer.
 
-The revocation or expiration of the currently active refresh token should be understood to effectively revoke or expire the sharing arrangement as a whole.
-
 Token Expiry
 The expiry time for issued access tokens and refresh tokens must be deterministic for the Data Recipient.
 
@@ -844,11 +921,100 @@ The Data Holder MUST indicate the lifetime in seconds of the access token in the
 The Data Holder MUST indicate the expiration time of the refresh token using the refresh_token_expires_at claim.
 
 Identifiers and Subject Types
+sub claim
 The identifier for an authenticated end-user (subject) MUST be passed in the sub claim of an ID Token and UserInfo response as defined by [OIDC].
 
 The Data Holder MUST generate the sub value as a Pairwise Pseudonymous Identifier (PPID) as described in section 8 of [OIDC]. Furthermore, the identifier MUST be unique per customer as per the definition of customer in the CDR Federation section of this profile.
 
 It is RECOMMENDED that the sub value is generated as a version 4 Universally Unique Identifier (UUID) [RFC4122].
+
+CDR Arrangement ID
+Non-normative example: Token Endpoint hydration
+
+Request
+
+POST /token HTTP/1.1
+Host: https://data.holder.com.au
+Content-Type: application/x-www-form-urlencoded
+
+client_id=s6BhdRkqt3
+&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+&client_assertion=eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey ...
+&grant_type=refresh_token
+&refresh_token=8xLOxBtZp8
+&scope=openid%20profile
+Response
+
+{
+  "access_token": "2YotnFZFEjr1zCsicMWpAA",
+  "expires_in": 3600,
+  "refresh_token": "tGzv3JOkF0XG5Qx2TlKWIA",
+  "id_token": "eyJraWQiOiIxZTlnZGs3IiwiYWxnIjoiUl...",
+  "cdr_arrangement_id": "02e7c9d9-cfe7-4c3e-8f64-e91173c84ecb"
+}
+Decoded JWT
+
+{
+  "iss": "https://data.holder.com.au",
+  "sub": "a9ebbef6-1f0b-44eb-96cf-0c5b51b37ab2",
+  "aud": "12345",
+  "nonce": "n-0S6_WzA2Mj",
+  "exp": 1311281970,
+  "iat": 1311280970,
+  "nbf": 1311280970,
+  "auth_time": 1311280969,
+  "acr": "urn:cds.au:cdr:3",
+  "refresh_token_expires_at": "1311281970",
+  "sharing_expires_at": "1311281970",
+  "cdr_arrangement_id": "02e7c9d9-cfe7-4c3e-8f64-e91173c84ecb"
+}
+Non-normative example: Token Introspection Endpoint hydration
+
+Request
+
+POST /token/introspect HTTP/1.1
+Host: https://data.holder.com.au
+Content-Type: application/x-www-form-urlencoded
+
+client_id=s6BhdRkqt3
+&client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer
+&client_assertion=eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey ...
+&grant_type=refresh_token
+&refresh_token=8xLOxBtZp8
+&scope=openid
+Response
+
+{
+  "iss": "https://data.holder.com.au",
+  "sub": "a9ebbef6-1f0b-44eb-96cf-0c5b51b37ab2",
+  "aud": "12345",
+  "nonce": "n-0S6_WzA2Mj",
+  "exp": 1311281970,
+  "iat": 1311280970,
+  "nbf": 1311280970,
+  "auth_time": 1311280969,
+  "acr": "urn:cds.au:cdr:3",
+  "refresh_token_expires_at": "1311281970",
+  "sharing_expires_at": "1311281970",
+  "cdr_arrangement_id": "02e7c9d9-cfe7-4c3e-8f64-e91173c84ecb"
+}
+Statements related to the CDR Arrangement ID:
+
+The CDR Arrangement ID is a string representing a unique sharing arrangement between a data recipient and data holder for a given consumer
+The CDR Arrangement ID is represented as a claim "cdr_arrangement_id" in the ID Token
+The CDR Arrangement ID MUST be unique to a Data Holder
+The CDR Arrangement ID MUST be non-guessable and must not identify a consumer
+A CDR Arrangement ID MUST be bound to only one active consent at a time but may have no active consent
+A CDR Arrangement ID can span multiple historical consents which are not active
+A CDR Arrangement ID SHOULD be generated using an algorithm that reduces the chances of collision
+A CDR Arrangement ID MUST be static across consents within the one sharing arrangement (e.g. across consent renewal and re-authorisation)
+A CDR Arrangement ID MUST be used to revoke consent
+Retrospectively obtaining a CDR Arrangement ID
+For consents The Data Holder must provide the CDR Arrangement ID as a claim in the Token endpoint response and Token Introspection endpoint response.
+
+A Data Recipient can call either the Token or Token Introspection endpoints at any point post-consent to obtain the CDR Arrangement ID using a valid refresh token.
+
+The CDR Arrangement ID will be supplied in the response JSON as the claim cdr_arrangement_id.
 
 
 Levels of Assurance (LoAs)
@@ -921,9 +1087,10 @@ Non-Normative Example - acr as an Essential Claim
   "response_type": "code id_token",
   "client_id": "12345",
   "redirect_uri": "https://www.recipient.com.au/coolstuff",
-  "scope": "openid",
+  "scope": "openid profile",
   "state": "af0ifjsldkj",
   "nonce": "n-0S6_WzA2Mj",
+  "exp": 1311281970,
   "claims": {
     "sharing_duration": 7776000,
     "id_token": {
@@ -942,7 +1109,7 @@ The Request Object is a signed and encoded JWT specified in section 6.1 of [OIDC
 
 Request Objects MUST be signed by Data Recipients as specified in section 8.6 of [FAPI-RW].
 
-Request Object references SHALL NOT be supported.
+Request Object references MUST be supported if the Data Holder supports Pushed Authorisation Requests (PAR).
 
 Requesting Sharing Duration
 To facilitate the specification of the duration for consent to share CDR data that is approved by the consumer, a mechanism for the Data Recipient to specify a sharing duration to the Data Holder is required.
@@ -958,13 +1125,13 @@ Note that the period of one year in the above statements should be interpreted a
 
 The Data Recipient is able to obtain the expiration of sharing via the sharing_expires_at claim.
 
-Specifying An Existing Refresh Token
-To allow for an existing consent to be reliably revoked upon the establishment of a new consent intended as a replacement data holders MUST support an additional claim in the authorisation request object named existing_refresh_token that the data recipient may optionally include with the value set to the active refresh token for an existing consent.
+Specifying An existing arrangement
+To allow for an existing consent to be reliably revoked upon the establishment of a new consent intended as a replacement data holders MUST support an additional claim in the authorisation request object named cdr_arrangement_id that the data recipient may optionally include with the value set to the arrangement ID for a previously established sharing arrangement.
 
-The existing_refresh_token claim MUST be handled as follows:
+The cdr_arrangement_id claim MUST be handled as follows:
 
-Until November 2020 data holders are not required to take any action if existing_refresh_token is supplied but MUST NOT respond with an error.
-From November 2020 data holders MUST revoke a token provided in the existing_refresh_token claim in the request object once the new consent is successfully established and a new set of tokens has been provided to the data recipient.
+Until November 2020 data holders are not required to take any action if cdr_arrangement_id is supplied but MUST NOT respond with an error.
+From November 2020 data holders MUST revoke all existing tokens related to the arrangement identified by the cdr_arrangement_id claim in the request object once the new consent is successfully established and a new set of tokens has been provided to the data recipient.
 Until November 2020 data recipients MUST NOT implement scenarios that support concurrent consent. Only single, extant consent scenarios should be implemented until this date.
 Until November 2020 data recipients MUST actively revoke previously supplied refresh tokens, immediately after receiving the tokens for a newly established consent, using the revocation end point.
 End Points
@@ -997,6 +1164,10 @@ Content-Type: application/json
   "acr_values_supported": ["urn:cds.au:cdr:2","urn:cds.au:cdr:3"],
   "subject_types_supported": ["pairwise"],
   "id_token_signing_alg_values_supported": ["ES256", "PS256"],
+  "id_token_encryption_alg_values_supported": [ "RSA1_5", "RSA-OAEP",  "RSA-OAEP-256", "dir", "ECDH-ES", "ECDH-ES+A128KW", "ECDH-ES+A192KW", "ECDH-ES+A256KW", "A128KW", "A192KW", "A256KW", "A128GCMKW", "A192GCMKW", "A256GCMKW" ],
+  "id_token_encryption_enc_values_supported": [ "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512", "A128GCM", "A192GCM", "A256GCM" ],
+  "cdr_arrangement_endpoint": "https://data.holder.com.au/arrangements",
+  "pushed_authorization_request_endpoint": "https://data.holder.com.au/par",
   "request_object_signing_alg_values_supported": ["ES256", "PS256"],
   "token_endpoint_auth_methods_supported": ["private_key_jwt"],
   "mutual_tls_sender_constrained_access_tokens": "true",
@@ -1022,6 +1193,12 @@ scopes_supported: This list of supported scopes.
 claims_supported: The list of supported claims.
 acr_values_supported: The supported ACR values.
 jwks_uri: The JSON Web Key Set for the data holder.
+id_token_encryption_alg_values_supported: The list of the supported JWE algorithms for securing the issued ID tokens.
+id_token_encryption_enc_values_supported: The list of the supported JWE encryption methods for securing the issued ID tokens.
+From November 2020, the Data Holder metadata MUST include:
+
+cdr_arrangement_endpoint: URL of the CDR Arrangement End Point for consent revocation.
+pushed_authorization_request_endpoint: URL of the Pushed Authorisation End Point used to support [PAR].
 
 Authorisation End Point
 Non-Normative Example
@@ -1126,28 +1303,110 @@ active: Boolean indicator of whether or not the presented token is currently act
 exp: A JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC expiry time.
 Revocation End Point
 Description	Value
-Hosted By	Data Holder & Data Recipient
-Transport Security	MTLS for Data Holders, TLS for Data Recipients
+Hosted By	Data Holder
+Transport Security	MTLS for Data Holders
 Client Authentication Required	Yes
 Bearer Token Required	No
-Data Holders and Data Recipients MUST implement a Token Revocation End Point as described in section 2 of [RFC7009].
+Data Holders and MUST implement a Token Revocation End Point as described in section 2 of [RFC7009].
 
-Requirements for Data Holder implementations
-The Revocation End Point serves as a revocation mechanism that allows a Data Recipient to invalidate its tokens as required to allow for token clean up. It also provides a mechanism for a Data Recipient to notify the Data Holder of the revocation of a sharing arrangement by the Customer in totality as required by the ACCC CDR Rules. This revocation will have been actioned by the Customer via the Data Recipient’s consent dashboard as described in the ACCC CDR Rules.
+The Revocation End Point serves as a revocation mechanism that allows a Data Recipient to invalidate its tokens as required to allow for token clean up.
 
 Revocation of Refresh Tokens and Access Tokens MUST be supported.
 
-If consent is withdrawn by a Customer in writing or by using the Data Holder’s dashboard the Data Holder MUST use the Data Recipient’s implementation of the revocation end point with the current Refresh Token to notify the Data Recipient.
+CDR Arrangement Management End Point
+Non-Normative Example
 
-Requirements for Data Recipient implementations
-The Revocation End Point, when implemented by the Data Recipient allows a Data Holder to notify the Data Recipient of the revocation of a sharing arrangement by the Customer in totality as required by the ACCC CDR Rules. This revocation will have been actioned by the Customer via the Data Holder’s consent dashboard as described in the ACCC CDR Rules.
+Request
 
-Revocation of Access Tokens MUST not be supported.
+DELETE https://data.holder.com.au/arrangements/5a1bf696-ee03-408b-b315-97955415d1f0
+HTTP/1.1
+Host: data.holder.com.au
+Authorization: Bearer eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey...
+Description	Value
+Hosted By	Data Holder & Data Recipient
+Transport Security	MTLS for Data Holders, TLS for Data Recipients
+Client Authentication Required	Yes (for calling Data Recipients)
+Bearer Token Required	Yes (for calling Data Holders)
+HTTP Method: DELETE Data Holder Path: Defined using OIDC Discovery Data Recipient Path: /arrangements/{cdr_arrangement_id}
 
-Revocation of Refresh Tokens MUST be supported and will be used to notify the Data Recipient of sharing revocation
+From November 2020, Data Holders and Data Recipients MUST implement an arrangement management end point that can be used to revoke an existing sharing arranagement.
 
-If consent is withdrawn by a Customer in writing or by using the Data Recipient’s dashboard the Data Recipient MUST use the Data Holder’s implementation of the revocation end point with the current Refresh Token to notify the Data Holder.
+This end point will be implemented according to the following:
 
+Consent management MUST be managed through the new CDR Arrangement Management API. The CDR Arrangement Management API only supports DELETE for revocation of consent for the scope of concurrent consent.
+Data Recipients and Data Holders MUST revoke consent by calling the CDR Arrangement Management API with a valid CDR Arrangement Identifier
+Data Holders MUST publish their CDR Arrangement Management API using their OpenID Provider Metadata discovery endpoint
+Data Recipients MUST expose their CDR Arrangement Management API under their Recipient Base URI published in their Software Statement Assertion
+If the CDR Arrangement Management API is called for revocation, it MUST delete associated refresh and/or access tokens
+For Data Holders, Data Recipients must be authenticated when they call this end point using a valid Access Token as specified in section 10.3 of [OAUTH2]
+For Data Holders, if the cdr_arrangement_id is not related to the consumer identified by the Access Token provided it MUST be rejected
+For Data Recipients, Data Holder must be authenticated when they call this end point according to the guidance in the Client Authentication section.
+For Data Recipients, if the cdr_arrangement_id is not related to the Data Holder making the call it MUST be rejected
+A call to this end point should be responded to with HTTP status code 204 if the sharing arrangement has been revoked successfully
+A call to this end point should be responded to with HTTP status code 422 if the client submitted an invalid identifier
+Race conditions and handling consent revocation with Data Recipients
+Because single-consent sharing arrangements will be established before concurrent consent future dated obligations, there is the chance that a consumer may revoke consent with a Data Holder before a Data Recipient has obtained a sharing ID. In this instance, a Data Holder will call the Data Recipient’s CDR Arrangement Management API with a CDR Arrangement ID that is not recognised by the Data Recipient. The Data Recipient would return a HTTP error code 422 which signifies to the Data Holder that the cdr_arrangement_id is not recognised.
+
+In this instance, a Data Holder must attempt to call the Data Recipient’s revocation endpoint to notify the Data Recipient that a sharing arrangement has ended. If the Data Recipient has chosen to no longer support a revocation endpoint, the absence of support will be inferred through the absence of the revocation_endpoint in the Data Recipients software statement assertion (SSA).
+
+Pushed Authorisation End Point
+Non-Normative Example
+
+Request
+
+POST /par HTTP/1.1
+     Host: data.holder.com.au
+     Content-Type: application/x-www-form-urlencoded
+
+request=eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyMyJ9.ey...
+Decoded Request
+
+{
+  "iss": "https://data.holder.com.au",
+  "aud": "a7AfcPcsl2",
+  "exp": 1311281970,
+  “client_id”: s6BhdRkqt3,
+  “response_type”: ”code id_token”,
+  “client_id”: 12345,
+  “redirect_uri”: ”https://www.recipient.com.au%2Fcoolstuff”,
+  “scope”: “openid profile bank:accounts.basic:read
+            bank:accounts.detail:read”,
+  “nonce”: “n-0S6_WzA2Mj”,
+  “state”: “af0ifjsldkj”
+}
+Response
+
+HTTP/1.1 201 Created
+Content-Type: application/json
+Cache-Control: no-cache, no-store
+{
+  "request_uri": "urn:data.holder.com.au:bwc4JK-ESC0w8acc191e-Y1LTC2",
+  "expires_in": 3600
+}
+Description	Value
+Hosted By	Data Holder
+Transport Security	MTLS
+Client Authentication Required	No
+Bearer Token Required	No
+From November 2020, Data Holders MUST support Pushed Authorisation Requests (PAR) via the pushed authorisation end point according to [PAR].
+
+Data Recipients must send authorisation request objects by reference by calling the Data Holder’s pushed authorisation request endpoint if:
+
+The request object is likely to be too large to be sent as a URI parameter
+The request object contains a cdr_arrangement_id parameter
+The Data Holder response provides the Data Recipient with a Request URI in the response. The Request URI is then passed to the Data Holder’s Authorisation endpoint to initiate an authorisation flow. In this way, the Data Recipient has staged their authorisation intent with the Data Holder and can then proceed via the backchannel.
+
+In addition:
+
+Data Holders MUST support request objects sent by reference for Pushed Authorisation Requests
+Request Object references SHALL NOT be supported in any mode of use other than Pushed Authorisation Requests (PAR). If a Data Holder does not support Pushed Authorisation Requests (PAR), it MUST NOT support Request Object references.
+Data Holders MUST publish their support for PAR as per the specification using OAuth/OpenID Provider Metadata parameters in discovery responses
+The Request URI MUST expire between 10 seconds and 90 seconds
+Data Recipients MAY provide an existing cdr_arrangement_id claim in an authorisation request object to establish a new consent under an existing arrangement
+Data Holders MUST revoke existing refresh tokens and access tokens when a cdr_arrangement_id is provided in the authorisation request object but ONLY after successful authorisation
+Data Recipients MUST observe data deletion and de-identification requirements for revoked consent after successful authorisation
+If the cdr_arrangement_id is not related to the consumer being authenticated it MUST be rejected
+If the cdr_arrangement_id is not related to the Data Holder it MUST be rejected
 Normative References
 Reference	Description	Version
 [FAPI-R]	Financial-grade API - Part 1: Read Only API Security Profile: https://openid.net/specs/openid-financial-api-part-1.html	Draft-06
@@ -1158,7 +1417,7 @@ Reference	Description	Version
 [JWT]	JSON Web Token (JWT): https://tools.ietf.org/html/rfc7519	May 2015
 [JWS]	JSON Web Signature (JWS): https://tools.ietf.org/html/rfc7797	Feb 2016
 [JWE]	JSON Web Encryption (JWE): https://tools.ietf.org/html/rfc7516	May 2015
-[MTLS]	OAuth 2.0 Mutual TLS Client Authentication and Certificate Bound Access Tokens: https://tools.ietf.org/html/draft-ietf-oauth-mtls-17	Aug 2019
+[MTLS]	OAuth 2.0 Mutual TLS Client Authentication and Certificate Bound Access Tokens: https://tools.ietf.org/html/rfc8705	Feb 2020
 [OAUTH2]	The OAuth 2.0 Authorization Framework: https://tools.ietf.org/html/rfc6749	Oct 2012
 [OIDC]	OpenID Connect Core 1.0 incorporating errata set 1: http://openid.net/specs/openid-connect-core-1_0.html	Nov 2014
 [OIDD]	OpenID Connect Discovery 1.0 incorporating errata set 1: http://openid.net/specs/openid-connect-discovery-1_0.html	Nov 2014
@@ -1167,6 +1426,7 @@ Reference	Description	Version
 [RFC7009]	OAuth 2.0 Token Revocation: https://tools.ietf.org/html/rfc7009	Aug 2013
 [RFC7523]	JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants: https://tools.ietf.org/html/rfc7523	May 2015
 [RFC7662]	OAuth 2.0 Token Introspection: https://tools.ietf.org/html/rfc7662	Oct 2015
+[PAR]	OAuth 2.0 Pushed Authorization Requests: https://tools.ietf.org/html/draft-ietf-oauth-par-01	Feb 2020
 Informative References
 Reference	Description
 [BCP195]	Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS): https://tools.ietf.org/html/bcp195
@@ -1175,7 +1435,7 @@ Reference	Description
 [RFC4122]	A Universally Unique Identifier (UUID) URN Namespace: https://tools.ietf.org/html/rfc4122
 [X.1254]	X.1254 - Entity authentication assurance framework: https://www.itu.int/rec/T-REC-X1254-201209-I/en
 Consumer Experience
-The Consumer Experience (CX) standards, containing requirements and guidelines for the creation of conformant implementatations by both Data Recipients and Data Holders, are split into two documents. This first defines mandatory standards and the second includes guidelines for ensuring compliance with the CDR rules:
+The Consumer Experience (CX) standards, containing requirements and guidelines for the creation of conformant implementatations by both Data Recipients and Data Holders, are split into two documents. This first defines mandatory standards and the second includes guidelines for facilitating the implementation of rules and standards that relate to the consumer experience:
 
 CX Standards
 CX Guidelines
@@ -1721,17 +1981,8 @@ Example responses
               "additionalInfo": "string",
               "additionalInfoUri": "string"
             },
-            "subTier": {
-              "name": "string",
-              "unitOfMeasure": "DOLLAR",
-              "minimumValue": 0,
-              "maximumValue": 0,
-              "rateApplicationMethod": "WHOLE_BALANCE",
-              "applicabilityConditions": {
-                "additionalInfo": "string",
-                "additionalInfoUri": "string"
-              }
-            }
+            "additionalInfo": "string",
+            "additionalInfoUri": "string"
           }
         ],
         "additionalValue": "string",
@@ -1747,6 +1998,8 @@ Example responses
         "calculationFrequency": "string",
         "applicationFrequency": "string",
         "interestPaymentDue": "IN_ARREARS",
+        "repaymentType": "INTEREST_ONLY",
+        "loanPurpose": "OWNER_OCCUPIED",
         "tiers": [
           {
             "name": "string",
@@ -1758,17 +2011,8 @@ Example responses
               "additionalInfo": "string",
               "additionalInfoUri": "string"
             },
-            "subTier": {
-              "name": "string",
-              "unitOfMeasure": "DOLLAR",
-              "minimumValue": 0,
-              "maximumValue": 0,
-              "rateApplicationMethod": "WHOLE_BALANCE",
-              "applicabilityConditions": {
-                "additionalInfo": "string",
-                "additionalInfoUri": "string"
-              }
-            }
+            "additionalInfo": "string",
+            "additionalInfoUri": "string"
           }
         ],
         "additionalValue": "string",
@@ -1887,6 +2131,7 @@ x-min-v: string
 x-fapi-interaction-id: string
 x-fapi-auth-date: string
 x-fapi-customer-ip-address: string
+x-cds-client-headers: string
 
 var headers = {
   'Accept':'application/json',
@@ -1894,7 +2139,8 @@ var headers = {
   'x-min-v':'string',
   'x-fapi-interaction-id':'string',
   'x-fapi-auth-date':'string',
-  'x-fapi-customer-ip-address':'string'
+  'x-fapi-customer-ip-address':'string',
+  'x-cds-client-headers':'string'
 
 };
 
@@ -1935,6 +2181,7 @@ x-min-v	header	string	optional	Minimum version of the API end point requested by
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
 x-fapi-auth-date	header	string	optional	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not to be included for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
 
 200 Response
@@ -3224,12 +3471,12 @@ It is expected that data consumers needing this data will call relatively freque
 
 In addition, the concept of effective date and time has also been included. This allows for a product to be marked for obsolescence, or introduction, from a certain time without the need for an update to show that a product has been changed. The inclusion of these dates also removes the need to represent deleted products in the payload. Products that are no long offered can be marked not effective for a few weeks before they are then removed from the product set as an option entirely.
 
-NOTE: This version must be implemented by July 2020
+NOTE: This version must be implemented by February 2021
 
-Obsolete versions: v1
+Obsolete versions: v1 v2
 
 Endpoint Version
-Version	2
+Version	3
 Parameters
 Name	In	Type	Required	Description
 effective	query	string	optional	Allows for the filtering of products based on whether the current time is within the period of time defined as effective by the effectiveFrom and effectiveTo fields. Valid values are ‘CURRENT’, ‘FUTURE’ and ‘ALL’. If absent defaults to 'CURRENT'
@@ -3342,12 +3589,12 @@ GET /banking/products/{productId}
 
 Obtain detailed information on a single product offered openly to the market.
 
-NOTE: This version must be implemented by July 2020
+NOTE: This version must be implemented by February 2021
 
-Obsolete versions: v1
+Obsolete versions: v1 v2
 
 Endpoint Version
-Version	2
+Version	3
 Parameters
 Name	In	Type	Required	Description
 productId	path	ASCIIString	mandatory	ID of the specific product requested
@@ -3472,17 +3719,8 @@ Example responses
               "additionalInfo": "string",
               "additionalInfoUri": "string"
             },
-            "subTier": {
-              "name": "string",
-              "unitOfMeasure": "DOLLAR",
-              "minimumValue": 0,
-              "maximumValue": 0,
-              "rateApplicationMethod": "WHOLE_BALANCE",
-              "applicabilityConditions": {
-                "additionalInfo": "string",
-                "additionalInfoUri": "string"
-              }
-            }
+            "additionalInfo": "string",
+            "additionalInfoUri": "string"
           }
         ],
         "additionalValue": "string",
@@ -3498,6 +3736,8 @@ Example responses
         "calculationFrequency": "string",
         "applicationFrequency": "string",
         "interestPaymentDue": "IN_ARREARS",
+        "repaymentType": "INTEREST_ONLY",
+        "loanPurpose": "OWNER_OCCUPIED",
         "tiers": [
           {
             "name": "string",
@@ -3509,17 +3749,8 @@ Example responses
               "additionalInfo": "string",
               "additionalInfoUri": "string"
             },
-            "subTier": {
-              "name": "string",
-              "unitOfMeasure": "DOLLAR",
-              "minimumValue": 0,
-              "maximumValue": 0,
-              "rateApplicationMethod": "WHOLE_BALANCE",
-              "applicabilityConditions": {
-                "additionalInfo": "string",
-                "additionalInfoUri": "string"
-              }
-            }
+            "additionalInfo": "string",
+            "additionalInfoUri": "string"
           }
         ],
         "additionalValue": "string",
@@ -3636,6 +3867,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
+200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: common:customer.basic:read
 Get Customer Detail
 
@@ -4023,10 +4255,10 @@ ResponseBankingProductList
 Properties
 Name	Type	Required	Restrictions	Description
 data	object	mandatory	none	none
-» products	[BankingProductV2]	mandatory	none	The list of products returned. If the filter results in an empty set then this array may have no records
+» products	[BankingProductV3]	mandatory	none	The list of products returned. If the filter results in an empty set then this array may have no records
 links	LinksPaginated	mandatory	none	none
 meta	MetaPaginated	mandatory	none	none
-BankingProductV2
+BankingProductV3
 
 {
   "productId": "string",
@@ -4194,17 +4426,8 @@ ResponseBankingProductById
               "additionalInfo": "string",
               "additionalInfoUri": "string"
             },
-            "subTier": {
-              "name": "string",
-              "unitOfMeasure": "DOLLAR",
-              "minimumValue": 0,
-              "maximumValue": 0,
-              "rateApplicationMethod": "WHOLE_BALANCE",
-              "applicabilityConditions": {
-                "additionalInfo": "string",
-                "additionalInfoUri": "string"
-              }
-            }
+            "additionalInfo": "string",
+            "additionalInfoUri": "string"
           }
         ],
         "additionalValue": "string",
@@ -4220,6 +4443,8 @@ ResponseBankingProductById
         "calculationFrequency": "string",
         "applicationFrequency": "string",
         "interestPaymentDue": "IN_ARREARS",
+        "repaymentType": "INTEREST_ONLY",
+        "loanPurpose": "OWNER_OCCUPIED",
         "tiers": [
           {
             "name": "string",
@@ -4231,17 +4456,8 @@ ResponseBankingProductById
               "additionalInfo": "string",
               "additionalInfoUri": "string"
             },
-            "subTier": {
-              "name": "string",
-              "unitOfMeasure": "DOLLAR",
-              "minimumValue": 0,
-              "maximumValue": 0,
-              "rateApplicationMethod": "WHOLE_BALANCE",
-              "applicabilityConditions": {
-                "additionalInfo": "string",
-                "additionalInfoUri": "string"
-              }
-            }
+            "additionalInfo": "string",
+            "additionalInfoUri": "string"
           }
         ],
         "additionalValue": "string",
@@ -4258,10 +4474,10 @@ ResponseBankingProductById
 
 Properties
 Name	Type	Required	Restrictions	Description
-data	BankingProductDetail	mandatory	none	none
+data	BankingProductDetailV2	mandatory	none	none
 links	Links	mandatory	none	none
 meta	Meta	optional	none	none
-BankingProductDetail
+BankingProductDetailV2
 
 {
   "productId": "string",
@@ -4377,17 +4593,8 @@ BankingProductDetail
             "additionalInfo": "string",
             "additionalInfoUri": "string"
           },
-          "subTier": {
-            "name": "string",
-            "unitOfMeasure": "DOLLAR",
-            "minimumValue": 0,
-            "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
-            "applicabilityConditions": {
-              "additionalInfo": "string",
-              "additionalInfoUri": "string"
-            }
-          }
+          "additionalInfo": "string",
+          "additionalInfoUri": "string"
         }
       ],
       "additionalValue": "string",
@@ -4403,6 +4610,8 @@ BankingProductDetail
       "calculationFrequency": "string",
       "applicationFrequency": "string",
       "interestPaymentDue": "IN_ARREARS",
+      "repaymentType": "INTEREST_ONLY",
+      "loanPurpose": "OWNER_OCCUPIED",
       "tiers": [
         {
           "name": "string",
@@ -4414,17 +4623,8 @@ BankingProductDetail
             "additionalInfo": "string",
             "additionalInfoUri": "string"
           },
-          "subTier": {
-            "name": "string",
-            "unitOfMeasure": "DOLLAR",
-            "minimumValue": 0,
-            "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
-            "applicabilityConditions": {
-              "additionalInfo": "string",
-              "additionalInfoUri": "string"
-            }
-          }
+          "additionalInfo": "string",
+          "additionalInfoUri": "string"
         }
       ],
       "additionalValue": "string",
@@ -4438,7 +4638,7 @@ Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	BankingProductV2	mandatory	none	none
+anonymous	BankingProductV3	mandatory	none	none
 and
 
 Name	Type	Required	Restrictions	Description
@@ -4714,17 +4914,8 @@ BankingProductDepositRate
         "additionalInfo": "string",
         "additionalInfoUri": "string"
       },
-      "subTier": {
-        "name": "string",
-        "unitOfMeasure": "DOLLAR",
-        "minimumValue": 0,
-        "maximumValue": 0,
-        "rateApplicationMethod": "WHOLE_BALANCE",
-        "applicabilityConditions": {
-          "additionalInfo": "string",
-          "additionalInfoUri": "string"
-        }
-      }
+      "additionalInfo": "string",
+      "additionalInfoUri": "string"
     }
   ],
   "additionalValue": "string",
@@ -4760,6 +4951,8 @@ BankingProductLendingRate
   "calculationFrequency": "string",
   "applicationFrequency": "string",
   "interestPaymentDue": "IN_ARREARS",
+  "repaymentType": "INTEREST_ONLY",
+  "loanPurpose": "OWNER_OCCUPIED",
   "tiers": [
     {
       "name": "string",
@@ -4771,17 +4964,8 @@ BankingProductLendingRate
         "additionalInfo": "string",
         "additionalInfoUri": "string"
       },
-      "subTier": {
-        "name": "string",
-        "unitOfMeasure": "DOLLAR",
-        "minimumValue": 0,
-        "maximumValue": 0,
-        "rateApplicationMethod": "WHOLE_BALANCE",
-        "applicabilityConditions": {
-          "additionalInfo": "string",
-          "additionalInfoUri": "string"
-        }
-      }
+      "additionalInfo": "string",
+      "additionalInfoUri": "string"
     }
   ],
   "additionalValue": "string",
@@ -4797,6 +4981,8 @@ comparisonRate	RateString	optional	none	A comparison rate equivalent for this ra
 calculationFrequency	ExternalRef	optional	none	The period after which the rate is applied to the balance to calculate the amount due for the period. Calculation of the amount is often daily (as balances may change) but accumulated until the total amount is 'applied' to the account (see applicationFrequency). Formatted according to ISO 8601 Durations (excludes recurrence syntax)
 applicationFrequency	ExternalRef	optional	none	The period after which the calculated amount(s) (see calculationFrequency) are 'applied' (i.e. debited or credited) to the account. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
 interestPaymentDue	string	optional	none	When loan payments are due to be paid within each period. The investment benefit of earlier payments affect the rate that can be offered
+repaymentType	string	optional	none	Options in place for repayments. If absent, the lending rate is applicable to all repayment types
+loanPurpose	string	optional	none	The reason for taking out the loan. If absent, the lending rate is applicable to all loan purposes
 tiers	[BankingProductRateTier]	optional	none	Rate tiers applicable for this rate
 additionalValue	string	conditional	none	Generic field containing additional information relevant to the lendingRateType specified. Whether mandatory or not is dependent on the value of lendingRateType
 additionalInfo	string	optional	none	Display text providing more information on the rate.
@@ -4816,6 +5002,10 @@ lendingRateType	BUNDLE_DISCOUNT_FIXED
 lendingRateType	BUNDLE_DISCOUNT_VARIABLE
 interestPaymentDue	IN_ARREARS
 interestPaymentDue	IN_ADVANCE
+repaymentType	INTEREST_ONLY
+repaymentType	PRINCIPAL_AND_INTEREST
+loanPurpose	OWNER_OCCUPIED
+loanPurpose	INVESTMENT
 BankingProductRateTier
 
 {
@@ -4828,17 +5018,8 @@ BankingProductRateTier
     "additionalInfo": "string",
     "additionalInfoUri": "string"
   },
-  "subTier": {
-    "name": "string",
-    "unitOfMeasure": "DOLLAR",
-    "minimumValue": 0,
-    "maximumValue": 0,
-    "rateApplicationMethod": "WHOLE_BALANCE",
-    "applicabilityConditions": {
-      "additionalInfo": "string",
-      "additionalInfoUri": "string"
-    }
-  }
+  "additionalInfo": "string",
+  "additionalInfoUri": "string"
 }
 
 Defines the criteria and conditions for which a rate applies
@@ -4851,21 +5032,10 @@ minimumValue	number	mandatory	none	The number of tierUnitOfMeasure units that fo
 maximumValue	number	optional	none	The number of tierUnitOfMeasure units that form the upper bound of the tier or band. For a tier with a discrete value (as opposed to a range of values e.g. 1 month) this must be the same as tierValueMinimum. Where this is the same as the tierValueMinimum value of the next-higher tier the referenced tier should be exclusive of this value. For example a term deposit of 2 months falls into the upper tier of the following tiers: (1 – 2 months, 2 – 3 months). If absent the tier's range has no upper bound.
 rateApplicationMethod	string	optional	none	The method used to calculate the amount to be applied using one or more tiers. A single rate may be applied to the entire balance or each applicable tier rate is applied to the portion of the balance that falls into that tier (referred to as 'bands' or 'steps')
 applicabilityConditions	BankingProductRateCondition	optional	none	Defines a condition for the applicability of a tiered rate
-subTier	object	optional	none	Defines the sub-tier criteria and conditions for which a rate applies
-» name	string	mandatory	none	A display name for the tier
-» unitOfMeasure	string	mandatory	none	The unit of measure that applies to the tierValueMinimum and tierValueMaximum values e.g. a DOLLAR amount. PERCENT (in the case of loan-to-value ratio or LVR). Tier term period representing a discrete number of MONTH's or DAY's (in the case of term deposit tiers)
-» minimumValue	number	mandatory	none	The number of tierUnitOfMeasure units that form the lower bound of the tier. The tier should be inclusive of this value
-» maximumValue	number	mandatory	none	The number of tierUnitOfMeasure units that form the upper bound of the tier or band. For a tier with a discrete value (as opposed to a range of values e.g. 1 month) this must be the same as tierValueMinimum. Where this is the same as the tierValueMinimum value of the next-higher tier the referenced tier should be exclusive of this value. For example a term deposit of 2 months falls into the upper tier of the following tiers: (1 – 2 months, 2 – 3 months)
-» rateApplicationMethod	string	optional	none	The method used to calculate the amount to be applied using one or more tiers. A single rate may be applied to the entire balance or each applicable tier rate is applied to the portion of the balance that falls into that tier (referred to as 'bands' or 'steps')
-» applicabilityConditions	BankingProductRateCondition	optional	none	Defines a condition for the applicability of a tiered rate
+additionalInfo	string	optional	none	Display text providing more information on the rate tier.
+additionalInfoUri	URIString	optional	none	Link to a web page with more information on this rate tier
 Enumerated Values
 Property	Value
-unitOfMeasure	DOLLAR
-unitOfMeasure	PERCENT
-unitOfMeasure	MONTH
-unitOfMeasure	DAY
-rateApplicationMethod	WHOLE_BALANCE
-rateApplicationMethod	PER_TIER
 unitOfMeasure	DOLLAR
 unitOfMeasure	PERCENT
 unitOfMeasure	MONTH
@@ -5021,17 +5191,8 @@ ResponseBankingAccountById
               "additionalInfo": "string",
               "additionalInfoUri": "string"
             },
-            "subTier": {
-              "name": "string",
-              "unitOfMeasure": "DOLLAR",
-              "minimumValue": 0,
-              "maximumValue": 0,
-              "rateApplicationMethod": "WHOLE_BALANCE",
-              "applicabilityConditions": {
-                "additionalInfo": "string",
-                "additionalInfoUri": "string"
-              }
-            }
+            "additionalInfo": "string",
+            "additionalInfoUri": "string"
           }
         ],
         "additionalValue": "string",
@@ -5047,6 +5208,8 @@ ResponseBankingAccountById
         "calculationFrequency": "string",
         "applicationFrequency": "string",
         "interestPaymentDue": "IN_ARREARS",
+        "repaymentType": "INTEREST_ONLY",
+        "loanPurpose": "OWNER_OCCUPIED",
         "tiers": [
           {
             "name": "string",
@@ -5058,17 +5221,8 @@ ResponseBankingAccountById
               "additionalInfo": "string",
               "additionalInfoUri": "string"
             },
-            "subTier": {
-              "name": "string",
-              "unitOfMeasure": "DOLLAR",
-              "minimumValue": 0,
-              "maximumValue": 0,
-              "rateApplicationMethod": "WHOLE_BALANCE",
-              "applicabilityConditions": {
-                "additionalInfo": "string",
-                "additionalInfoUri": "string"
-              }
-            }
+            "additionalInfo": "string",
+            "additionalInfoUri": "string"
           }
         ],
         "additionalValue": "string",
@@ -5242,17 +5396,8 @@ BankingAccountDetail
             "additionalInfo": "string",
             "additionalInfoUri": "string"
           },
-          "subTier": {
-            "name": "string",
-            "unitOfMeasure": "DOLLAR",
-            "minimumValue": 0,
-            "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
-            "applicabilityConditions": {
-              "additionalInfo": "string",
-              "additionalInfoUri": "string"
-            }
-          }
+          "additionalInfo": "string",
+          "additionalInfoUri": "string"
         }
       ],
       "additionalValue": "string",
@@ -5268,6 +5413,8 @@ BankingAccountDetail
       "calculationFrequency": "string",
       "applicationFrequency": "string",
       "interestPaymentDue": "IN_ARREARS",
+      "repaymentType": "INTEREST_ONLY",
+      "loanPurpose": "OWNER_OCCUPIED",
       "tiers": [
         {
           "name": "string",
@@ -5279,17 +5426,8 @@ BankingAccountDetail
             "additionalInfo": "string",
             "additionalInfoUri": "string"
           },
-          "subTier": {
-            "name": "string",
-            "unitOfMeasure": "DOLLAR",
-            "minimumValue": 0,
-            "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
-            "applicabilityConditions": {
-              "additionalInfo": "string",
-              "additionalInfoUri": "string"
-            }
-          }
+          "additionalInfo": "string",
+          "additionalInfoUri": "string"
         }
       ],
       "additionalValue": "string",
@@ -5591,7 +5729,7 @@ merchantCategoryCode	string	optional	none	The merchant category code (or MCC) fo
 billerCode	string	optional	none	BPAY Biller Code for the transaction (if available)
 billerName	string	optional	none	Name of the BPAY biller for the transaction (if available)
 crn	string	optional	none	BPAY CRN for the transaction (if available)
-apcaNumber	string	optional	none	6 Digit APCA number for the initiating institution
+apcaNumber	string	optional	none	6 Digit APCA number for the initiating institution. The field is fixed-width and padded with leading zeros if applicable.
 Enumerated Values
 Property	Value
 type	FEE
@@ -7586,8 +7724,8 @@ Value	Description	Use of additionalValue Field
 MIN_BALANCE	A minimum balance is required for the product	The minimum balance in AmountString format
 MAX_BALANCE	A maximum balance is required for the product	The maximum balance in AmountString format
 OPENING_BALANCE	An opening balance is required for the product	The minimum opening balance in AmountString format
-MAX_LIMIT	A maximum credit limit exists	The maximum limit in AmountString format
-MIN_LIMIT	A minimum credit limit exists	The minimum limit in AmountString format
+MAX_LIMIT	A maximum limit exists (such as a maximum loan balance denoting the borrowable amount or maximum allowable credit limit)	The maximum limit in AmountString format
+MIN_LIMIT	A minimum limit exists (such as a minimum borrowable amount or minimum credit limit)	The minimum limit in AmountString format
 
 Product Eligibility Types
 Description of the usage of the eligibilityType field as it applies to products.
@@ -8484,6 +8622,8 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+17/4/2020	1.3.0	Minor Update Release	Incorporates maintenance iteration 2 changes along with a number other CX and technical changes
+See release notes for detail
 31/1/2020	1.2.0	Phase 2 Baseline	Baseline version for the Phase 2 implementation of the CDR regime
 See release notes for detail
 20/1/2020	1.1.1	Maintenance updates	Error Fixes
