@@ -1,0 +1,3570 @@
+Logo
+Search
+Introduction
+Standards
+Security
+Banking APIs
+Common APIs
+Shared Schemas
+Consumer Data Right Home
+CDR Standards on GitHub
+
+Swagger (JSON)
+Swagger (YAML)
+Introduction
+ This is an archived version of the Consumer Data Right Standards and is retained for reference only.
+These standards have been developed as part of the introduction in Australia of the Consumer Data Right legislation to give Australians greater control over their data.
+
+The Consumer Data Right is intended to apply sector by sector across the whole economy, beginning in the banking, energy and telecommunications sectors. These standards have been developed to facilitate the Consumer Data Right by acting as a specific baseline for implementation.
+
+These standards are governed by the Consumer Data Standards team inside Data61. Data61 has been appointed as the interim standards body. The work of the team is overseen by Mr. Andrew Stevens as interim Chair, with industry and consumer advice provided by an Advisory Committee. Data61 works closely with the Australian Competition and Consumer Commission (ACCC) as lead regulator of the Consumer Data Right, supported by the Office of the Australian Information Commissioner (OAIC).
+
+Standards
+These standards represent version 0.1.0 of the high level standards which will support the creation of version 1. See the versioning section for more information on how versions are managed in the standard.
+
+Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
+
+Principles
+The following principles, classified as Outcome Principles and Technical Principles, are the basis for the development of the standards for the Consumer Data Right.
+
+Outcome Principles
+These principles articulate qualitative outcomes that the API definitions should seek to deliver.
+
+Principle 1: APIs are secure
+The API definitions will consider and incorporate the need for a high degree of security to protect customer data. This includes the risk of technical breach but also additional concerns of inadvertent data leakage through overly broad data payloads and scopes. The security of customer data is a first order outcome that the API standards must seek to deliver.
+
+Principle 2: APIs use open standards
+In order to promote widespread adoption, open standards that are robust and widely used in the industry will be used wherever possible.
+
+Principle 3: APIs provide a good customer experience
+The API definitions will consider and incorporate the customer experience implications. The APIs should support the creation of customer experiences that are simple and enticing to use.
+
+Principle 4: APIs provide a good developer experience
+To ensure that the entry hurdle for new developers is low the experience of the developers that are building clients using the APIs will be considered. The ability for a developer to easily understand and write code using the APIs in modern development environments should be facilitated by the API standards.
+
+Technical Principles
+These principles articulate specific technical outcomes that the API definitions should seek to deliver.
+
+Principle 5: APIs are RESTful
+The API standards will adhere to RESTful API concepts where possible and sensible to do so. In particular the concepts of statelessness and resource orientation will be followed.
+
+Principle 6: APIs are implementation agnostic
+The underlying implementation of the APIs should not be constrained or driven by the API definitions and standards. Conversely, the underlying implementation choices should not be visible or derivable to the client applications using the APIs.
+
+Principle 7: APIs are simple
+As complexity will increase implementation costs for both providers and clients as well as reduce the utility of the APIs, API definitions should seek to be as simple as possible but no simpler.
+
+Principle 8: APIs are rich in capability
+As the APIs are defined care should be taken to ensure that the data payloads defined represent rich data sets that can be used in many scenarios, including scenarios not necessarily front of mind during the design process.
+
+Principle 9: APIs are performant
+The API definitions should consider and incorporate performance implications during design ensuring that repeated calls are not necessary for simple use cases and that payload sizes do not introduce performance issues.
+
+Principle 10: APIs are consistent
+The API definitions across the full suite of APIs should be consistent with each other as much as possible. Where possible common data structures and patterns should be defined and reused.
+
+Principle 11: APIs are version controlled and backwards compatible
+As the API definitions evolve care will be taken to ensure the operation of existing clients are protected when breaking changes occur. Breaking changes will be protected by a well defined version control model and by a policy of whereby previous versions are maintained for a period of time to allow for backwards compatibility.
+
+Principle 12: APIs are extensible
+The API definitions and standards should be built for extensibility. This extensibility should accommodate future APIs categories and industry sectors but it should also allow for extension by data providers to create unique, value add offerings to the ecosystem.
+
+Versioning
+The standards have adopted a two level versioning strategy. The high level standards (including principles, URI structure, payload naming conventions, etc) be versioned and each API end point will have an additional version specific to that end point.
+
+Standard Versioning
+The base URI structure containing the version for this standard is:
+http://<provider path>/cds-au/v1/<resource>
+
+The high level standard will be versioned and this version will be in embedded in the URI Structure for the APIs. This documentation relates specifically to version 1 of the high level standards.
+
+End Point Versioning
+Each end point will have multiple versions independent of other end points. A specific end point version will be requested by a client using a HTTP header. This header will be supported by all end points under the API standards. See the section on HTTP Headers for more information on how versions are requested and supplied under the standards.
+
+URI Structure
+Some example URIs that meet this standard are:
+http://www.bank.com.au/api/cds-au/v1/banking/accounts
+http://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products
+http://www.energyretailer.com.au/api/cds-au/v1/energy/usage
+
+The URI structure for API end points in the standards MUST be implemented as follows:
+<provider path> / cds-au / <version> / <industry> / <resource>
+
+The components of this URI structure are described as follows:
+
+Provider Path: The provider path is a base path set by the data provider. It can be any URI desired by the provider.
+“cds-au”: This is a static string representing the end points defined by the Consumer Data Standards for Australia. This static string allows for separation from other APIs available at the same base provider path and also allows for extension if the standards are adopted by another jurisdiction in whole or in part.
+Version: The version of the high level standards. This is not the version of the endpoint or the payload being requested but the version of the overall standards being applied. This version number will be “v” followed by a the version as a positive integer (e.g. v1, v12 or v76).
+Industry: A static string used to separate APIs for a specific industry. As standards for new industries are defined the list of industry strings will be extended.
+Resource: The URI for the specific resource requested. This end point URI will be defined as part of the end point definitions for each API group.
+Note that the currently accepted values for the Industry component of the base path are:
+
+banking – for APIs related to banking and potentially wider financial services data
+energy – for APIs related to the energy distribution industry
+telco – for APIs related to telecommunications
+common – for APIs that potentially span industries
+Resource URIs
+Resources that are collections, and members of collections, will follow the JSONAPI.org recommendation.
+
+Under this model collections, individual members and collection sub-resources would be accessed as follows:
+
+GET …\accounts	Returns an array of accounts
+GET …\accounts\{id}	Returns the detail of a specific account
+GET …\accounts\transactions	Returns the transactions of multiple accounts
+GET …\accounts\{id}\transactions	Returns the transactions of a specific account
+POST …\accounts	Create a new account
+POST …\accounts\search	Returns an array of accounts based on a complex query
+The final example above represents a complex query accessed via a POST request. In this situation the POST URI should be applied to a sub-resource of the collection. A POST to a collection is reserved for the creation of a new collection member
+
+If no valid sub-resource exists then a dedicated sub-resource should be created, such as the “search” URI listed in the example above.
+
+HTTP Headers
+Supported HTTP headers, and their usage, for the standards are as laid out in the following sections.
+
+ Please note that there will be a requirement to support specific headers for security purposes. These are yet to be fully determined.
+Request Headers
+A sample set of headers requesting version 3 to 5:
+Content-Type = application/json
+Accept = application/json
+x-v = 5
+x-min-v = 3
+x-Correlation-Id = 27639FAB67CC
+
+Header Field	Description
+Content-Type	Standard HTTP Header. Represents the format of the payload provided in the request. Must be set to application/json.
+Accept	Standard HTTP Header. Specify the Content-Type that is required from the Server.
+If specified, must be set to application/json unless otherwise specified in the resource end point standard.
+If set to an unacceptable value the provider must respond with a 406 Not Acceptable. If not specified, default is application/json.
+x-v	Version of the API end point requested by the client. Must be set to a positive integer.
+If the version(s) requested is not supported then the provider should respond with a 406 Not Acceptable.
+x-min-v	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The provider should respond with the highest supported version between x-min-v and x-v.
+If all versions requested are not supported then the provider should respond with a 406 Not Acceptable.
+x-<PID>-v	A provider specific version of extension fields. Should not be used in conjunction with x-min-v.
+x-Correlation-Id	Optional correlation ID provided by the data consumer that should be reflected back in the response headers. Can be used for reporting and logging.
+Response headers
+Header Field	Description	Mandatory?
+Content-Type	Standard HTTP Header. Represents the format of the payload returned in the response.
+Must be application/json unless otherwise specified in the resource end point standard.	Mandatory
+Retry-After	Header indicating the time (in seconds) that the client should wait before retrying an operation. The provider should include this header along with responses with the HTTP status code of 429 Too many requests.	Optional
+x-v	The version of the API end point that the provider has responded with.	Mandatory
+x-Correlation-Id	Reflected value of the correlation ID provided by the data consumer in the request headers.
+If no correlation ID was provided in the request this header should not be supplied.
+If a correlation ID was provided in the request then this header is mandatory.	Optional
+Additional Headers
+Generally understood headers used in HTTP transactions to provide caching guidance and the use of the compression are not specified but are considered acceptable. It is at the discretion of the data provider if these headers are used for a specific implementation. Data providers should not require these headers for successful API access, however.
+
+HTTP Response Codes
+The handling and usage of HTTP response codes for the standards will be according to the following table.
+
+Situation	HTTP Status	Notes	POST	GET	DELETE
+Query completed successfully	200 OK		Yes	Yes	No
+Normal execution. The request has succeeded.	201 Created	The operation results in the creation of a new resource.	Yes	No	No
+Delete operation completed successfully	204 No Content		No	No	Yes
+Request has malformed, missing or non-compliant JSON body or URL parameters	400 Bad Request	The requested operation will not be carried out.	Yes	Yes	Yes
+Authorization header missing or invalid token	401 Unauthorized	The operation was refused access. Re-authenticating may result in an appropriate token that may be used.	Yes	Yes	Yes
+Token has incorrect scope or a security policy was violated.	403 Forbidden	The operation was refused access. Re-authenticating is unlikely to remediate the situation.	Yes	Yes	Yes
+The consumer tried to access the resource with a method that is not supported.	405 Method Not Allowed		Yes	Yes	Yes
+The request contained an Accept header other than permitted media types, a character set other than UTF-8 or a version that was not supported	406 Not Acceptable		Yes	Yes	Yes
+The operation was refused because the payload is in a format not supported by this method on the target resource.	415 Unsupported Media Type		Yes	No	No
+The request was well formed but was unable to be processed due to business logic specific to the request	422 Unprocessable Entity		Yes	No	No
+The operation was refused as too many requests have been made within a certain timeframe.	429 Too Many Requests	Throttling is a NFR. The data provider should include a Retry-After header in the response indicating how long the data consumer must wait before retrying the operation.	Yes	Yes	Yes
+Something went wrong on the API gateway or micro-service	500 Internal Server Error	The operation failed.	Yes	Yes	Yes
+Service is currently unavailable	503 Service Unavailable		Yes	Yes	Yes
+The server was unable to respond in a timely manner	504 Gateway Timeout	Returned if a timeout has occurred but a resend of the original request is viable (otherwise us 500 instead)	Yes	Yes	Yes
+Payload Conventions
+This section of the standard outlines the request and response payload structures for all API end points as well as the naming conventions for fields.
+
+Request Payload Structure
+A sample request would be structured as follows:
+
+{
+  “data”: {
+    ...
+  }
+  “meta”: {
+    ...
+  }
+}
+Each API request payload MUST have a JSON object at the root level known as the root object. This object MUST contain a data object to hold the primary data for the request.
+
+The root object will contain a meta object if, and only if, it is specifically REQUIRED by the end point. The meta object is used to provide additional information such as second factor authorisation data, traffic management, pagination counts or other purposes that are complementary to the workings of the API.
+
+The definition of the contents for the data object and meta object will be defined separately for each end point.
+
+Response Payload Structure
+A sample successful response:
+
+{
+  “data”: {
+    ...
+  }
+  “links”: {
+    “self”: “...”
+  }
+  “meta”: {
+    ...
+  }
+}
+A sample unsuccessful response:
+
+{
+  “errors”: [
+    {
+      “code”: “...”,
+      “title”: “...”,
+      “detail”: “...”
+    }, {
+      “code”: “...”,
+      “title”: “...”,
+      “detail”: “...”,
+      “meta”: {
+        ...
+      }
+    }
+  ]
+}
+Each API request payload MUST have a JSON object at the root level known as the root object.
+
+The contents of the root object are as follows:
+
+If the response is successful (200 OK) the root object:
+MUST contain a data object
+MUST contain a links object
+MAY contain a meta object if REQUIRED by the definition of the specific end point
+If the response is unsuccessful (not 200 OK) the root object:
+MUST contain an errors object
+The definition of the contents for the data object and meta object will be defined separately for each end point.
+
+The links object will contain links to related API end points. This will include links to support pagination.
+
+The links object MUST contain a field named self that will have the fully qualified URI to the current request as a value.
+
+The errors object will be an array of zero or more unnamed objects. The fields in each of these objects will be as follows:
+
+code field MUST be present: holds an end point specific error code
+title field MUST be present: holds a human readable label of the error that is constant per code
+detail field MUST be present: holds a human readable description of this specific error
+meta object MAY be present: holds additional end point specific data relevant to the error
+Field Naming Conventions
+Valid Characters In Field Names
+All field names defined in either a request or response payload MUST be treated as case sensitive by clients and servers, and they MUST meet all of the following conditions:
+
+Member names MUST contain at least one character.
+Member names MUST contain only the allowed characters listed below:
+U+0061 to U+007A, a-z
+U+0041 to U+005A, A-Z
+U+0030 to U+0039, 0-9
+Additionally, the following characters are allowed in field names, except as the first or last character:
+U+002D HYPHEN-MINUS, '-'
+U+005F LOW LINE, '_'
+U+0024 DOLLAR SIGN, '$'
+Any other character MUST NOT be used in field names.
+
+Field Naming Style
+Field names MUST be meaningful names with defined semantics.
+
+Fields representing the same data in different payloads or different parts of a payload MUST have the same name.
+
+Array types SHOULD have plural field names. All other field names SHOULD be singular.
+
+Field names MUST be defined using camel case with the following clarifications:
+
+If a field name is a single acronym it SHOULD be lowercase
+If a field name contains an acronym along with other words it MAY be uppercase
+The first character in a field name SHOULD be lower case unless it is part of an acronym
+Fields MUST NOT be named using reserved javascript tokens.
+
+Maps
+For JSON maps (i.e. key/value pairs) any Unicode character MAY be used as a field name and stylistic requirements do not apply.
+
+Field Property Conventions
+Field Data Types
+Each field defined for the payloads of an end point MUST have an assigned data type.
+
+The list of valid data types are set out in the common field types section. If a custom data type is required for a field then the field SHOULD be classified as a string with a clear description of how the property value is to be interpreted or defined.
+
+Mandatory/Optional Fields
+Each field defined for the payloads of an end point MUST have an assigned status of mandatory, optional or conditional.
+
+Mandatory fields MUST be present and have a non-null value in a request or response payload for the payload to be considered valid.
+
+Optional fields MAY be present but this is not guaranteed. It is also valid for these fields to be present but have a null value.
+
+Conditional fields MUST have an associated conditional statement. If the conditional statement is true in a specific request or response the field is considered mandatory. If the conditional statement is false then the field is considered optional.
+
+Empty/Null Fields
+An empty field (ie. a field that is not present in a payload) will be considered equivalent with a field that is present with a null value.
+
+An empty string (“”) is not considered to be equivalent to null.
+
+A Boolean value of false is not considered to be equivalent to null. Optional Boolean fields, by implication, have three possible values: true, false and indeterminate (ie. null).
+
+Object conventions
+Sample union object structure:
+
+“data”: {
+    [
+        {
+            “shape$type”: “circle”,
+            “circle”: {
+            }
+        },
+        {
+            “shape$type”: “square”,
+            “square”: {
+            }
+        }
+    ]
+}
+A specific convention will apply to union objects.
+
+In the standards a union object is used in a situation where a set of data can be represented with different sets of fields depending on the context. To maintain strong typing of the fields one of a series of known object structures will be used. An example where this technique is used in the standard is in the definition of account balances where balance information can be represented differently, but unambiguously, for different account types.
+
+For union objects an additional field, with a known suffix, is used to identify the object type that has been provided specifically.
+
+As the name of this field is constant it can be used to perform an indirect lookup on the object type that has actually been provided removing the need to scan for which object is present.
+
+A field of this type could be specified to always have the suffix $type.
+
+Common Field Types
+The following table outlines the common data types for fields used in the standard.
+
+Type	Description	Valid Examples
+String	Standard UTF-8 string but unrestricted in content. Any valid Unicode character can be used.	
+ASCIIString	Standard UTF-8 string but limited to the ASCII character set.	
+Boolean	Standard JSON boolean	true
+false
+Enum	String representing an option from a defined list of values
+- All possible values should be provided
+- Values should be in all caps
+- Spaces should be replaced with under bars '_'
+- Values should be limited to the ASCII character set	“OPTION1”
+“ANOTHER_OPTION”
+“VAL_ABC_123”
+NaturalNumber	A natural number (ie. a positive integer inclusive of zero)	0
+1
+10000
+PositiveInteger	A positive integer (zero excluded)	1
+10000
+NegativeInteger	A negative integer inclusive of zero	0
+-1
+-10000
+Integer	Any positive or negative integer inclusive of zero	1
+0
+-1
+Number	A standard floating point number. Can be positive, negative or zero	0.1
+-100.09
+10
+90.09
+DateTimeString	Combined Date and Time string as per RFC- 3339 (labelled date-time in the RFC)	“2007-05-01T15:43:00.12345Z”
+“2012-12-25T15:43:00-08:00”
+“1997-01-12T15:43:00.121Z”
+DateString	Date string as per RFC-3339 (labelled full-date in the RFC). UTC time should always be used	“2007-05-01”
+“2012-12-25”
+TimeString	Time string as per RFC-3339 (labelled full-time in the RFC). UTC time should always be used	“15:43:00.12345Z”
+“15:43:00-12:00”
+CurrencyString	Standard 3 character currency codes as per ISO-4217	“AUD”
+“USD”
+“GBP”
+RateString	A string representing a percentage interest rate
+- A positive number (or zero)
+- At least 1 and up to a total of 16 significant digits before decimal point
+- Up to 16 digits following the decimal point
+- No formatting, eg thousand separating commas	“82”
+“0.05”
+“12.3456789”
+“99.123456789123”
+AmountString	A string representing an amount of currency.
+- A positive, zero or negative number
+- Negative numbers identified with a ‘-‘
+- No currency symbols should be supplied
+- At least 1 and up to a total of 16 significant digits before decimal point
+- Minimum 2 digits following a decimal point (more digits allowable but only if required)
+- No additional formatting, eg thousand separating commas	“0.01”
+“10.00”
+“1234567.89”
+“-1001.23”
+“1.999”
+MaskedPANString	Masked credit card number. Lower case ‘x’ should be used to mask numbers and only the last four digits should be exposed to facilitate identification.	"xxxxxxxxxxxx1234"
+MaskedAccountString	Masked bank account number genericised for a variety of account types. Should be represented as the full account number would normally be represented (including spaces) but with only the last four digits shown.	"xxxx xxxx xxxx 1234"
+"xxx-xxx xxxxx1234"
+URI	A valid URI	"http://www.google.com"
+Pagination
+Each API end point that can return multiple records will stipulate whether pagination is supported for the end point or not. For end points that will return less than a reasonably sized page of results in the majority of circumstances support for paging may not be included.
+
+Note that the use of paging for an end point does not require or preclude the use of filtering query parameters. It is expected that filtering and paging will be applied independently of each other.
+
+Query Parameters
+The consumer will stipulate pagination requirements on the request using query parameters. When paging is supported the consumer MAY provide the following query parameters:
+
+page – the page number being requested (with the first page being 1)
+page-size – the number of records to return in each page
+If the query parameters are not provided the following defaults will be assumed:
+
+page – a default of 1 (the first page) will be assumed
+page-size – a default of 25 will be assumed
+Response Fields
+In addition to the data requested a provider MUST provide the following additional information in the response payload:
+
+In the links object the following fields are to be provided:
+first - A URI to request the first page. This field MUST be present.
+last - A URI to request the last page. This field MUST be present unless there is only one page in the set.
+prev - A URI to the previous page. This field MUST be present unless the current page is the first page.
+next - A URI to the next page. This field MUST be present unless the current page is the final page.
+In the meta object the following fields are to be provided:
+totalRecords - The total number of records in the set. This field MUST be present.
+totalPages - The total number of pages in the set. This field MUST be present.
+For each of these fields the page size specified in the request should be assumed when calculating values.
+
+Additional Pagination Rules
+Providers are not expected to implement pagination with transaction isolation. The underlying data-set may change between two subsequent requests. This may result in situations where the same transaction is returned on more than one page.
+A maximum page size of 1000 records is assumed for all end points (unless otherwise stipulated in the end point definition). If a page size greater than this maximum is requested then a HTTP status of 422 Unprocessable Entity SHOULD be returned.
+ID Permanence
+Within these standards resource IDs are REQUIRED to comply with the following:
+
+An ID for a resource should only be specified in the API standard if an end point exists to obtain detail for that resource or to change the state of the resource.
+If an ID is specified in the standards for a resource then it is mandatory and MUST be supplied, by the data provider, in accordance with the standards.
+If an ID is specified the ID value MUST be entirely arbitrary and have no inherent meaning. For instance, an ID should not be a combination of other fields or a string that can be parsed to extract meaningful information.
+IDs SHOULD be unique but that uniqueness may be within a clearly bounded context. For example, a beneficiary ID may be unique but only in the context of a specific account. The bounds of uniqueness should be clearly described in the standards definition for the end point.
+IDs MUST be immutable across sessions but MUST NOT be transferable across data consumers. For example, data consumer A obtaining an account ID would get a different result from data consumer B obtaining the ID for the same account even if the same customer authorised the access. Under this constraint IDs cannot be usefully transferred between client organisations or providers.
+IDs MUST NOT be transferable between different customers for the same data consumer. For example, a data consumer should obtain a different ID for a joint account if the ID was obtained independently using authorisations from both customers.
+In payloads the field name of “id” should NEVER be used. Each ID field should be meaningfully named so that wherever that ID is used across multiple end points it always refers to the same ID set. For instance, the IDs for accounts would be represented in JSON in a field named “accountId”.
+Extensibility
+The Consumer Data Right standards will not cover all possible data sets or APIs that participants may wish to expose. Participants may also wish to innovate on top of the API standards by offering additional data to meet specific market opportunities. It is desirable that the standards not only allow for this to occur but actively encourage it with specific additions to the standards to enable such extension.
+
+At the same time, it is important that a participant seeking to provide extensions does not hinder a data consumer that is only built for the published standards.
+
+To accommodate these concerns the standards incorporate the following considerations specifically related to extension by data providers.
+
+The three types of extension that the standards address are:
+
+Data provider offering entirely new API categories that are not covered by the API Standards
+Data provider offering additional end points to an API category that is already covered by the standards
+Data provider offering additional fields to the response payloads for an end point defined in the standards
+Provider Identifier
+For example, the prefixes for the four major Banks required to implement by 1st July 2019 would be:
+
+CBA – Commonwealth Bank
+WBC – Westpac Banking Corporation
+ANZ – ANZ Banking Group
+NAB – National Australia Bank
+Data providers seeking to extend the standards MUST nominate a prefix to identify all extensions. Extended fields and end points and would use this prefix consistently. This prefix would be, by preference, the ASX symbol for the provider. Care should be taken not to use a prefix already adopted by another provider in the regime.
+
+In these standards, where a Provider Identifier would be included, the term <PID> will be used.
+
+New API Categories
+When extending by adding new API categories a provider MUST add these to the overall URI structure by substituting the industry element with the Provider ID.
+
+For instance, the standard URI base path is structured as:
+<provider path> / cds-au / <version> / <industry> / <resource>
+
+For the extension API categories for a specific provider they would be structured as:
+<provider path> / cds-au / <version> / <PID> / <resource>
+
+The end points defined under this structure, including the payloads of these end points do not need to be prefixed in any way. The fact that they are underneath the provider section implies that they are additional to the standard.
+
+Note that:
+
+This mechanism MUST NOT be used to create modified duplicates of the end points defined in the API Standards
+The end points in this area MUST comply with the overall standards including naming conventions and data types.
+New End Points In Existing API Categories
+When creating new end points that are in parallel to existing API categories in the standard the Provider Identifier MUST be used to prefix the highest URI element where divergence occurs.
+
+For example, assume an existing balance end point is defined as follows:
+<base path>/accounts/{account ID}/transactions
+
+and the provider wishes to add an end point that summarises balance movement for a specific time period then they may define the end point as:
+<base path>/account/{account ID}/<PID>-balance-movement
+
+Note that:
+
+The prefix is defined as the Provider Identifier followed by a hyphen.
+As the entire end point is new, the request and payload fields do not need to be prefixed in any way.
+Care should be taken to ensure there is no collision with an end point defined in the standards by specifying an extension at the same level as a variable URI element (such as at the same level of the {account ID} in the example above).
+If an end point has multiple levels in the resource path only the highest point where divergence with the standard occurs needs to be prefixed.
+The new end point MUST comply with the overall standards including naming conventions and data types.
+Additional Fields In An Existing Response Payload
+When adding a new field in an existing payload the field can be added to the JSON by prefixing the string <PID>-.
+
+If an object is being added as an extension only the highest level object name needs to be prefixed. Any fields inside the extended object can be named normally.
+
+Note that:
+
+Existing fields MUST NOT be modified in any way. This includes adding new enumeration values to enum type fields.
+A mandatory field MUST NOT be made optional as the result of an extension.
+Request payloads can also be extended but the resulting end point should still execute successfully if the extension field is not present (by implication, extension fields in request payloads MUST be optional).
+New query parameters MAY be added along the same lines as a new field in a request payload (i.e. prefixed, non-mandatory and no side effects if not present).
+New headers MAY be added along the same lines as a new field in a request payload with the exception that the new header should be prefixed x-<PID>-.
+New fields MUST comply with the overall naming conventions and data type standards used.
+Extension Versioning
+As described previously in the versioning section the standard provides for multiple versions of each API end point. This implies the need for extensions to also be versioned.
+
+An optional header x-<PID>-v will be supported for all end points that can be used by the data consumer to request a specific version of extension fields to include in the response. See the section on HTTP Headers for more information on the use of this header.
+
+Security
+ This section is still under development as the Information Security Working Group defines the specific implementation considerations for the standard.
+
+Where content is present it represents decisions that have been completed.
+High Level Profile
+Securing of the API end points defined by the standards will be accomplished through alignment with well defined industry protocols and security profiles. Context specific constraints are then applied to these profiles to provide implementation clarity or reduce risk.
+
+In particular the standards are aligned to the Financial API (FAPI) Read/Wite profile.
+
+Note that the FAPI Read/Write profile builds on the FAPI Read Only profile and implies alignment with the use of Open ID Connect.
+
+Additional Constraints
+The FAPI Read/Write profile implies specific implementation decisions that are worthy of explicit statement. There are also some additional, specific constraints are applicable for implementations conforming to these standards:
+
+Only the Hybrid Authorisation flow will be supported
+Public Clients will not be supported. All payload data will be transferred via backchannel communication
+Use of TLS mandated for all interactions
+Requirement to use TLS 1.2 or greater
+The version and configuration of TLS for implementations conforming with standards will not be a lower version, or less secure, than that of other digital channels deployed by the data provider
+A TLS server certificate check shall be performed, as per RFC 6125
+Mutual TLS will be used to secure back-channel communication between the data consumer and data provider
+For all interactions (except for authorisation) the cipher suites that may be used will be limited to:
+TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
+TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
+TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+Authorisation Scopes
+The following authorisation scopes have been defined for the standards. Each API end point will specify which scopes are required to access the data available via that end point.
+
+Scope Name	Scope ID	Description
+Basic Bank Account Data	bank_basic_accounts	This scope would allow for the third party to access basic information of the customer’s accounts.
+
+Includes simple account information including balance.
+Does not include account identifiers, product information or transaction data.
+Detailed Bank Account Data	bank_detailed_accounts	This scope would allow for the third party to access detailed information of the customer’s accounts. This scope is effectively additional authorisation to the Basic Bank Account Data scope. Granting this authorisation only makes sense if the Bank Account Data scope is also authorised.
+
+Includes basic account information plus account identifiers and product information.
+Does not include transaction data.
+Bank Transaction Data	bank_transactions	This scope would allow the third party to access transaction data for accounts. This scope is effectively additional authorisation to the Basic Bank Account Data scope. Granting this authorisation only makes sense if the Basic Bank Account Data scope is also authorised.
+
+Includes all account transaction data.
+Bank Payee Data	bank_payees	This scope allows access to payee information stored by the customer.
+
+Includes payee information such as billers, international beneficiaries and domestic payees.
+Basic Customer Data	common_basic_customer	The scope would allow the third party to access personally identifiable information about the customer. For retail customers this would be information about the customer themselves. For business customers it would imply the name of specific user but also information about the business.
+
+Includes name and occupation for individuals or name, business numbers and industry code for organisations
+Detailed Customer Data	common_detailed_customer	The scope would allow the third party to access more detailed information about the customer. Includes the data available with the Basic Customer Data scope plus contact details.
+
+Includes basic data plus phone, email and address information.
+Public	NA	Openly accessible information. A customer would never need to grant this scope. This scope is included so that end points that can be called without requiring authorisation can be identified.
+
+Includes access to openly available information such as generic product information.
+OIDC Scopes & Claims
+In addition to the Consumer Data Standards specific scopes above the following standard scopes and claims described by OpenID Connect core will be supported:
+
+openid scope
+profile scope
+name claim
+family_name claim
+given_name claim
+Banking APIs
+Get Accounts
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/accounts
+
+Account List Data.
+
+Obtain list of accounts.
+
+Parameters
+Parameter	In	Type	Required	Description
+product-category	query	ProductCategory	false	Used to filter results on the productCategory field in the account end points. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+open-status	query	string	false	Used to filter results according to open/closed status. Values can be OPEN, CLOSED or ALL. If absent then ALL is assumed.
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Enumerated Values
+Parameter	Value
+open-status	OPEN
+open-status	CLOSED
+open-status	ALL
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "accounts": [
+      {
+        "accountId": "string",
+        "displayName": "string",
+        "nickname": "string",
+        "maskedNumber": "string",
+        "productCategory": "PERS_AT_CALL_DEPOSITS",
+        "productType": "string",
+        "balance$type": "deposits",
+        "deposits": {
+          "currentBalance": {
+            "amount": 300.56,
+            "currency": "AUD"
+          },
+          "availableBalance": {
+            "amount": 300.56,
+            "currency": "AUD"
+          }
+        }
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountsResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_basic_accounts )
+
+AccountsResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+»» accounts	[Account]	true	none	The list of accounts returned. If the filter results in an empty set then this array may have no records.
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+Get Account Detail
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/{accountId}',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /accounts/{accountId}
+
+Detailed Account Data.
+
+Obtain detailed information on a single account.
+
+Parameters
+Parameter	In	Type	Required	Description
+accountId	path	AccountId	true	ID of the Account. Must have previously been returned from one of the account list end points.
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "accountId": "string",
+    "displayName": "string",
+    "nickname": "string",
+    "maskedNumber": "string",
+    "productCategory": "PERS_AT_CALL_DEPOSITS",
+    "providerType": "string",
+    "balance$type": "deposits",
+    "deposits": {
+      "currentBalance": {
+        "amount": 300.56,
+        "currency": "AUD"
+      },
+      "availableBalance": {
+        "amount": 300.56,
+        "currency": "AUD"
+      }
+    },
+    "features": [
+      {
+        "featureType": "DEBIT_CARD",
+        "discountType": "DEBIT_CARD"
+      }
+    ],
+    "fees": [
+      {
+        "name": "string",
+        "feeType": "PERIODIC",
+        "amount": 0,
+        "additionalInfo": "string",
+        "additionalInfoUri": "http://example.com",
+        "discounts": [
+          {
+            "discountType": "BALANCE",
+            "additionalValue": 0
+          }
+        ],
+        "additionalValue": "DAILY"
+      }
+    ],
+    "depositRates": [
+      {
+        "rate": "string",
+        "additionalInfo": "string",
+        "additionalInfoUri": "http://example.com",
+        "depositRateType": "FIXED",
+        "additionalValue": "2018-11-01T05:33:52Z",
+        "discountType": "FIXED"
+      }
+    ],
+    "lendingRates": [
+      {
+        "rate": "string",
+        "additionalInfo": "string",
+        "additionalInfoUri": "http://example.com",
+        "lendingRateType": "FIXED",
+        "additionalValue": "2018-11-01T05:33:52Z",
+        "discountType": "FIXED"
+      }
+    ],
+    "bundleName": "string",
+    "termDeposit": {
+      "lodgementDate": "2018-11-01",
+      "maturityDate": "2018-11-01",
+      "maturityAmount": 380,
+      "maturityCurrency": "AUD",
+      "maturityInstructions": "ROLLED_OVER"
+    },
+    "address": {
+      "address$type": "simple",
+      "simple": {
+        "mailingName": "string",
+        "addressLine1": "string",
+        "addressLine2": "string",
+        "addressLine3": "string",
+        "postcode": "string",
+        "city": "string",
+        "state": "string",
+        "country": "AUS"
+      }
+    }
+  },
+  "links": {
+    "self": "http://example.com"
+  },
+  "meta": {
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_detailed_accounts )
+
+AccountResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	AccountDetail	true	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	StandardResponse	false	none	none
+Get Bulk Balances
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/balances',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/accounts/balances
+
+Multiple Balances Data.
+
+Obtain balances for multiple, filtered accounts.
+
+Parameters
+Parameter	In	Type	Required	Description
+product-category	query	ProductCategory	false	Used to filter results on the productCategory field in the account end points. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "balances": [
+      {
+        "accountId": "string",
+        "$balance$type": "deposits",
+        "deposits": {
+          "currentBalance": {
+            "amount": 300.56,
+            "currency": "AUD"
+          },
+          "availableBalance": {
+            "amount": 300.56,
+            "currency": "AUD"
+          }
+        }
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountsBalancesResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_basic_accounts )
+Get Balances For Specific Accounts
+
+Code samples
+
+var headers = {
+  'Content-Type':'application/json',
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/balances',
+  method: 'post',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+POST /banking/accounts/balances
+
+Specific Balances Data.
+
+Obtain balances for a specified list of account Ids.
+
+Body parameter
+
+{
+  "data": {
+    "accountIds": [
+      "string"
+    ]
+  },
+  "meta": {
+  }
+}
+Request Schema
+Name	Type	Required	Restrictions	Description
+data	object	true	none	
+» accountIds	[AccountId]	true	none	Array of accountIds requested
+meta	object	true	none	
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "balances": [
+      {
+        "accountId": "string",
+        "balance$type" : "deposits",
+        "deposits": {
+          "currentBalance": {
+            "amount": 300.56,
+            "currency": "AUD"
+          },
+          "availableBalance": {
+            "amount": 300.56,
+            "currency": "AUD"
+          }
+        }
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountsBalancesResponse
+422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request.	Inline
+Response Schema
+Status Code 422
+
+List of Errors.
+
+Name	Type	Required	Restrictions	Description
+errors	[Error]	false	none	List of Errors.
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_basic_accounts )
+
+AccountsBalancesResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+»» balances	[AccountBalance]	true	none	List of Balances.
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+Get Transactions For Account
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/{accountId}/transactions',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/accounts/{accountId}/transactions
+
+Account Specific Transactions.
+
+Obtain transactions for a specific account.
+
+Some general notes that apply to all end points that retrieve transactions:
+
+Where multiple transactions are returned transactions should be ordered according to effective date in descending order
+As the date and time for a transaction can alter depending on status and transaction type two separate date/times are included in the payload. There are still some scenarios where neither of these time stamps is available. For the purpose of filtering and ordering it is expected that the provider will use the “effective” date/time which will be defined as:
+Posted date/time if available, then
+Execution date/time if available, then
+A reasonable date/time nominated by the data provider using internal data structures
+For transaction amounts it should be assumed that a negative value indicates a reduction of the available balance on the account while a positive value indicates an increase in the available balance on the account
+Parameters
+Parameter	In	Type	Required	Description
+accountId	path	AccountId	true	ID of the account to get transactions for. Must have previously been returned by one of the account list end points.
+start-time	query	DateTimeString	false	Constrain the transaction history request to transactions with effective time at or after this date/time. If absent defaults to today. Format is aligned to DateTimeString common type.
+end-time	query	DateTimeString	false	Constrain the transaction history request to transactions with effective time at or before this date/time. If absent defaults to start-time plus 100 days. Format is aligned to DateTimeString common type.
+min-amount	query	number	false	Filter transactions to only transactions with amounts higher or equal to than this amount.
+max-amount	query	number	false	Filter transactions to only transactions with amounts less than or equal to than this amount.
+text	query	ASCII String	false	Filter transactions to only transactions where this string value is found as a substring of either the reference or description fields. Format is arbitrary ASCII string.
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "accountId": "string",
+    "displayName": "string",
+    "nickname": "string",
+    "transactions": [
+      {
+        "transactionId": "string",
+        "isDetailAvailable": true,
+        "status": "PENDING",
+        "description": "string",
+        "postDateTime": "2018-11-01T05:33:52Z",
+        "executionDateTime": "2018-11-01T05:33:52Z",
+        "amount": 300.56,
+        "currency": "AUD",
+        "reference": "string"
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountTransactionsResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_transactions )
+
+AccountTransactionsResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+»» accountId	AccountId	true	none	A unique ID of the account adhering to the standards for ID permanence.
+»» displayName	string	true	none	The display name of the account as defined by the bank. This should not incorporate account numbers or PANs. If it does, the values should be masked according to the rules of the MaskedAccountNumber type.
+»» nickname	string	false	none	A customer supplied nickname for the account.
+»» transactions	[TransactionBasic]	true	none	The list of transactions returned. These are expected to be ordered with the most recent transaction first.
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+Get Transaction Detail
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/{accountId}/transactions/{transactionId}',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/accounts/{accountId}/transactions/{transactionId}
+
+Detailed Transaction Data.
+
+Obtain additional information for a specific transaction for a specific account.
+
+Parameters
+Parameter	In	Type	Required	Description
+accountId	path	AccountId	true	ID of the Account. Must have previously been returned from one of the account list end points.
+transactionId	path	TransactionId	true	ID of the Transaction obtained from a previous call to one of the transaction end points.
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "accountId": "string",
+    "displayName": "string",
+    "nickname": "string",
+    "transaction": {
+      "transactionId": "string",
+      "status": "PENDING",
+      "description": "string",
+      "postDateTime": "2018-11-01T05:33:52Z",
+      "executionDateTime": "2018-11-01T05:33:52Z",
+      "amount": {
+        "amount": 300.56,
+        "currency": "AUD"
+      },
+      "reference": "string",
+      "extendedData": {
+        "payer": "string",
+        "payee": "string",
+        "extensionType": "extendedDescription",
+        "extendedDescription": "string",
+        "service": "X2P1.01"
+      }
+    }
+  },
+  "links": {
+    "self": "http://example.com",
+  },
+  "meta": {
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountTransactionResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_transactions )
+Get Bulk Transactions
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/transactions',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/accounts/transactions
+
+Bulk Transaction Data.
+
+Obtain transactions for multiple, filtered accounts.
+
+Parameters
+Parameter	In	Type	Required	Description
+product-category	query	ProductCategory	false	Used to filter results on the productCategory field in the account end points. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+start-time	query	DateTimeString	false	Constrain the transaction history request to transactions with effective time at or after this date/time. If absent defaults to today. Format is aligned to DateTimeString common type.
+end-time	query	DateTimeString	false	Constrain the transaction history request to transactions with effective time at or before this date/time. If absent defaults to start-time plus 100 days. Format is aligned to DateTimeString common type.
+min-amount	query	number	false	Filter transactions to only transactions with amounts higher or equal to than this amount.
+max-amount	query	number	false	Filter transactions to only transactions with amounts less than or equal to than this amount.
+text	query	ASCII String	false	Filter transactions to only transactions where this string value is found as a substring of either the reference or description fields. Format is arbitrary ASCII string.
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "transactions": [
+      {
+        "accountId": "string",
+        "transactionId": "string",
+        "isDetailAvailable": true,
+        "status": "PENDING",
+        "description": "string",
+        "postDateTime": "2018-11-01T05:33:52Z",
+        "executionDateTime": "2018-11-01T05:33:52Z",
+        "amount": 300.56,
+        "currency": "AUD",
+        "reference": "string",
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountsTransactionsResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_transactions )
+
+AccountsTransactionsResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+»» transactions	[AccountTransaction]	true	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+
+AccountTransactionResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+»» accountId	AccountId	true	none	A unique ID of the account adhering to the standards for ID permanence.
+»» displayName	string	true	none	The display name of the account as defined by the bank. This should not incorporate account numbers or PANs. If it does, the values should be masked according to the rules of the MaskedAccountNumber type.
+»» nickname	string	false	none	A customer supplied nickname for the account.
+»» transaction	TransactionDetail	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+Get Transactions For Specific Accounts
+
+Code samples
+
+var headers = {
+  'Content-Type':'application/json',
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/transactions',
+  method: 'post',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+POST /banking/accounts/transactions
+
+Specific Transactions Data.
+
+Obtain transactions for a specific list of account Ids.
+
+Body parameter
+
+{
+  "data": {
+    "accountIds": [
+      "string"
+    ]
+  },
+  "meta": {
+  }
+}
+Parameters
+Parameter	In	Type	Required	Description
+start-time	query	DateTimeString	false	Constrain the transaction history request to transactions with effective time at or after this date/time. If absent defaults to today. Format is aligned to DateTimeString common type.
+end-time	query	DateTimeString	false	Constrain the transaction history request to transactions with effective time at or before this date/time. If absent defaults to start-time plus 100 days. Format is aligned to DateTimeString common type.
+min-amount	query	number	false	Filter transactions to only transactions with amounts higher or equal to than this amount.
+max-amount	query	number	false	Filter transactions to only transactions with amounts less than or equal to than this amount.
+text	query	ASCII String	false	Filter transactions to only transactions where this string value is found as a substring of either the reference or description fields. Format is arbitrary ASCII string.
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Request Schema
+Name	Type	Required	Restrictions	Description
+data	object	true	none	
+» accountIds	[AccountId]	true	none	Array of accountIds requested
+meta	object	true	none	
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "balances": [
+      {
+        "accountId": "string",
+        "balance": {
+          "balanceType": "deposits",
+          "currentBalance": {
+            "amount": 300.56,
+            "currency": "AUD"
+          },
+          "availableBalance": {
+            "amount": 300.56,
+            "currency": "AUD"
+          }
+        }
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountsTransactionsResponse
+422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request.	Inline
+Response Schema
+Status Code 422
+
+List of Errors.
+
+Name	Type	Required	Restrictions	Description
+errors	[Error]	false	none	List of Errors.
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_transactions )
+Get Direct Debits For Account
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/{accountId}/direct-debits',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/accounts/{accountId}/direct-debits
+
+Account Specific Direct Debit Authorisations.
+
+Obtain direct debit authorisations for a specific accounnt list of accounts.
+
+Parameters
+Parameter	In	Type	Required	Description
+accountId	path	AccountId	true	ID of the Account. Must have previously been returned from one of the account list end points.
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "directDebitAuthorisations": [
+      {
+        "accountId": "string",
+        "authorisedEntity": {
+          "name": "string",
+          "financialInsitution": "string",
+          "abn": "string",
+          "acn": "string"
+        },
+        "lastDebitDateTime": "2018-11-01T05:33:52Z",
+        "lastDebitAmount": 300.56
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountDirectDebitsResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_detailed_accounts )
+Get Bulk Direct Debits
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/direct-debits',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/accounts/direct-debits
+
+Bulk Direct Debit Authorisations Data.
+
+Obtain direct debit authorisations for multiple, filtered accounts.
+
+Parameters
+Parameter	In	Type	Required	Description
+product-category	query	ProductCategory	false	Used to filter results on the productCategory field in the account end points. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "directDebitAuthorisations": [
+      {
+        "accountId": "string",
+        "authorisedEntity": {
+          "name": "string",
+          "financialInsitution": "string",
+          "abn": "string",
+          "acn": "string"
+        },
+        "lastDebitDateTime": "2018-11-01T05:33:52Z",
+        "lastDebitAmount": 300.56
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountDirectDebitsResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_detailed_accounts )
+Get Direct Debits For Specific Accounts
+
+Code samples
+
+var headers = {
+  'Content-Type':'application/json',
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/accounts/direct-debits',
+  method: 'post',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+POST /banking/accounts/direct-debits
+
+Specific Direct Debit Authorisations Data.
+
+Obtain direct debit authorisations for a specified list of accounts.
+
+Body parameter
+
+{
+  "data": {
+    "accountIds": [
+      "string"
+    ]
+  },
+  "meta": {
+  }
+}
+Parameters
+Parameter	In	Type	Required	Description
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Request Schema
+Name	Type	Required	Restrictions	Description
+data	object	true	none	
+» accountIds	[AccountId]	true	none	Array of accountIds requested
+meta	object	true	none	
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "directDebitAuthorisations": [
+      {
+        "accountId": "string",
+        "authorisedEntity": {
+          "name": "string",
+          "financialInsitution": "string",
+          "abn": "string",
+          "acn": "string"
+        },
+        "lastDebitDateTime": "2018-11-01T05:33:52Z",
+        "lastDebitAmount": 300.56
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	AccountDirectDebitsResponse
+422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request.	Inline
+Response Schema
+Status Code 422
+
+List of Errors.
+
+Name	Type	Required	Restrictions	Description
+errors	[Error]	false	none	List of Errors.
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_detailed_accounts )
+
+AccountDirectDebitsResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+»» directDebitAuthorisations	[AccountDirectDebit]	true	none	The list of authorisations returned.
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+Get Payees
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/payees',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/payees
+
+Payee Data.
+
+Obtain a list of pre-registered payees.
+
+Parameters
+Parameter	In	Type	Required	Description
+type	query	string	false	Filter on type payee. If absent the assumed value is ALL.
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Enumerated Values
+Parameter	Value
+type	DOMESTIC
+type	INTERNATIONAL
+type	BILLER
+type	ALL
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "payees": [
+      {
+        "payeeId": "string",
+        "nickname": "string",
+        "description": "string",
+        "type": "DOMESTIC"
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	PayeesResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_basic_accounts )
+
+PayeesResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+»» payees	[Payee]	true	none	The list of payyees returned.
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+Get Payee Detail
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/payees/{payeeId}',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/payees/{payeeId}
+
+Detailed Payee Data.
+
+Obtain detailed information on a single payee.
+
+Parameters
+Parameter	In	Type	Required	Description
+payeeId	path	PayeeId	true	ID of the payee requested.
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "payeeId": "string",
+    "nickname": "string",
+    "description": "string",
+    "type": "DOMESTIC",
+    "payee": {
+      "payeeType": "domestic",
+      "domesticAccountPayee": {
+        "domesticPayeeType": "payId",
+        "name": "string",
+        "identifier": "string",
+        "type": "EMAIL"
+      }
+    }
+  },
+  "links": {
+    "self": "http://example.com",
+  },
+  "meta": {
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	PayeeResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: bank_payees )
+
+PayeeResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	PayeeDetail	true	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	StandardResponse	false	none	none
+
+PayeeId
+"string"
+
+ID of the payee adhering to the rules of ID permanence.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	ASCII String	false	none	ID of the payee adhering to the rules of ID permanence.
+
+Payee
+{
+  "payeeId": "string",
+  "nickname": "string",
+  "description": "string",
+  "type": "DOMESTIC"
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+payeeId	PayeeId	true	none	ID of the payee adhering to the rules of ID permanence.
+nickname	string	true	none	A description of the payee provided by the customer.
+description	string	false	none	A description of the payee provided by the customer.
+type	string	true	none	The enumeration of payee types.
+Enumerated Values
+Parameter	Value
+type	DOMESTIC
+type	INTERNATIONAL
+type	BILLER
+
+PayeeDetail
+{
+  "payeeId": "string",
+  "nickname": "string",
+  "description": "string",
+  "type": "DOMESTIC",
+  "payee$type": "domestic",
+  "domestic": {
+    "payeeAccount$type": "payId",
+    "payId": {
+      "name": "string",
+      "identifier": "string",
+      "type": "EMAIL"
+    }
+  }
+}
+
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	Payee	false	none	none
+payee$type	string	false	none	Type of object included that describes the payee in detail.
+oneOf
+
+Name	Type	Required	Restrictions	Description
+domestic	DomesticPayeeType	false	none	none
+xor
+
+Name	Type	Required	Restrictions	Description
+biller	BillerPayeeType	false	none	none
+xor
+
+Name	Type	Required	Restrictions	Description
+international	InternationalPayeeType	false	none	none
+Enumerated Values
+Property	Value
+payee$type	domestic
+payee$type	biller
+payee$type	international
+
+DomesticPayeeType
+{
+  "payeeAccount$type": "payId",
+  "payId": {
+    "name": "string",
+    "identifier": "string",
+    "type": "EMAIL"
+  }
+}
+
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» payeeAccount$type	string	true	none	Type of account object included
+oneOf
+
+Name	Type	Required	Restrictions	Description
+» account	object	false	none	none
+»» accountName	string	true	none	name of the account to pay to.
+»» bsb	string	true	none	BSB of the account to pay to.
+»» accountNumber	string	true	none	Number of the account to pay to.
+xor
+
+Name	Type	Required	Restrictions	Description
+» card	object	false	none	none
+»» cardNumber	MaskedPANString	true	none	Masked PAN for the card to pay to.
+xor
+
+Name	Type	Required	Restrictions	Description
+» payId	object	false	none	none
+»» name	string	true	none	The name assiged to the PayID by the owner of the PayID.
+»» identifier	string	true	none	The identifier of the PayID.
+»» type	string	true	none	The type of PayID.
+Enumerated Values
+Property	Value
+payeeAccount$type	account
+payeeAccount$type	card
+payeeAccount$type	payId
+type	EMAIL
+type	MOBILE
+type	ORG_NUMBER
+type	ORG_NAME
+
+BillerPayeeType
+{
+  "billerCode": "string",
+  "crn": "string",
+  "billerName": "string"
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» billerCode	string	true	none	BPay Biller Code of the Biller.
+» crn	string	false	none	BPay CRN of the Biller. If the contents of the CRN match the format of a Credit Card PAN then it should be masked using the rules applicable for the MaskedPANString common type
+» billerName	string	true	none	Name of the Biller.
+
+InternationalPayeeType
+{
+  "beneficiaryDetails": {
+    "name": "string",
+    "country": "string",
+    "message": "string"
+  },
+  "bankDetails": {
+    "country": "string",
+    "accountNumber": "string",
+    "bankAddress": {
+      "name": "string",
+      "address": "string"
+    },
+    "beneficiaryBankBIC": "string",
+    "fedWireNumber": "string",
+    "sortCode": "string",
+    "chipNumber": "string",
+    "routingNumber": "string"
+  }
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» beneficiaryDetails	object	true	none	none
+»» name	string	false	none	Name of the beneficiary.
+»» country	string	true	none	Country where the beneficiary resides.
+»» message	string	false	none	Response message for the payment.
+» bankDetails	object	true	none	Details on the recipient institution and account for an international payment
+»» country	string	true	none	Country of the recipient institution.
+»» accountNumber	string	true	none	Accont targeted for payment.
+»» bankAddress	object	false	none	none
+»»» name	string	true	none	Name of the recipient bank.
+»»» address	string	true	none	Address of the recipient bank.
+»» beneficiaryBankBIC	string	false	none	Swift bank code.
+»» fedWireNumber	string	false	none	Number for Fedwire payment (Federal Reserve Wire Network).
+»» sortCode	string	false	none	Sort code used for account idenfitication in some jurisdictions..
+»» chipNumber	string	false	none	Number for the Clearing House Interbank Payments system.
+»» routingNumber	string	false	none	International bank routing number.
+Get Products
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/products',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/products
+
+Product List Data.
+
+Obtain a list of products that are currently openly offered to the market.
+
+Note that the results returned by this end point are expected to be ordered according to updated-since
+
+Conventions
+In the product reference payloads there are a number of recurring conventions that are explained here, in one place.
+
+Arrays Of Features
+In the product detail payload there are a number of arrays articulating generic features, constraints, prices, etc. The intent of these arrays is as follows:
+
+Each element in an array has the same structure so that clients can reliably interpret the payloads
+Each element as a type element that is an enumeration of the specific aspect of a product being described, such as types of fees.
+Each element has a field name additionalValue. This is a generic field with contents that will vary based on the type of object being described. The contents of this field for the ADDITIONAL_CARDS feature is the number of cards allowed while the contents of this field for the MAX_LIMIT constraint would be the maximum credit limit allowed for the product.
+An element in these arrays of the same type may appear more than once. For instance, a product may offer two separate loyalty programs that the customer can select from. A fixed term mortgage may have different rates for different term lengths.
+An element in these arrays may contain an additionalInfo and additionalInfoUri field. The additionalInfo field is used to provide displayable text clarifying the purpose of the element in some way when the product is presented to a customer. The additionalInfoUri provides a link to externally hosted information specifically relevant to that feature of the product.
+URIs To More Information
+As the complexities and nuances of a financial product can not easily be fully expressed in a data structure without a high degree of complexity it is necessary to provide additional reference information that a potential customer can access so that they are fully informed of the features and implications of the product. The payloads for product reference therefore contain numerous fields that are provided to allow the product provider to describe the product more fully using a web page hosted on their on channels.
+
+These URIs do not need to all link to different pages. If desired, they can all link to a single hosted page and use difference HTML anchors to focus on a specific topic such as eligibility or fees.
+
+Linkage To Accounts
+From the moment that a customer applies for a product and an account is created the account and the product that spawned it will diverge. Rates and features of the product may change and a discount may be negotiated for the account.
+
+For this reason productCategory is a common field between accounts and products but there is not common linkage field specific to a product that appears within the account payloads.
+
+Similarly, many of the fields and objects in the product payload will appear in the account detail payload but the full sets of options are not identical between the two entities.
+
+Dates
+It is expected that data consumers needing this data will call relatively frequently to ensure the data they have is representative of the current offering from a bank. To minimise the volume and frequency of these calls the ability to set a lastUpdated field with the date and time of the last update to this product is included. A call for a list of products can then be filtered to only return products that have been updated since the last time that data was obtained.
+
+In addition the concept of effective date and time has also been included. This allows for a product to be marked for obsolescence, or introduction, from a certain time without the need for an update to show that a product has been changed. The inclusion of these dates also removes the need to represent deleted products in the payload. Products that are no long offered can be marked not effective for a few weeks before they are then removed from the product set as an option entirely.
+
+Parameters
+Parameter	In	Type	Required	Description
+product-category	query	ProductCategory	false	Used to filter results on the productCategory field. Any one of the valid values for this field can be supplied. If absent then all products returned.
+effective	query	boolean	false	If true then only include products that are effective right now and exclude products that may be available at a future time. If false only include products effective in the future. If absent defaults to include all products.
+updated-since	query	DateTimeString	false	Only include products that have been updated after the specified date and time. If absent defaults to include all products.
+brand	query	string	false	Filter results based on a specific brand
+page	query	PositiveInteger	false	Page of results to request (standard pagination).
+page-size	query	PositiveInteger	false	Page size to request. Default is 25 (standard pagination).
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "products": [
+      {
+        "productId": "string",
+        "effectiveFrom": "2018-11-01T05:33:52Z",
+        "effectiveTo": "2018-11-01T05:33:52Z",
+        "lastUpdated": "2018-11-01T05:33:52Z",
+        "productCategory": "PERS_AT_CALL_DEPOSITS",
+        "name": "string",
+        "description": "string",
+        "brand": "string",
+        "brandName": "string",
+        "applicationUri": "http://example.com",
+        "isNegotiable": true,
+        "additionalInformation": {
+          "overviewUri": "http://example.com",
+          "termsUri": "http://example.com",
+          "eligibilityUri": "http://example.com",
+          "feesAndPricingUri": "http://example.com",
+          "bundleUri": "http://example.com"
+        }
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	ProductsResponse
+ This operation can be performed without authentication
+
+ProductsResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+»» products	[Product]	true	none	The list of products returned.
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+Get Product Detail
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'x-Correlation-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/banking/v1/products/{productId}',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /banking/products/{productId}
+
+Detailed Product Data.
+
+Obtain detailed information on a single product offered openly to the market.
+
+Parameters
+Parameter	In	Type	Required	Description
+productId	path	ASCII String	true	ID of the specific Product request.
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "productId": "string",
+    "effectiveFrom": "2018-11-01T05:33:52Z",
+    "effectiveTo": "2018-11-01T05:33:52Z",
+    "lastUpdated": "2018-11-01T05:33:52Z",
+    "productCategory": "PERS_AT_CALL_DEPOSITS",
+    "name": "string",
+    "description": "string",
+    "applicationUri": "http://example.com",
+    "isNegotiable": true,
+    "additionalInformation": {
+      "overviewUri": "http://example.com",
+      "termsUri": "http://example.com",
+      "eligibilityUri": "http://example.com",
+      "feesAndPricingUri": "http://example.com",
+      "bundleUri": "http://example.com"
+    },
+    "features": [
+      {
+        "featureType": "DEBIT_CARD",
+        "discountType": "DEBIT_CARD"
+      }
+    ],
+    "fees": [
+      {
+        "name": "string",
+        "feeType": "PERIODIC",
+        "amount": 0,
+        "additionalInfo": "string",
+        "additionalInfoUri": "http://example.com",
+        "discounts": [
+          {
+            "discountType": "BALANCE",
+            "additionalValue": 0
+          }
+        ],
+        "additionalValue": "DAILY"
+      }
+    ],
+    "depositRates": [
+      {
+        "rate": "string",
+        "additionalInfo": "string",
+        "additionalInfoUri": "http://example.com",
+        "depositRateType": "FIXED",
+        "additionalValue": "2018-11-01T05:33:52Z",
+        "discountType": "FIXED"
+      }
+    ],
+    "lendingRates": [
+      {
+        "rate": "string",
+        "additionalInfo": "string",
+        "additionalInfoUri": "http://example.com",
+        "lendingRateType": "FIXED",
+        "additionalValue": "2018-11-01T05:33:52Z",
+        "discountType": "FIXED"
+      }
+    ],
+    "constraints": [
+      {
+        "constraintType": "MIN_BALANCE",
+        "additionalValue": 0
+      }
+    ],
+    "eligibility": [
+      {
+        "additionalInfo": "string",
+        "additionalInfoUri": "http://example.com",
+        "eligibilityType": "BUSINESS"
+      }
+    ]
+  },
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	ProductResponse
+ This operation can be performed without authentication
+
+ProductResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	ProductDetail	true	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	PaginatedResponse	false	none	none
+Common Schemas
+
+TransactionBasic
+{
+  "transactionId": "string",
+  "isDetailAvailable": true,
+  "status": "PENDING",
+  "description": "string",
+  "postDateTime": "2018-11-01T05:33:52Z",
+  "executionDateTime": "2018-11-01T05:33:52Z",
+  "amount": 300.56,
+  "currency": "AUD",
+  "reference": "string"
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+transactionId	TransactionId	false	none	A unique ID of the transaction adhering to the standards for ID permanence. This is mandatory (through hashing if necessary) unless there are specific and justifiable technical reasons why a transaction cannot be uniquely identified for a particular account type
+isDetailAvailable	boolean	true	none	True if extended information is available using the transaction detail end point. False if extended data is not available
+status	TransactionStatus	true	none	Status of the transaction.
+description	string	true	none	The transaction description as applied by the financial institution.
+postDateTime	DateTimeString	false	none	The time the transaction was posted. This field is mandatory if the transaction has status POSTED. This is the time that appears on a standard statement.
+executionDateTime	DateTimeString	false	none	The time the transaction was executed by the originating customer, if available.
+amount	AmountString	false	none	The value of the transaction. Negative values mean money was outgoing.
+currency	CurrencyString	false	none	The currency for the transaction amount. AUD assumed if not present.
+reference	string	true	none	The reference for the transaction provided by the originating institution.
+
+TransactionDetail
+{
+  "transactionId": "string",
+  "status": "PENDING",
+  "description": "string",
+  "postDateTime": "2018-11-01T05:33:52Z",
+  "executionDateTime": "2018-11-01T05:33:52Z",
+  "amount": 300.56,
+  "currency": "AUD",
+  "reference": "string",
+  "extendedData": {
+    "payer": "string",
+    "payee": "string",
+    "extensionType": "extendedDescription",
+    "extendedDescription": "string",
+    "service": "X2P1.01"
+  }
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+transactionId	TransactionId	false	none	A unique ID of the transaction adhering to the standards for ID permanence. This is mandatory (through hashing if necessary) unless there are specific and justifiable technical reasons why a transaction cannot be uniquely identified for a particular account type
+status	TransactionStatus	true	none	Status of the transaction.
+description	string	true	none	The transaction description as applied by the financial institution.
+postDateTime	DateTimeString	false	none	The time the transaction was posted. This field is mandatory if the transaction has status POSTED. This is the time that appears on a standard statement.
+executionDateTime	DateTimeString	false	none	The time the transaction was executed by the originating customer, if available.
+amount	AmountString	false	none	The value of the transaction. Negative values mean money was outgoing.
+currency	CurrencyString	false	none	The currency for the transaction amount. AUD assumed if not present.
+reference	string	true	none	The reference for the transaction provided by the originating institution.
+extendedData	ExtendedTransactionData	false	none	Contains more detailed information specific to transactions originated via NPP.
+
+AccountTransaction
+{
+  "accountId": "string",
+  "transactionId": "string",
+  "isDetailAvailable": true,
+  "status": "PENDING",
+  "description": "string",
+  "postDateTime": "2018-11-01T05:33:52Z",
+  "executionDateTime": "2018-11-01T05:33:52Z",
+  "amount": 300.56,
+  "currency": "AUD",
+  "reference": "string"
+}
+
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» accountId	AccountId	true	none	A unique ID of the account adhering to the standards for ID permanence.
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	TransactionBasic	false	none	none
+
+ExtendedTransactionData
+{
+  "payer": "string",
+  "payee": "string",
+  "extension$type": "extendedDescription",
+  "extendedDescription": "string",
+  "service": "X2P1.01"
+}
+
+Contains more detailed information specific to transactions originated via NPP.
+
+Properties
+Name	Type	Required	Restrictions	Description
+payer	string	false	none	Label of the originating payer. Mandatory for an inbound payment.
+payee	string	false	none	Label of the target PayID. Mandatory for an outbound payment.
+extension$type	string	false	none	Optional extended data provided specific to transaction originated via NPP.
+extendedDescription	string	false	none	An extended string description. Only present if specified by the extensionType field.
+service	string	true	none	Identifier of the applicable overlay service.
+Enumerated Values
+Property	Value
+extension$type	extendedDescription
+service	X2P1.01
+
+TransactionStatus
+"PENDING"
+
+Status of the transaction.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	string	false	none	Status of the transaction.
+Enumerated Values
+Property	Value
+anonymous	PENDING
+anonymous	POSTED
+
+TransactionId
+"string"
+
+A unique ID of the transaction adhering to the standards for ID permanence. This field is mandatory in this payload as it is a reflection of the requested transaction in the path parameter.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	ASCII String	false	none	A unique ID of the transaction adhering to the standards for ID permanence. This field is mandatory in this payload as it is a reflection of the requested transaction in the path parameter.
+
+AccountDirectDebit
+{
+  "accountId": "string",
+  "authorisedEntity": {
+    "name": "string",
+    "financialInsitution": "string",
+    "abn": "string",
+    "acn": "string"
+  },
+  "lastDebitDateTime": "2018-11-01T05:33:52Z",
+  "lastDebitAmount": 300.56
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+accountId	AccountId	true	none	A unique ID of the account adhering to the standards for ID permanence.
+authorisedEntity	AuthorisedEntity	false	none	Information on the authorised entity that is able to perform a direct debit
+lastDebitDateTime	DateTimeString	false	none	The date and time of the last debit executed under this authorisation
+lastDebitAmount	AmountString	false	none	The amount of the last debit executed under this authorisation
+
+AuthorisedEntity
+{
+  "name": "string",
+  "financialInsitution": "string",
+  "abn": "string",
+  "acn": "string"
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+name	string	true	none	Name of the authorised entity.
+financialInsitution	string	true	none	Name of the financial institution through which the direct debit will be executed.
+abn	ABN	false	none	Australian Business Number for the authorised entity.
+acn	ACN	false	none	Australian Company Number for the authorised entity.
+
+ABN
+"string"
+
+Australian Business Number.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	string	false	none	Australian Business Number.
+
+ACN
+"string"
+
+Australian Company Number.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	string	false	none	Australian Company Number.
+
+Account
+{
+  "accountId": "string",
+  "displayName": "string",
+  "nickname": "string",
+  "maskedNumber": "string",
+  "productCategory": "PERS_AT_CALL_DEPOSITS",
+  "providerType": "string",
+  "balance$type": "deposits",
+  "deposits": {
+    "currentBalance": {
+      "amount": 300.56,
+      "currency": "AUD"
+    },
+    "availableBalance": {
+      "amount": 300.56,
+      "currency": "AUD"
+    }
+  }
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+accountId	AccountId	true	none	A unique ID of the account adhering to the standards for ID permanence.
+displayName	string	true	none	The display name of the account. If a customer provided nickname is available that value should be returned.
+nickname	string	false	none	A customer supplied nick name for the account.
+maskedNumber	MaskedAccountNumber	true	none	A masked version of the account. Whether BSB/Account Number, Credit Card PAN or another number this should be formatted with each digit masked and the last three digits unmasked.
+productCategory	ProductCategory	false	none	The the product category an account aligns withs.
+providerType	string	true	none	The unique type as defined by the account provider.
+balance$type	string	true	none	The type of balance object provided for the account.
+oneOf
+
+Name	Type	Required	Restrictions	Description
+deposits	DepositBalanceType	false	none	none
+xor
+
+Name	Type	Required	Restrictions	Description
+lending	LendingBalanceType	false	none	none
+xor
+
+Name	Type	Required	Restrictions	Description
+purses	MultiCurrencyPursesType	false	none	none
+Enumerated Values
+Property	Value
+balance$type	deposits
+balance$type	lending
+balance$type	purses
+
+AccountDetail
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	Account	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+» bundleName	string	false	none	Indicates if this account is park of a bundle that is providing additional benefit to the customer.
+» specificAccount$type	string	false	none	The type of structure to present account specific fields
+oneOf
+
+Name	Type	Required	Restrictions	Description
+» termDeposit	TermDepositAccountType	false	none	none
+xor
+
+Name	Type	Required	Restrictions	Description
+» creditCard	CreditCardAccountType	false	none	none
+xor
+
+Name	Type	Required	Restrictions	Description
+» loan	LoanAccountType	false	none	none
+continued
+
+Name	Type	Required	Restrictions	Description
+» features	[ProductFeature]	false	none	Array of features on the account
+» fees	[ProductFee]	false	none	Fees and charges applicable to the account
+» depositRates	[ProductDepositRate]	false	none	Interest rates available for deposits
+» lendingRates	[ProductLendingRate]	false	none	Interest rates charged against lending balances
+» address	object	false	none	The address for the account to be used for correspondence
+»» address$type	string	true	none	The type of address object that is present
+»» simple	SimpleAddress	false	none	none
+»» paf	PAFAddress	false	none	none
+Enumerated Values
+Property	Value
+specificAccount$type	termDeposit
+specificAccount$type	creditCard
+specificAccount$type	loan
+address$type	simple
+address$type	paf
+
+CountryCodeISO
+"AUS"
+
+A valid ISO 3166 Alph-3 country code.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	string	false	none	A valid ISO 3166 Alph-3 country code.
+
+Product
+{
+  "productId": "string",
+  "effectiveFrom": "2018-11-01T05:33:52Z",
+  "effectiveTo": "2018-11-01T05:33:52Z",
+  "lastUpdated": "2018-11-01T05:33:52Z",
+  "productCategory": "PERS_AT_CALL_DEPOSITS",
+  "name": "string",
+  "description": "string",
+  "brand": "string",
+  "brandName": "string",
+  "applicationUri": "http://example.com",
+  "isNegotiable": true,
+  "additionalInformation": {
+    "overviewUri": "http://example.com",
+    "termsUri": "http://example.com",
+    "eligibilityUri": "http://example.com",
+    "feesAndPricingUri": "http://example.com",
+    "bundleUri": "http://example.com"
+  }
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+productId	ASCII String	true	none	A provider specific unique identifier for this product. This identifier must be unique to a product but does not otherwise need to adhere to ID permanence guidelines.
+effectiveFrom	DateTimeString	false	none	A description of the product.
+effectiveTo	DateTimeString	false	none	The date and time at which this product will be retired and will no longer be offered.
+lastUpdated	DateTimeString	true	none	A description of the product.
+productCategory	ProductCategory	true	none	The the product category an account aligns withs.
+name	string	true	none	The display name of the product.
+description	string	true	none	The description of the product.
+brand	string	true	none	A label of the brand for the product. Able to be used for filtering. For data providers with single brands this value is still required.
+brandName	string	false	none	An optional display name of the brand
+applicationUri	URIString	false	none	A link to an application web page where this product can be applied for.
+isNegotiable	boolean	true	none	Indicates whether the product is specifically designed so that fees and prices are negotiated depending on context. While all products are open to a degree of negotiation this flag indicates that negotiation is expected and thus that the provision of specific fees and rates is not applicable.
+additionalInformation	object	false	none	Object that contains links to additional information on specific topics.
+» overviewUri	URIString	false	none	General overview of the product.
+» termsUri	URIString	false	none	Terms and conditions for the product.
+» eligibilityUri	URIString	false	none	Eligibility rules and criteria for the product.
+» feesAndPricingUri	URIString	false	none	Description of fees, pricing, discounts, exemptions and bonuses for the product.
+» bundleUri	URIString	false	none	Description of a bundle that this product can be part of.
+
+ProductDetail
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	Product	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+» bundles	[object]	false	none	An array of bundles that this product participates in. Each bundle is described by free form information but also by a list of product IDs of the other products that are included in the bundle. It is assumed that the current product is included in the bundle also
+»» name	string	true	none	Name of the bundle
+»» description	true	none	Description of the bundle	
+»» additionalInfoUri	URIString	false	none	Link to a web page with more information on the bundle criteria and benefits
+»» productIds	[string]	true	none	Array of product IDs for products included in the bundle
+» features	[ProductFeature]	false	none	Array of features available for the product
+» constraints	[ProductConstraint]	false	none	Constraints on the application for or operation of the product such as minimum balances or limit thresholds
+» eligibility	[ProductEligibility]	false	none	Eligibility criteria for the product
+» fees	[ProductFee]	false	none	Fees and charges applicable for the product
+» depositRates	[ProductDepositRate]	false	none	Interest rates available for deposits
+» lendingRates	[ProductLendingRate]	false	none	Interest rates charged against lending balances
+» repaymentType	string	false	none	For lending style products what are the options for repayments that are available. If absent (and relevant) defaults to PRINCIPAL_AND_INTEREST
+Enumerated Values
+Property	Value
+repaymentType	INTEREST_ONLY
+repaymentType	PRINCIPAL_AND_INTEREST
+repaymentType	NEGOTIABLE
+
+ProductFeature
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» featureType	string	true	none	The type of feature described. See the note below for valid values and their meaning
+» additionalValue	string	false	none	Generic field containing additional information relevant to the featureType specified. Whether mandatory or not is dependent on the value of featureType
+For an explanation of the featureType values and their meanings refer to Product Feature Types or Account Feature Types
+
+
+ProductConstraint
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» constraintType	string	true	none	The type of constraint described. See the note below for valid values and their meaning
+» additionalValue	string	false	none	Generic field containing additional information relevant to the constraintType specified. Whether mandatory or not is dependent on the value of constraintType
+For an explanation of the constraintType values and their meanings refer to Product Constraint Types
+
+
+ProductEligibility
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» eligibilityType	string	true	none	The type of eligibility criteria described. See the note below for valid values and their meaning
+» additionalValue	string	false	none	Generic field containing additional information relevant to the eligibilityType specified. Whether mandatory or not is dependent on the value of eligibilityType
+» additionalInfo	string	false	none	Display text providing more information on the eligibility criteria. Mandatory if the eligibilityType field is set to OTHER
+» additionalInfoUri	URIString	false	none	Link to a web page with more information on this eligibility criteria
+For an explanation of the eligibilityType values and their meanings refer to Product Eligibility Types
+
+
+ProductFee
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» name	string	true	none	Name of the fee
+» feeType	string	true	none	The type of fee. See the note below for valid values and their meaning
+» amount	AmountString	false	none	The amount charged for the fee. Assumed to be in AUD. One of amount, balanceRate and transactionRate is mandatory.
+» balanceRate	RateString	false	none	A fee rate calculated based on a proportion of the balance. Assumed to be in AUD. One of amount, balanceRate and transactionRate is mandatory.
+» transactionRate	RateString	false	none	A fee rate calculated based on a proportion of a transaction. Assumed to be in AUD. One of amount, balanceRate and transactionRate is mandatory.
+» currency	CurrencyString	false	none	The currency the fee will be charged in. Assumes AUD if absent
+» additionalValue	string	false	none	Generic field containing additional information relevant to the feeType specified. Whether mandatory or not is dependent on the value of feeType
+» additionalInfo	string	false	none	Display text providing more information on the fee
+» additionalInfoUri	URIString	false	none	Optional Link to a web page with more information on this fee
+» discounts	[ProductDiscount]	false	none	An optional list of discounts to this fee that may be available
+For an explanation of the feeType values and their meanings refer to Product Fee Types or Account Fee Types
+
+
+ProductDiscount
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» description	string	true	none	Description of the discount
+» discountType	string	true	none	The type of discount. See the note below for valid values and their meaning
+» amount	AmountString	true	none	Value of the discount. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself
+» additionalValue	string	false	none	Generic field containing additional information relevant to the discountType specified. Whether mandatory or not is dependent on the value of discountType
+For an explanation of the discountType values and their meanings refer to Product Discount Types or Account Discount Types
+
+
+ProductDepositRate
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» depositRateType	string	true	none	The type of rate (base, bonus, etc). See the next section for an overview of valid values and their meaning
+» rate	RateString	true	none	The rate to be applied
+» additionalValue	string	false	none	Generic field containing additional information relevant to the depositRateType specified. Whether mandatory or not is dependent on the value of depositRateType
+» additionalInfo	string	false	none	Display text providing more information on the rate
+» additionalInfoUri	URIString	false	none	Link to a web page with more information on this fee
+For an explanation of the depositRateType values and their meanings refer to Product Deposit Rate Types or Account Deposit Rate Types
+
+
+ProductLendingRate
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» lendingRateType	string	true	none	The type of rate (base, bonus, etc). See the next section for an overview of valid values and their meaning
+» rate	RateString	true	none	The rate to be applied
+» additionalValue	string	false	none	Generic field containing additional information relevant to the lendingRateType specified. Whether mandatory or not is dependent on the value of lendingRateType
+» additionalInfo	string	false	none	Display text providing more information on the rate
+» additionalInfoUri	URIString	false	none	Link to a web page with more information on this fee
+For an explanation of the lendingRateType values and their meanings refer to Product Lending Rate Types or Account Lending Rate Types
+
+
+AccountType
+{
+  "accountType": "termDeposit"
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+accountType	string	true	none	The specfic account type.
+Enumerated Values
+Property	Value
+accountType	termDeposit
+accountType	creditCard
+accountType	loan
+
+TermDepositAccountType
+{
+  "lodgementDate": "2018-11-01",
+  "maturityDate": "2018-11-01",
+  "maturityAmount": 380,
+  "maturityCurrency": "AUD",
+  "maturityInstructions": "ROLLED_OVER"
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» lodgementDate	DateString	true	none	The lodgement date of the original deposit.
+» maturityDate	DateString	true	none	Maturity date for the term deposit.
+» maturityAmount	number	false	none	Amount to be paid upon maturity. If absent it implies the amount to paid is variable and cannot currently be calculated
+» maturityCurrency	CurrencyString	false	none	If absent assumes AUD.
+» maturityInstructions	string	true	none	Current instructions on action to be taken at maturity.
+Enumerated Values
+Property	Value
+maturityInstructions	ROLLED_OVER
+maturityInstructions	PAID_OUT_AT_MATURITY
+
+CreditCardAccountType
+{
+  "minPaymentAmount": 100,
+  "paymentDueAmount": 200,
+  "paymentCurrency": "AUD",
+  "paymentDueDate": "2018-11-01"
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» minPaymentAmount	AmountString	true	none	The minimum payment amount due for the next card payment.
+» paymentDueAmount	AmountString	true	none	The amount due for the next card payment.
+» paymentCurrency	CurrencyString	false	none	If absent assumes AUD.
+» paymentDueDate	DateString	true	none	Date that the next payment for the card is due.
+
+LoanAccountType
+{
+  "originalStartDate": "2018-11-01",
+  "originalLoanAmount": 200,
+  "originalLoanCurrency": "AUD",
+  "loanEndDate": "2018-11-01",
+  "nextInstalmentDate": "2018-11-01",
+  "minInstalmentAmount": 0,
+  "minInstalmentCurrency": "AUD",
+  "maxRedraw": 0,
+  "maxRedrawCurrency": "AUD",
+  "minRedraw": 0,
+  "minRedrawCurrency": "AUD",
+  "offsetAccountEnabled": true,
+  "offsetAccountIds": ["string"],
+  "repaymentType": "INTEREST_ONLY",
+  "repaymentFrequency": "P1M"
+}
+
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	true	none	none
+» originalStartDate	DateString	false	none	Optional original start date for the loan.
+» originalLoanAmount	AmountString	false	none	Optional original loan value.
+» originalLoanCurrency	CurrencyString	false	none	If absent assumes AUD.
+» loanEndDate	DateString	true	none	Date that the loan is due to be repaid in full.
+» nextInstalmentDate	DateString	true	none	Next date that an installment is required.
+» minInstalmentAmount	AmountString	true	none	Minimum Amount of next instalment.
+» minInstalmentCurrency	CurrencyString	false	none	If absent assumes AUD.
+» maxRedraw	number	false	none	Maximum amount of funds that can be redrawn. If not present redraw is not available even if the feature exists for the account.
+» maxRedrawCurrency	CurrencyString	false	none	If absent assumes AUD.
+» minRedraw	number(date)	false	none	none
+» minRedrawCurrency	CurrencyString	false	none	If absent assumes AUD.
+» offsetAccountEnabled	boolean	false	none	Set to true if one or more offset accounts are configured for this loan account
+» offsetAccountId	[AccountId]	false	none	The accountIDs of the configured offset accounts attached to this loan. Only offset accounts that can be accesses under the current authorisation should be included. It is expected behaviour that offsetAccountEnabled is set to true but the offsetAccountIds field is absent or empty. This represents a situation where an offset account exists but details can not be accessed under the current authorisation.
+» repaymentType	string	false	none	Options in place for repayments. If absent defaults to PRINCIPAL_AND_INTEREST.
+» repaymentFrequency	string	true	none	The expected or required repayment frequency. Formatted according to ISO 8601 Durations
+Enumerated Values
+Property	Value
+repaymentType	INTEREST_ONLY
+repaymentType	PRINCIPAL_AND_INTEREST
+
+MaskedAccountNumber
+"string"
+
+A masked version of the account. Whether BSB/Account Number, Credit Card PAN or another number this should be formatted with each digit masked and the last three digits unmasked.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	string	false	none	A masked version of the account. Whether BSB/Account Number, Credit Card PAN or another number this should be formatted with each digit masked and the last three digits unmasked.
+
+AccountId
+"string"
+
+A unique ID of the account adhering to the standards for ID permanence.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	ASCIIString	false	none	A unique ID of the account adhering to the standards for ID permanence.
+
+AccountBalance
+{
+  "accountId": "string",
+  "balance$type": "deposits",
+  "deposits": {
+    "currentBalance": {
+      "amount": 300.56,
+      "currency": "AUD"
+    },
+    "availableBalance": {
+      "amount": 300.56,
+      "currency": "AUD"
+    }
+  }
+}
+
+
+
+Properties
+Name	Type	Required	Restrictions	Description
+accountId	AccountId	true	none	A unique ID of the account adhering to the standards for ID permanence.
+balance$type	string	true	none	The type of balance object provided for the account.
+oneOf
+
+Name	Type	Required	Restrictions	Description
+deposits	DepositBalanceType	false	none	none
+xor
+
+Name	Type	Required	Restrictions	Description
+lending	LendingBalanceType	false	none	none
+xor
+
+Name	Type	Required	Restrictions	Description
+purses	MultiCurrencyPursesType	false	none	none
+Enumerated Values
+Property	Value
+balance$type	deposits
+balance$type	lending
+balance$type	purses
+
+BalanceType
+{
+  "balanceType": "deposits"
+}
+
+
+
+Properties
+Name	Type	Required	Restrictions	Description
+balanceType	string	true	none	The balance type object provided for the account.
+Enumerated Values
+Property	Value
+balanceType	deposits
+balanceType	lending
+balanceType	purses
+
+DepositBalanceType
+{
+  "currentBalance": {
+    "amount": 300.56,
+    "currency": "AUD"
+  },
+  "availableBalance": {
+    "amount": 300.56,
+    "currency": "AUD"
+  }
+}
+
+
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» currentBalance	CurrencyAmount	true	none	The current balance of the account at this time. Should align to the current balance available via other channels such as ATM balance enquiry or Internet Banking.
+» availableBalance	CurrencyAmount	true	none	Object represent the current balance for the account. Assumed to be positive or zero.
+
+LendingBalanceType
+{
+  "accountBalance": {
+    "amount": 300.56,
+    "currency": "AUD"
+  },
+  "availableBalance": {
+    "amount": 300.56,
+    "currency": "AUD"
+  },
+  "creditLimit": {
+    "amount": 300.56,
+    "currency": "AUD"
+  },
+  "amortisedLimit": {
+    "amount": 300.56,
+    "currency": "AUD"
+  }
+}
+
+
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» accountBalance	CurrencyAmount	true	none	Object represent the balance for the loan, line of credit or credit card.
+» availableBalance	CurrencyAmount	true	none	The available balance for the account. Assumed to be positive or zero.
+» creditLimit	CurrencyAmount	true	none	The maximum amount of credit that is avaible for this account. Assumed to be positive or zero.
+» amortisedLimit	CurrencyAmount	false	none	The available limit amortised according to payement schedule.
+
+MultiCurrencyPursesType
+{
+  "purses": [
+    {
+      "amount": 300.56,
+      "currency": "AUD"
+    }
+  ]
+}
+
+
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» purses	[CurrencyAmount]	true	none	List of Purses.
+
+ProductCategory
+The product category an account aligns withs.
+
+Properties
+Name	Type	Required	Restrictions	Description
+anonymous	string	false	none	The the product category an account aligns withs.
+Enumerated Values
+Property	Value
+anonymous	PERS_AT_CALL_DEPOSITS
+anonymous	BUS_AT_CALL_DEPOSITS
+anonymous	TERM_DEPOSITS
+anonymous	RESIDENTIAL_MORTGAGES
+anonymous	PERS_CRED_AND_CHRG_CARDS
+anonymous	BUS_CRED_AND_CHRG_CARDS
+anonymous	PERS_LOANS
+anonymous	PERS_LEASING
+anonymous	BUS_LEASING
+anonymous	TRADE_FINANCE
+anonymous	PERS_OVERDRAFT
+anonymous	BUS_OVERDRAFT
+anonymous	BUS_LOANS
+anonymous	FOREIGN_CURR_AT_CALL_DEPOSITS
+anonymous	FOREIGN_CURR_TERM_DEPOSITS
+anonymous	FOREIGN_CURR_LOAN
+anonymous	FOREIGN_CURRRENCT_OVERDRAFT
+anonymous	TRAVEL_CARD
+
+CurrencyAmount
+{
+  "amount": 300.56,
+  "currency": "AUD"
+}
+
+
+
+Properties
+Name	Type	Required	Restrictions	Description
+amount	number	true	none	none
+currency	string	false	none	none
+Product & Account Components
+
+Product Feature Types
+Description of the usage of the featureType field as it applies to products.
+
+Value	Description	Use of additionalValue Field
+CARD_ACCESS	A card is available for the product to access funds	NA
+ADDITIONAL_CARDS	Additional cards can be requested	The maximum number of additional cards. If no maximum then should be set to null
+UNLIMITED_TXNS	Unlimited free transactions available	NA
+FREE_TXNS	A set number of free transactions available per month	The number of free transactions
+FREE_TXNS_ALLOWANCE	A set amount of transaction fee value that is discounted per month	The amount of transaction fee discounted (in AUD)
+LOYALTY_PROGRAM	A points based loyalty program is available	Name of the loyalty program
+OFFSET	An offset account can be connected to the product	NA
+OVERDRAFT	An overdraft can be applied for	NA
+REDRAW	Redraw of repaid principal above minimum required is available	NA
+INSURANCE	Insurance is provided as an additional feature of the product	Text description of the type of insurance (e.g. Travel Insurance)
+BALANCE_TRANSFERS	Balance transfers can be made from the account (eg. for credit cards)	NA
+INTEREST_FREE	Interest free period for purchases	Interest free period. Formatted according to ISO 8601 Durations
+INTEREST_FREE_TRANSFERS	Interest free period for balance transfers	Interest free period. Formatted according to ISO 8601 Durations
+DIGITAL_WALLET	A Digital wallet can be attached to the product	The name or brand of the wallet
+DIGITAL_BANKING	Access is available to online banking features for the product	NA
+NPP_PAYID	An account of this product type can be used as the target of an NPP PayID	NA
+NPP_ENABLED	An account of this product type can be used to receive funds as a result of a BSB/Number based NPP payment	NA
+DONATE_INTEREST	Indicates that interest generated from the product can be automatically donated to a charity or community group	NA
+BILL_PAYMENT	The product can be attached to an automatic budgeting and bill payment service	Optional name of the service
+
+Product Constraint Types
+Description of the usage of the constraintType field as it applies to products.
+
+Value	Description	Use of additionalValue Field
+MIN_BALANCE	A minimum balance is required for the product	The minimum balance in AmountString format
+OPENING_BALANCE	An opening balance is required for the product	The minimum opening balance in AmountString format
+MAX_LIMIT	A maximum credit limit exists	The maximum limit in AmountString format
+MIN_LIMIT	A minimum credit limit exists	The minimum limit in AmountString format
+
+Product Eligibility Types
+Description of the usage of the eligibilityType field as it applies to products.
+
+Value	Description	Use of additionalValue Field
+BUSINESS	Only business may apply for the account	NA
+PENSION_RECIPIENT	A recipient of a government pension may apply for the product	NA
+MIN_AGE	Only customers older than a minimum age may apply	The minimum age in years
+MAX_AGE	Only customers younger than a maximum age may apply	The maximum age in years
+MIN_INCOME	The customer must have an income greater than a specified threshold to obtain the product	Minimum income in AmountString format
+MIN_TURNOVER	Only a business with greater than a minimum turnover may apply	Minimum turnover in AmountString format
+STAFF	Only a staff member of the provider may apply	NA
+STUDENT	Only students may apply for the product	NA
+EMPLOYMENT_STATUS	An eligibility constraint based on employment status applies	A description of the status required
+RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
+OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	Value relevant to the criteria
+
+Product Fee Types
+Description of the usage of the feeType field as it applies to products.
+
+Value	Description	Use of additionalValue Field
+PERIODIC	A periodic fee such as a monthly account servicing fee	The period of charge. Formatted according to ISO 8601 Durations
+TRANSACTION	A fee for each transaction (above any free transactions in a period)	A description of the type of transaction (eg. Assisted Transaction, Teller Transaction, Cheque)
+ESTABLISHMENT	An establishment fee for the product	NA
+EXIT	A fee for closing the product	NA
+OVERDRAW	A fee for overdrawing the account	NA
+MIN_BALANCE	A periodic fee for being below the minimum balance	The period of charge. Formatted according to ISO 8601 Durations
+REDRAW	A fee for performing a redraw transaction	NA
+CHEQUE_CASH	A fee for cashing a cheque	NA
+CHEQUE_STOP	A fee for stopping a cheque	NA
+CHEQUE_BOOK	A fee for ordering a new cheque book	NA
+CARD_REPLACE	A fee for ordering a replacement card	NA
+PAPER_STATEMENT	A fee for obtaining a paper statement	NA
+OTHER_EVENT	A fee for another type of event not already specified in the list of valid values	Text description of the event
+
+Product Discount Types
+Description of the usage of the discountType field as it applies to products.
+
+Value	Description	Use of additionalValue Field
+BALANCE	Discount on a fee for maintaining a set balance. As the discount applies to a fee the period is the same as for the fee	The minimum balance in AmountString format
+DEPOSITS	Discount for depositing a certain amount of money in a period. As the discount applies to a fee the period is the same as for the fee	The minimum deposit amount in AmountString format
+PAYMENTS	Discount for outbound payments from the account under a certain amount of money in a period. As the discount applies to a fee the period is the same as for the fee	The payment threshold amount in AmountString format
+BUNDLE	Discount for originating a bundle instead of a standalone product	The name of the applicable bundle
+
+Product Deposit Rate Types
+Description of the usage of the depositRateType field as it applies to products.
+
+Value	Description	Use of additionalValue Field
+FIXED	Fixed rate for a period of time	The period of time fixed. Formatted according to ISO 8601 Durations
+BONUS	A bonus rate available by meeting a specific criteria	A description of the criteria to obtain the bonus
+BUNDLE_BONUS	A bonus rate obtained by originating a bundle instead of a standalone product	The name of the bundle
+VARIABLE	A variable base rate for the product	NA
+INTRODUCTORY	An introductory bonus that will expire after a set period	The period of time for the introductory rate. Formatted according to ISO 8601 Durations
+
+Product Lending Rate Types
+Description of the usage of the lendingRateType field as it applies to products.
+
+Value	Description	Use of additionalValue Field
+FIXED	Fixed rate for a period of time	The period of time fixed. Formatted according to ISO 8601 Durations
+INTRODUCTORY	An introductory discount that will expire after a set period	The period of time for the introductory rate. Formatted according to ISO 8601 Durations
+DISCOUNT	A specific discount rate that may be applied. A discount rate reduces the interest payable	Description of the discount rate that is applicable
+PENALTY	A specific penalty rate that may be applied. A penalty rate increases the interest payable	Description of the penalty rate that is applicable
+BUNDLE_DISCOUNT	A discount rate obtained by originating a bundle instead of a standalone product	The name of the bundle
+FLOATING	A floating rate is relatively fixed but still adjusts under specific circumstances	Details of the float parameters
+MARKET_LINKED	A rate that is linked to a specific market, commodity or asset class	Details of the market linkage
+CASH_ADVANCE	Specific rate applied to case advances from the account	NA
+VARIABLE	A variable base rate for the product	NA
+COMPARISON	A comparison rate for the product	Description of the comparison algorithm applied (eg. AAPR)
+
+Account Feature Types
+Description of the usage of the featureType field as it applies to accounts.
+
+Value	Description	Use of additionalValue Field
+CARD_ACCESS	A card is available for the product to access funds	NA
+ADDITIONAL_CARDS	Additional cards can be requested	The maximum number of additional cards. If no maximum then should be set to null
+UNLIMITED_TXNS	Unlimited free transactions available	NA
+FREE_TXNS	A set number of free transactions available per month	The number of free transactions
+FREE_TXNS_ALLOWANCE	A set amount of transaction fee value that is discounted per month	The amount of transaction fee discounted (in AUD)
+LOYALTY_PROGRAM	A points based loyalty program is available	Name of the loyalty program
+OFFSET	An offset account can be connected to the product	NA
+OVERDRAFT	An overdraft can be applied for	NA
+REDRAW	Redraw of repaid principal above minimum required is available	NA
+INSURANCE	Insurance is provided as an additional feature of the product	Text description of the type of insurance (e.g. Travel Insurance)
+BALANCE_TRANSFERS	Balance transfers can be made from the account (eg. for credit cards)	NA
+INTEREST_FREE	Interest free period for purchases	Interest free period. Formatted according to ISO 8601 Durations
+INTEREST_FREE_TRANSFERS	Interest free period for balance transfers	Interest free period. Formatted according to ISO 8601 Durations
+DIGITAL_WALLET	A Digital wallet can be attached to the product	The name or brand of the wallet
+DIGITAL_BANKING	Access is available to online banking features for the product	NA
+NPP_PAYID	An account of this product type can be used as the target of an NPP PayID	NA
+NPP_ENABLED	An account of this product type can be used to receive funds as a result of a BSB/Number based NPP payment	NA
+DONATE_INTEREST	Indicates that interest generated from the product can be automatically donated to a charity or community group	NA
+BILL_PAYMENT	The product can be attached to an automatic budgeting and bill payment service	Optional name of the service
+
+Account Fee Types
+Description of the usage of the feeType field as it applies to accounts.
+
+Value	Description	Use of additionalValue Field
+PERIODIC	A periodic fee such as a monthly account servicing fee	The period of charge. Formatted according to ISO 8601 Durations
+TRANSACTION	A fee for each transaction (above any free transactions in a period)	A description of the type of transaction (eg. Assisted Transaction, Teller Transaction, Cheque)
+EXIT	A fee for closing the product	NA
+OVERDRAW	A fee for overdrawing the account	NA
+MIN_BALANCE	A periodic fee for being below the minimum balance	The period of charge. Formatted according to ISO 8601 Durations
+REDRAW	A fee for performing a redraw transaction	NA
+CHEQUE_CASH	A fee for cashing a cheque	NA
+CHEQUE_STOP	A fee for stopping a cheque	NA
+CHEQUE_BOOK	A fee for ordering a new cheque book	NA
+CARD_REPLACE	A fee for ordering a replacement card	NA
+PAPER_STATEMENT	A fee for obtaining a paper statement	NA
+OTHER_EVENT	A fee for another type of event not already specified in the list of valid values	Text description of the event
+
+Account Discount Types
+Description of the usage of the discountType field as it applies to accounts.
+
+Value	Description	Use of additionalValue Field
+BALANCE	Discount on a fee for maintaining a set balance. As the discount applies to a fee the period is the same as for the fee	The minimum balance in AmountString format
+DEPOSITS	Discount for depositing a certain amount of money in a period. As the discount applies to a fee the period is the same as for the fee	The minimum deposit amount in AmountString format
+PAYMENTS	Discount for outbound payments from the account under a certain amount of money in a period. As the discount applies to a fee the period is the same as for the fee	The payment threshold amount in AmountString format
+BUNDLE	Discount for originating a bundle instead of a standalone product	The name of the applicable bundle
+
+Account Deposit Rate Types
+Description of the usage of the depositRateType field as it applies to accounts.
+
+Value	Description	Use of additionalValue Field
+FIXED	Fixed rate for a period of time	DateTimeString representing when the fixed rate will expire
+BONUS	A bonus rate available by meeting a specific criteria	A description of the criteria to obtain the bonus
+BUNDLE_BONUS	A bonus rate obtained by originating a bundle instead of a standalone product	The name of the bundle
+VARIABLE	A variable base rate for the product	NA
+INTRODUCTORY	An introductory bonus that will expire after a set period	DateTimeString representing when the introductory rate will expire
+
+Account Lending Rate Types
+Description of the usage of the lendingRateType field as it applies to accounts.
+
+Value	Description	Use of additionalValue Field
+FIXED	Fixed rate for a period of time	DateTimeString representing when the fixed rate will expire
+INTRODUCTORY	An introductory discount that will expire after a set period	DateTimeString representing when the introductory rate will expire
+DISCOUNT	A specific discount rate that may be applied. A discount rate reduces the interest payable	Description of the discount rate that is applicable
+PENALTY	A specific penalty rate that may be applied. A penalty rate increases the interest payable	Description of the penalty rate that is applicable
+BUNDLE_DISCOUNT	A discount rate obtained by originating a bundle instead of a standalone product	The name of the bundle
+FLOATING	A floating rate is relatively fixed but still adjusts under specific circumstances	Details of the float parameters
+MARKET_LINKED	A rate that is linked to a specific market, commodity or asset class	Details of the market linkage
+CASH_ADVANCE	Specific rate applied to case advances from the account	NA
+VARIABLE	A variable base rate for the product	NA
+COMPARISON	A comparison rate for the product	Description of the comparison algorithm applied (eg. AAPR)
+Common APIs
+Get Customer
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/common/v1/customer',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /common/customer
+
+Basic Customer Data.
+
+Obtain basic information on the customer that has authorised the current session.
+
+Example responses
+
+200 Response
+
+{
+  "data": {
+    "customer$type": "person",
+    "person": {
+      "customerType": "person",
+      "lastUpdateTime": "2018-11-01T05:32:18Z",
+      "firstName": "string",
+      "lastName": "string",
+      "middleNames": [
+        "string"
+      ],
+      "prefix": "string",
+      "suffix": "string",
+      "occupationCode": "string"
+    },
+    "organisation": {
+      "lastUpdateTime": "2018-11-01T05:32:18Z",
+      "agentFirstName": "string",
+      "agentLastName": "string",
+      "agentRole": "Unspecified",
+      "businessName": "string",
+      "legalName": "string",
+      "shortName": "string",
+      "abn": "string",
+      "acn": "string",
+      "isACNRegistered": true,
+      "industryCode": "string",
+      "organisationType": "SOLE_TRADER",
+      "registeredCountry": "AUS",
+      "establishmentDate": "string"
+    }
+  },
+  "links": {
+    "self": "http://example.com"
+  },
+  "meta": {
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	CustomerResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: common_basic_customer )
+
+CustomerResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	Object	true	none	none
+»» customer$type	string	true	none	The type of the customer. Determines the main object returned
+»» person	Person	false	none	none
+»» organisation	Organisation	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	StandardResponse	false	none	none
+Enumerated Values
+Property	Value
+customer$type	person
+customer$type	organisation
+Get Customer Detail
+
+Code samples
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'1',
+  'x-min-v':'1',
+  'x-<<PID>>-Id':'string',
+  'Authorization':'Bearer {access-token}'
+
+};
+
+$.ajax({
+  url: 'https://myserver.com/cds-au/common/v1/customer/detail',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /common/customer/detail
+
+Detailed Customer Data.
+
+Obtain detailed information on the customer that has authorised the current session.
+
+Example responses
+
+200 Response
+
+{
+  "links": {
+    "self": "http://example.com"
+  },
+  "data": {
+    "customer$type": "person",
+    "lastUpdateTime": "2018-11-01T05:32:18Z",
+    "firstName": "string",
+    "lastName": "string",
+    "middleNames": [
+      "string"
+    ],
+    "prefix": "string",
+    "suffix": "string",
+    "occupationCode": "string",
+    "phoneNumbers": [
+      {
+        "isPreferred": true,
+        "purpose": "MOBILE",
+        "countryCode": "61",
+        "areaCode": "string",
+        "number": "string",
+        "extension": "string",
+        "fullNumber": "string"
+      }
+    ],
+    "emailAddresses": [
+      {
+        "isPreferred": true,
+        "purpose": "WORK",
+        "address": "user@example.com"
+      }
+    ],
+    "physicalAddresses": [
+      {
+        "purpose": "REGISTERED",
+        "address": {
+          "addressType": "simple",
+          "mailingName": "string",
+          "addressLine1": "string",
+          "addressLine2": "string",
+          "addressLine3": "string",
+          "postcode": "string",
+          "city": "string",
+          "state": "string",
+          "country": "AUS"
+        }
+      }
+    ]
+  }
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	successful operation	CustomerDetailResponse
+ To perform this operation, you must be authenticated by means of one of the following methods: openId ( Scopes: common_detail_customer )
+
+CustomerDetailResponse
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	any	true	none	none
+»» customer$type	string	true	none	The type of the customer. Determines the main object returned
+»» anonymous	PersonDetail	false	none	none
+»» anonymous	OrganisationDetail	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	StandardResponse	false	none	none
+Enumerated Values
+Property	Value
+customer$type	person
+customer$type	organisation
+
+PersonDetail
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	Person	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» phoneNumbers	[PhoneNumber]	true	none	At least one record is required.
+» emailAddresses	[EmailAddress]	true	none	May be empty.
+» physicalAddresses	[PhysicalAddress]	true	none	Must contain at least one address. One and only one address may have the purpose of REGISTERED. Zero or one, and no more than one, record may have the purpose of MAIL. If zero then the REGISTERED address is to be used for mail.
+
+OrganisationDetail
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	Organisation	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» physicalAddresses	[PhysicalAddress]	true	none	Must contain at least one address. One and only one address may have the purpose of REGISTERED. Zero or one, and no more than one, record may have the purpose of MAIL. If zero then the REGISTERED address is to be used for mail.
+
+PhoneNumber
+{
+  "isPreferred": true,
+  "purpose": "MOBILE",
+  "countryCode": "61",
+  "areaCode": "string",
+  "number": "string",
+  "extension": "string",
+  "fullNumber": "string"
+}
+
+
+
+Properties
+Name	Type	Required	Restrictions	Description
+isPreferred	boolean	true	none	Required to be true for one and only one entry to indicate the preferred phone number.
+purpose	string	true	none	The purpose of the number as specified by the customer.
+countryCode	string	false	none	If absent, should be assumed to be +61 for Australia. The + should be included.
+areaCode	string	false	none	Required for non-mobile phone numbers. If this field is present and refers to an Australian area code, then the leading '0' should not be included.
+number	string	true	none	The actual phone number with leading zeroes as appropriate.
+extension	string	false	none	An extension number (if applicable).
+fullNumber	string	true	none	Fully formatted phone number with country code, area code, number and extension incorporated. Formatted according to section 5.1.4. of RFC 3966.
+Enumerated Values
+Property	Value
+purpose	MOBILE
+purpose	WORK
+purpose	HOME
+purpose	OTHER
+purpose	INTERNATIONAL
+purpose	UNSPECIFIED
+
+EmailAddress
+{
+  "isPreferred": true,
+  "purpose": "WORK",
+  "address": "user@example.com"
+}
+
+
+
+Properties
+Name	Type	Required	Restrictions	Description
+isPreferred	boolean	false	none	Required to be true for one and only one entry to indicate the preferred email address.
+purpose	string	false	none	The purpose of the address as specified by the customer.
+address	string	true	none	The email address value formatted according to RFC 5322.
+Enumerated Values
+Property	Value
+purpose	WORK
+purpose	HOME
+purpose	OTHER
+purpose	UNSPECIFIED
+
+PhysicalAddress
+Properties
+Name	Type	Required	Restrictions	Description
+purpose	string	true	none	none
+address$type	string	true	none	The type of address object that is present
+simple	SimpleAddress	false	none	none
+paf	PAFAddress	false	none	none
+Enumerated Values
+Property	Value
+purpose	REGISTERED
+purpose	MAIL
+purpose	PHYSICAL
+purpose	WORK
+purpose	OTHER
+address$type	simple
+address$type	paf
+
+SimpleAddress
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	Address	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» mailingName	string	false	none	Name of the individual or business formatted for inclusion in an address used for physical mail.
+» addressLine1	string	true	none	none
+» addressLine2	string	false	none	none
+» addressLine3	string	false	none	none
+» postcode	string	false	none	Mandatory for Australian address.
+» city	string	true	none	none
+» state	string	true	none	Free text if the country is not Australia. If country is Australia then must be one of the values defined by the ISO 3166:AU standard.
+» country	string	false	none	A valid ISO 3166 Alpha-3 country code.
+
+PAFAddress
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» data	object	true	none	none
+Common Schemas
+
+Person
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	The individual who authorised the session.
+» lastUpdateTime	DateTimeString	true	none	The date and time this this record was last updated.
+» firstName	string	true	none	none
+» lastName	string	true	none	none
+» middleNames	[string]	true	none	none
+» prefix	string	true	none	Title or salutation.
+» suffix	string	false	none	Used for a trailing suffix to the name.
+» occupationCode	string	false	none	Value should be a valid ANZCO v1.2 Standard Occupation classification.
+
+Organisation
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	The authorisation was given to a business agent and this type represents that business. This type should not be used where a retail customer was authorised.
+» lastUpdateTime	DateTimeString	false	none	The date and time this this record was last updated.
+» agentFirstName	string	false	none	The first name of the individual providing access on behalf of the organisation. For people with single names this field need not be present. The single name should be in the lastName field
+» agentLastName	string	true	none	The last name of the individual providing access on behalf of the organisation. For people with single names the single name should be in this field
+» agentRole	string	true	none	The role of the individual identifed by the Person record in this organisation. Expected to be used for display. Default to “Unspecified” if the role is not known
+» businessName	string	true	none	Name of the organisation.
+» legalName	string	false	none	Legal name, if different to the business name.
+» shortName	string	false	none	Short name used for communication, if different to the business name.
+» abn	string	false	none	Australian Business Number.
+» acn	string	false	none	Australian Company Number.
+» isACNCRegistered	boolean	false	none	True if registered with the ACNC. False if not. Absent or null if not confirmed.
+» industryCode	string	false	none	ANZIC (2006) code for the organisation.
+» organisationType	string	false	none	none
+» registeredCountry	string	false	none	A valid ISO 3166 Alpha-3 country code.
+» establishmentDate	DateTimeString	false	none	The date the organisation described was established.
+Enumerated Values
+Property	Value
+organisationType	SOLE_TRADER
+organisationType	COMPANY
+organisationType	PARTNERSHIP
+organisationType	TRUST
+organisationType	GOVERNMENT_ENTITY
+organisationType	OTHER
+Shared Schemas
+StandardResponse
+
+{
+  "links": {
+    "self": "http://example.com",
+  },
+  "meta": {
+  }
+}
+
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	Links - Standard	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» meta	Empty Object	true	none	none
+
+Links - Standard
+{
+  "self": "http://example.com",
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+self	string(uri)	true	none	Fully qualified link to this API call.
+PaginatedResponse
+
+{
+  "links": {
+    "self": "http://example.com",
+    "first": "http://example.com",
+    "prev": "http://example.com",
+    "next": "http://example.com",
+    "last": "http://example.com"
+  },
+  "meta": {
+    "totalRecords": 6,
+    "totalPages": 2
+  }
+}
+
+Properties
+allOf
+
+Name	Type	Required	Restrictions	Description
+anonymous	Links - Paginated	false	none	none
+and
+
+Name	Type	Required	Restrictions	Description
+anonymous	object	false	none	none
+» meta	Meta - Paginated	true	none	none
+
+Links - Paginated
+{
+  "self": "http://example.com",
+  "first": "http://example.com",
+  "prev": "http://example.com",
+  "next": "http://example.com",
+  "last": "http://example.com"
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+self	string(uri)	true	none	Fully qualified link to this API call.
+first	string(uri)	false	none	URI to the first page of this set. Mandatory if this response is not the first page.
+prev	string(uri)	false	none	URI to the previous page of this set. Mandatory if this response is not the first page.
+next	string(uri)	false	none	URI to the next page of this set. Mandatory if this response is not the last page.
+last	string(uri)	false	none	URI to the last page of this set. Mandatory if this response is not the last page.
+
+Meta - Paginated
+{
+  "totalRecords": 6,
+  "totalPages": 2
+}
+
+Properties
+Name	Type	Required	Restrictions	Description
+totalRecords	integer(int32)	true	none	The total number of records in the full set.
+totalPages	integer(int32)	true	none	The total number of pages in the full set.
+
+Error
+{
+  "code": "string",
+  "title": "string",
+  "detail": "string",
+  "meta": {
+  }
+}
+
+This is the standard representaton of an error.
+
+Properties
+Name	Type	Required	Restrictions	Description
+code	string	true	none	The code of the error
+title	string	true	none	A displayable title of the error type
+detail	string	true	none	Detail of the error
+meta	object	false	none	Optional additional data for specific error types
+shelljavascript
