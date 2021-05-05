@@ -39,17 +39,20 @@ The table below highlights these areas of the standards.
 
 Section	Description	Applicable Date
 Non-functional Requirements	The non-functional requirements for the CDR regime are documented but are not yet binding with no specific future binding date being set as yet	Not yet specified
-Get Product Detail V3	Version 3 of this end point must be made available by affected data holders by the end of February 2021	February 2021
-Get Product Detail V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 2020
+Get Product Detail V3	Version 3 of this end point must be made available by affected data holders by the end of February 2021	February 28th 2021
+Get Product Detail V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 31st 2020
 Get Product Detail V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
-Get Products V3	Version 3 of this end point must be made available by affected data holders by the end of February 2021	February 2021
-Get Products V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 2020
+Get Products V3	Version 3 of this end point must be made available by affected data holders by the end of February 2021	February 28th 2021
+Get Products V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 31st 2020
 Get Products V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
-Get Product Detail V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 2020
+Get Product Detail V2	Version 2 of this end point must be made available by affected data holders by the end of July 2020	July 31st 2020
 Get Product Detail V1	Data holders may obsolete version 1 of this end point from August 29th 2020. Data recipients must upgrade their implementations to use version 2 by this time	August 29th 2020
-Concurrent Consent	The target state concurrent consent solution covers various components of the Information Security profile is being phased in with alignment to the November 2020 implementation milestone set by the ACCC. If this milestone moves then this obligation will also move.	November 2020
+Concurrent Consent	The target state concurrent consent solution covers various components of the Information Security profile is being phased in with alignment to the November 2020 implementation milestone set by the ACCC. If this milestone moves then this obligation will also move.	November 1st 2020
+Token Revocation End Point	Data recipients may obsolete this end point from February 1st 2021.
+Data holders may obsolete consent revocation via this end point from February 1st 2021, however they must still support oAuth token revocation. Data recipients must upgrade their implementations to use the Data Holder CDR Arrangement Revocation End Point by this time.	February 1st 2021
+Get Metrics V2	Version 2 of this end point must be made available by affected data holders by the end of July 2021	July 31st 2021
 Standards
-These standards represent version 1.4.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.5.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
 
@@ -413,6 +416,52 @@ For union objects an additional field, with a known suffix, is used to identify 
 As the name of this field is constant it can be used to perform an indirect lookup on the object type that has actually been provided removing the need to scan for which object is present.
 
 A field of this type will always be specified with the suffix UType meaning Union Type.
+
+Array Conventions
+Samples for providing array values:
+
+## Many-values:
+"middleNames": ["Geoff", "John"],
+"errors": [
+    {
+      "code": "...",
+      "title": "...",
+      "detail": "..."
+    }, {
+      "code": "...",
+      "title": "...",
+      "detail": "..."
+    }
+]
+
+## Single-value:
+"middleNames": ["Geoff"],
+"errors": [
+    {
+      "code": "...",
+      "title": "...",
+      "detail": "..."
+    }
+]
+
+## Empty array:
+"middleNames": [ ],
+"errors": [ ]
+
+Unless otherwise stated within the data standards, arrays are explicitly expressed in response payloads.
+
+Mandatory fields
+In objects where an array field is defined as having 0..n values, the array field must be explicitly expressed as an array in the payload, even if it only contains one item or is empty.
+
+This applies equally for object arrays. Where a field is defined as an array value, the response should be: * an array of objects, * an array of values, or * an empty array ([]).
+
+An empty array is the representation for an array equivalent to an empty string.
+
+Optional fields
+If the field is optional a null value or empty field response is accepted.
+
+Normative references
+The only exception to this, unless explicitly stated, is normative standards. The requirements for expressing arrays within those normative standards apply per the normative references.
 
 Common Field Types
 The following table outlines the common data types for fields used in the standard.
@@ -865,7 +914,7 @@ The following normal [OIDC] claims MUST be supported. This list includes, but is
 
 sub: Pairwise Pseudonymous Identifier (PPID) for the End-User at the Data Holder.
 acr: Authentication Context Class Reference. MUST contain a valid ordinal LoA value.
-auth_time: Time when the End-User authentication occurred. Its value is a JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC auth_time.
+auth_time: Time when the End-User authentication occurred. Its value is a JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC auth_time. It MUST be returned by the Data Holder in the ID Token when the Data Recipient has requested it as an essential claim according to section 2 of the [OIDC] standard. It SHOULD NOT be returned via the UserInfo endpoint.
 name: End-User's full name in displayable form including all name parts.
 given_name: Given name(s) or first name(s) of the End-User.
 family_name: Surname(s) or last name(s) of the End-User.
@@ -893,11 +942,8 @@ Non-Normative Example - acr
 }
 ID Tokens are specified in section 2 of the [OIDC] standard. In accordance with [FAPI-RW], ID Tokens must be signed and encrypted when returned to a Data Recipient from both the Authorisation End Point and Token End Point.
 
-As described under section 5.2.2 of the [FAPI-RW] profile, ID Tokens MUST include the following claims (in addition to the mandatory claims specified in section 2 of the [OIDC] standard) as part of Hybrid Flow authentication:
+In addition to the mandatory claims specified in section 2 of the [OIDC] standard, required claims for ID Tokens as part of Hybrid Flow authentication must align to section 3.3 (Authentication using the Hybrid Flow) of the [OIDC] standards and section 5.2.2 and section 8.4.3 of the [FAPI-RW] profile.
 
-nonce: String value used to associate a Client session with an ID Token.
-s_hash: Hash of the state value.
-c_hash: Hash of the authorisation_code value.
 ID Tokens MUST be signed by Data Holders as specified in section 8.6 of [FAPI-RW].
 
 The ID Token returned from the Authorisation End Point MUST NOT contain any Personal Information (PI) claims.
@@ -978,8 +1024,7 @@ Decoded JWT
   "auth_time": 1311280969,
   "acr": "urn:cds.au:cdr:3",
   "refresh_token_expires_at": 1311281970,
-  "sharing_expires_at": 1311281970,
-  "cdr_arrangement_id": "02e7c9d9-cfe7-4c3e-8f64-e91173c84ecb"
+  "sharing_expires_at": 1311281970
 }
 Non-normative example: Token Introspection Endpoint hydration
 
@@ -999,25 +1044,27 @@ Response
 {
   "active": true,
   "exp": 1311281970,
+  "scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read",
   "cdr_arrangement_id": "02e7c9d9-cfe7-4c3e-8f64-e91173c84ecb"
 }
+The CDR Arrangement ID is a unique string representing a consent arrangement between a Data Recipient and Data Holder for a given consumer.
+
+The identifier MUST be unique per customer according to the definition of customer in the CDR Federation section of this profile.
+
+The Data Holder MUST provide the CDR Arrangement ID as the claim cdr_arrangement_id in the Token End Point response and Token Introspection End Point response.
+
+A Data Holder MUST only return the cdr_arrangement_id in the Token and Token Introspection End Point responses if they also support concurrent consent. This ensures that Data Recipients have a reliable way to determine whether a given Data Holder supports concurrent consent.
+
 Statements related to the CDR Arrangement ID:
 
-The CDR Arrangement ID is a string representing a unique sharing arrangement between a data recipient and data holder for a given consumer
-The CDR Arrangement ID is represented as a claim "cdr_arrangement_id" returned in the Token endpoint and Token Introspection endpoint response JSON
 The CDR Arrangement ID MUST be unique to a Data Holder
 The CDR Arrangement ID MUST be non-guessable and must not identify a consumer
-A CDR Arrangement ID MUST be bound to only one active consent at a time but may have no active consent
-A CDR Arrangement ID can span multiple historical consents which are not active
 A CDR Arrangement ID SHOULD be generated using an algorithm that reduces the chances of collision
 A CDR Arrangement ID MUST be static across consents within the one sharing arrangement (e.g. across consent renewal and re-authorisation)
-A CDR Arrangement ID MUST be used to revoke consent
 Retrospectively obtaining a CDR Arrangement ID
-For consents The Data Holder must provide the CDR Arrangement ID as a claim in the Token endpoint response and Token Introspection endpoint response.
+For any existing consents, Data Holders must retrospectively generate a cdr_arrangement_id such that from November 2020, Data Recipients can obtain a valid cdr_arrangement_id for all active consents they hold.
 
-A Data Recipient can call either the Token or Token Introspection endpoints at any point post-consent to obtain the CDR Arrangement ID using a valid refresh token.
-
-The CDR Arrangement ID will be supplied in the response JSON as the claim cdr_arrangement_id.
+A Data Recipient can call either the Token or Token Introspection End Points at any point post-consent to obtain the CDR Arrangement ID in the response JSON as the claim cdr_arrangement_id.
 
 
 Levels of Assurance (LoAs)
@@ -1127,14 +1174,18 @@ Note that the period of one year in the above statements should be interpreted a
 The Data Recipient is able to obtain the expiration of sharing via the sharing_expires_at claim.
 
 Specifying an existing arrangement
-To allow for an existing consent to be reliably revoked upon the establishment of a new consent intended as a replacement data holders MUST support an additional claim in the authorisation request object named cdr_arrangement_id that the data recipient may optionally include with the value set to the arrangement ID for a previously established sharing arrangement.
+Provided a Data Holder supports PAR, they MUST also support the cdr_arrangement_id claim provided in the Request Object sent to the PAR End Point. The Data Recipient MAY provide the cdr_arrangement_id claim in the Request Object sent to the PAR End Point.
 
 The cdr_arrangement_id claim MUST be handled as follows:
 
 Until November 2020 data holders are not required to take any action if cdr_arrangement_id is supplied but MUST NOT respond with an error.
-From November 2020 data holders MUST revoke all existing tokens related to the arrangement identified by the cdr_arrangement_id claim in the request object once the new consent is successfully established and a new set of tokens has been provided to the data recipient.
+
 Until November 2020 data recipients MUST NOT implement scenarios that support concurrent consent. Only single, extant consent scenarios should be implemented until this date.
-Until November 2020 data recipients MUST actively revoke previously supplied refresh tokens, immediately after receiving the tokens for a newly established consent, using the revocation end point.
+
+If a data recipient provides the cdr_arrangement_id claim in the request object to the data holder's PAR End Point, the data holder MUST revoke any existing tokens related to the arrangement once the new consent is successfully established and a new set of tokens has been provided to the data recipient.
+
+For data recipients seeking to replace consent where the Data Holder does not support PAR, data recipients MUST actively revoke previously supplied refresh tokens, immediately after receiving the tokens for a newly established consent, using the appropriate revocation end point.
+
 End Points
  NOTE: This section does not include any end points that will be defined by the design of the CDR Register. End points related to Data Recipient registration, certificate revocation, Data Recipient discovery or Data Holder discovery are documented in the CDR Register technical documentation.
 OpenID Provider Configuration End Point
@@ -1167,7 +1218,7 @@ Content-Type: application/json
   "id_token_signing_alg_values_supported": ["ES256", "PS256"],
   "id_token_encryption_alg_values_supported": [ "RSA-OAEP", "RSA-OAEP-256", "dir", "ECDH-ES", "ECDH-ES+A128KW", "ECDH-ES+A192KW", "ECDH-ES+A256KW", "A128KW", "A192KW", "A256KW", "A128GCMKW", "A192GCMKW", "A256GCMKW" ],
   "id_token_encryption_enc_values_supported": [ "A128CBC-HS256", "A192CBC-HS384", "A256CBC-HS512", "A128GCM", "A192GCM", "A256GCM" ],
-  "cdr_arrangement_endpoint": "https://data.holder.com.au/arrangements",
+  "cdr_arrangement_revocation_endpoint": "https://data.holder.com.au/arrangements/revoke",
   "pushed_authorization_request_endpoint": "https://data.holder.com.au/par",
   "request_object_signing_alg_values_supported": ["ES256", "PS256"],
   "token_endpoint_auth_methods_supported": ["private_key_jwt"],
@@ -1194,11 +1245,11 @@ scopes_supported: This list of supported scopes.
 claims_supported: The list of supported claims.
 acr_values_supported: The supported ACR values.
 jwks_uri: The JSON Web Key Set for the data holder.
-id_token_encryption_alg_values_supported: The list of the supported JWE algorithms for securing the issued ID tokens. Must conform to FAPI-RW and OIDD.
+id_token_encryption_alg_values_supported: The list of the supported JWE algorithms for securing the issued ID tokens. Must conform to [FAPI-RW] and [OIDD].
 id_token_encryption_enc_values_supported: The list of the supported JWE encryption methods for securing the issued ID tokens.
 From November 2020, the Data Holder metadata MUST include:
 
-cdr_arrangement_endpoint: URL of the CDR Arrangement End Point for consent revocation.
+cdr_arrangement_revocation_endpoint: The URL of the CDR Arrangement Revocation End Point for consent revocation
 pushed_authorization_request_endpoint: URL of the Pushed Authorisation End Point used to support [PAR].
 
 Authorisation End Point
@@ -1297,20 +1348,23 @@ Introspection of Refresh Tokens MUST be supported.
 
 Introspection of Access Tokens and ID Tokens MUST NOT be supported.
 
-An Introspection End Point Response SHALL only include the following fields:
+A Token Introspection End Point Response SHALL include, at least, the following fields:
 
 active: Boolean indicator of whether or not the presented token is currently active.
 exp: A JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC expiry time.
+scope: A JSON string containing a space-separated list of scopes associated with this token.
 cdr_arrangement_id: A unique identifier of the CDR arrangement related to the authorisation.
-Revocation End Point
+A Token Introspection End Point Response MAY include claims defined in Section 2.2 of [RFC7662] but username SHALL NOT be allowed.
+
+Token Revocation End Point
 Description	Value
-Hosted By	Data Holder and Data Recipient (Data Recipient required until November 2020)
+Hosted By	Data Holder and Data Recipient
 Transport Security	MTLS for Data Holders, TLS for Data Recipients
 Client Authentication Required	Yes (for verifying Data Recipients)
 Bearer Token Required	Yes (for verifying Data Holders)
 Requirements for Data Holder implementations
 
-Data Holders and MUST implement a Token Revocation End Point as described in section 2 of [RFC7009].
+Data Holders MUST implement a Token Revocation End Point as described in section 2 of [RFC7009].
 
 The Revocation End Point serves as a revocation mechanism that allows a Data Recipient to invalidate its tokens as required to allow for token clean up.
 
@@ -1318,53 +1372,86 @@ Revocation of Refresh Tokens and Access Tokens MUST be supported.
 
 Requirements for Data Recipient implementations
 
-The following obligations are required by Data Recipients until November 2020.
-
-The Revocation End Point, when implemented by the Data Recipient allows a Data Holder to notify the Data Recipient of the revocation of a sharing arrangement by the Customer in totality as required by the ACCC CDR Rules. This revocation will have been actioned by the Customer via the Data Holder’s consent dashboard as described in the ACCC CDR Rules.
+The Token Revocation End Point, when implemented by the Data Recipient allows a Data Holder to notify the Data Recipient of the revocation of a sharing arrangement by the Customer in totality as required by the ACCC CDR Rules. This revocation will have been actioned by the Customer via the Data Holder’s consent dashboard as described in the ACCC CDR Rules.
 
 Revocation of Access Tokens MUST not be supported.
 
-Revocation of Refresh Tokens MUST be supported and will be used to notify the Data Recipient of sharing revocation
+Revocation of Refresh Tokens MUST be supported and will be used to notify the Data Recipient of sharing revocation.
 
-If consent is withdrawn by a Customer in writing or by using the Data Recipient’s dashboard the Data Recipient MUST use the Data Holder’s implementation of the revocation end point with the current Refresh Token to notify the Data Holder.
+If consent is withdrawn by a Customer in writing or by using the Data Recipient’s dashboard the Data Recipient MUST revoke consent using Data Holder’s implementation.
 
-CDR Arrangement Management End Point
+Revoking consent
+
+If the Data Holder does not support a CDR Arrangement Revocation End Point, Data Recipients MUST use the Data Holder's Token Revocation End Point with the current Refresh Token to notify the Data Holder.
+
+If the Data Holder does support the CDR Arrangement Revocation End Point, Data Recipients MUST use the Data Holder's CDR Arrangement Revocation End Point with a valid cdr_arrangement_id to notify the Data Holder.
+
+NOTE: Data Recipients MUST continue to support this Token Revocation End Point until February 2021.
+
+NOTE: Data Holders MUST continue to support consent revocation via the oAuth Token Revocation end point until February 2021.
+
+CDR Arrangement Revocation End Point
 Non-Normative Example
 
 Request
 
-DELETE https://data.holder.com.au/arrangements/5a1bf696-ee03-408b-b315-97955415d1f0
+POST https://data.holder.com.au/arrangements/revoke
 HTTP/1.1
 Host: data.holder.com.au
-Authorization: Bearer eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey...
+Content-Type: application/x-www-form-urlencoded
+
+  client_id=s6BhdRkqt3&
+  client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&
+  client_assertion=eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey ...&
+  cdr_arrangement_id=5a1bf696-ee03-408b-b315-97955415d1f0
 Description	Value
 Hosted By	Data Holder & Data Recipient
 Transport Security	MTLS for Data Holders, TLS for Data Recipients
-Client Authentication Required	Yes (for verifying Data Recipients)
-Bearer Token Required	Yes (for verifying Data Holders)
-HTTP Method: DELETE
-Data Holder Path: Defined using OIDC Discovery
-Data Recipient Path: /arrangements/{cdr_arrangement_id}
+Client Authentication Required	Yes (for Data Holders verifying Data Recipients)
+Bearer Token Required	Yes (for Data Recipients verifying Data Holders)
+HTTP Method: POST
+Data Holder Path: The cdr_arrangement_revocation_endpoint defined using OIDC Discovery
+Data Recipient Path: <RecipientBaseUri>/arrangements/revoke where <RecipientBaseUri> is registered with the CDR Register.
 
-From November 2020, Data Holders and Data Recipients MUST implement an arrangement management end point that can be used to revoke an existing sharing arrangement.
+From November 2020, Data Holders and Data Recipients MUST implement a CDR Arrangement Revocation End Point that can be used to revoke an existing sharing arrangement.
+
+The request MUST include the following parameters using the application/x-www-form-urlencoded format in the HTTP request entity-body:
+cdr_arrangement_id: The ID of the arrangement that the client wants to revoke.
 
 This end point will be implemented according to the following:
 
-Consent management MUST be managed through the new CDR Arrangement Management End PointCDR Arrangement Management API. The CDR Arrangement Management API only supports DELETE for revocation of consent for the scope of concurrent consent.
-Data Recipients and Data Holders MUST revoke consent by calling the CDR Arrangement Management API with a valid CDR Arrangement Identifier
-Data Holders MUST publish their CDR Arrangement Management API using their OpenID Provider Metadata discovery endpoint
-Data Recipients MUST expose their CDR Arrangement Management API under their Recipient Base URI published in their Software Statement Assertion
-If the CDR Arrangement Management API is called for revocation, it MUST delete associated refresh and/or access tokens
-For Data Holders, Data Recipients must be authenticated when they call this end point using a valid Access Token as specified in section 10.3 of [OAUTH2]
-For Data Holders, if the cdr_arrangement_id is not related to the consumer identified by the Access Token provided it MUST be rejected
+Data Recipients and Data Holders MUST revoke consent by calling the CDR Arrangement Revocation End Point with a valid CDR Arrangement ID
+Data Holders MUST publish their CDR Arrangement Revocation End Point using their OpenID Provider Metadata Discovery End Point
+Data Recipients MUST expose their CDR Arrangement Revocation End Point under their Recipient Base URI published in their Software Statement Assertion
+Consent revocation MUST also revoke associated refresh and/or access tokens
 For Data Recipients, Data Holder must be authenticated when they call this end point according to the guidance in the Client Authentication section.
-For Data Recipients, if the cdr_arrangement_id is not related to the Data Holder making the call it MUST be rejected
-A call to this end point should be responded to with HTTP status code 204 if the sharing arrangement has been revoked successfully
-A call to this end point should be responded to with HTTP status code 422 if the client submitted an invalid identifier
-Race conditions and handling consent revocation with Data Recipients
-Because single-consent sharing arrangements will be established before concurrent consent future dated obligations, there is the chance that a consumer may revoke consent with a Data Holder before a Data Recipient has obtained a sharing ID. In this instance, a Data Holder will call the Data Recipient’s CDR Arrangement Management API with a CDR Arrangement ID that is not recognised by the Data Recipient. The Data Recipient would return a HTTP error code 422 which signifies to the Data Holder that the cdr_arrangement_id is not recognised.
+If the cdr_arrangement_id is not related to the client making the call it MUST be rejected
+Response Codes
 
-In this instance, a Data Holder must attempt to call the Data Recipient’s revocation endpoint to notify the Data Recipient that a sharing arrangement has ended. If the Data Recipient has chosen to no longer support a revocation endpoint, the absence of support will be inferred through the absence of the revocation_endpoint in the Data Recipients software statement assertion (SSA).
+The following responses are in addition to error responses covered by normative references. Error scenarios in the following table MUST use the error structure defined in the Payload Conventions.
+
+Response Code	Situation	Description
+204 No Content	Success	The sharing arrangement has been revoked successfully
+422 Unprocessable Entity	Invalid Arrangement ID	The client submitted an invalid arrangement identifier or the identifier could not be found
+Data Holders calling Data Recipients
+
+Data Holders may discover that a given Data Recipient supports the CDR Arrangement Revocation End Point by the presence of the Recipient Base URI in the Software Statement Assertion (SSA). If a Data Recipient does not support the CDR Arrangement Revocation End Point, the Data Holder MUST call the Data Recipient Token Revocation End Point.
+
+Data Recipients SHOULD update their client registration with each Data Holder as soon as is practical once they support the CDR Arrangement Revocation End Point.
+
+Data Recipients MUST continue to support their Token Revocation End Point until February 2021 and until they have updated their client registrations.
+
+Updating Register Meta Data and Client Registration
+
+When a Data Recipient supports the CDR Arrangement Revocation End Point, they MUST: 1. Update their meta data with the CDR Register to include their recipient_base_uri. 2. Update their client registration with each Data Holder.
+
+If the Data Recipient does not support the CDR Arrangement Revocation End Point, the Data Holder MUST instead revoke consent using the Data Recipient Token Revocation End Point.
+
+Data Recipients calling Data Holders
+
+Data Recipients may discover that a given Data Holder supports the CDR Arrangement Revocation End Point by the presence of the cdr_arrangement_revocation_endpoint in the Data Holder's OpenID Provider metadata.
+
+If a Data Recipient does not support the CDR Arrangement Revocation End Point, Data Holders must notify Data Recipients when consent is withdrawn by calling the Data Recipient Revocation End Point.
 
 Pushed Authorisation End Point
 Non-Normative Example
@@ -1428,27 +1515,22 @@ Host: data.holder.com.au
 Description	Value
 Hosted By	Data Holder
 Transport Security	MTLS
-Client Authentication Required	No
+Client Authentication Required	Yes
 Bearer Token Required	No
 From November 2020, Data Holders MUST support Pushed Authorisation Requests (PAR) via the pushed authorisation end point according to [PAR].
 
-Data Recipients must send authorisation request objects by reference by calling the Data Holder’s pushed authorisation request endpoint if:
+Data Recipients MAY send authorisation requests using [PAR] if supported by the Data Holder. Request objects which contain the cdr_arrangement_id claim MUST only be sent using [PAR]. If a Data Holder does not support [PAR], a Data Recipient SHOULD NOT provide the cdr_arrangement_id claim in the request object.
 
-The request object is likely to be too large to be sent as a URI parameter
-The request object contains a cdr_arrangement_id parameter
-The Data Holder response provides the Data Recipient with a Request URI in the response. The Request URI is then passed to the Data Holder’s Authorisation endpoint to initiate an authorisation flow. In this way, the Data Recipient has staged their authorisation intent with the Data Holder and can then proceed via the backchannel.
+The Data Holder response provides the Data Recipient with a Request URI in the response. The Request URI is then passed to the Data Holder’s Authorisation End Point to initiate an authorisation flow.
 
 In addition:
 
-Data Holders MUST support request objects sent by reference for Pushed Authorisation Requests
-Request Object references SHALL NOT be supported in any mode of use other than Pushed Authorisation Requests (PAR). If a Data Holder does not support Pushed Authorisation Requests (PAR), it MUST NOT support Request Object references.
-Data Holders MUST publish their support for PAR as per the specification using OAuth/OpenID Provider Metadata parameters in discovery responses
+Request Object references SHALL NOT be supported in any mode of use other than [PAR]. If a Data Holder does not support [PAR], it MUST NOT support Request Object references.
 The Request URI MUST expire between 10 seconds and 90 seconds
 Data Recipients MAY provide an existing cdr_arrangement_id claim in an authorisation request object to establish a new consent under an existing arrangement
-Data Holders MUST revoke existing refresh tokens and access tokens when a cdr_arrangement_id is provided in the authorisation request object but ONLY after successful authorisation
-Data Recipients MUST observe data deletion and de-identification requirements for revoked consent after successful authorisation
+Data Holders MUST revoke existing refresh tokens and access tokens when a cdr_arrangement_id is provided in the Request Object but only after successful authorisation
 If the cdr_arrangement_id is not related to the consumer being authenticated it MUST be rejected
-If the cdr_arrangement_id is not related to the Data Holder it MUST be rejected
+If the cdr_arrangement_id is not recognised by to the Data Holder it MUST be rejected
 Normative References
 Reference	Description	Version
 [FAPI-R]	Financial-grade API - Part 1: Read Only API Security Profile: https://openid.net/specs/openid-financial-api-part-1.html	Draft-06
@@ -1463,7 +1545,7 @@ Reference	Description	Version
 [OAUTH2]	The OAuth 2.0 Authorization Framework: https://tools.ietf.org/html/rfc6749	Oct 2012
 [OIDC]	OpenID Connect Core 1.0 incorporating errata set 1: http://openid.net/specs/openid-connect-core-1_0.html	Nov 2014
 [OIDD]	OpenID Connect Discovery 1.0 incorporating errata set 1: http://openid.net/specs/openid-connect-discovery-1_0.html	Nov 2014
-[TDIF]	Digital Transformation Agency - Trusted Digital Identity Framework https://www.dta.gov.au/our-projects/digital-identity/join-identity-federation/accreditation-and-onboarding/trusted-digital-identity-framework	Apr 2019
+[TDIF]	Digital Transformation Agency - Trusted Digital Identity Framework https://www.dta.gov.au/our-projects/digital-identity/trusted-digital-identity-framework	Apr 2019
 [RFC2119]	Key words for use in RFCs to Indicate Requirement Levels https://tools.ietf.org/html/rfc2119	Mar 1997
 [RFC7009]	OAuth 2.0 Token Revocation: https://tools.ietf.org/html/rfc7009	Aug 2013
 [RFC7523]	JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants: https://tools.ietf.org/html/rfc7523	May 2015
@@ -1542,18 +1624,18 @@ x-fapi-customer-ip-address	header	string	optional	The customer's original IP add
 x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
-product-category	TRANS_AND_SAVINGS_ACCOUNTS
-product-category	TERM_DEPOSITS
-product-category	TRAVEL_CARDS
+product-category	BUSINESS_LOANS
+product-category	CRED_AND_CHRG_CARDS
+product-category	LEASES
+product-category	MARGIN_LOANS
+product-category	OVERDRAFTS
+product-category	PERS_LOANS
 product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
-product-category	CRED_AND_CHRG_CARDS
-product-category	PERS_LOANS
-product-category	MARGIN_LOANS
-product-category	LEASES
+product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	OVERDRAFTS
-product-category	BUSINESS_LOANS
+product-category	TRAVEL_CARDS
+product-category	TRANS_AND_SAVINGS_ACCOUNTS
 open-status	OPEN
 open-status	CLOSED
 open-status	ALL
@@ -1572,7 +1654,7 @@ Example responses
         "openStatus": "OPEN",
         "isOwned": true,
         "maskedNumber": "string",
-        "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+        "productCategory": "BUSINESS_LOANS",
         "productName": "string"
       }
     ]
@@ -1653,18 +1735,18 @@ x-fapi-customer-ip-address	header	string	optional	The customer's original IP add
 x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
-product-category	TRANS_AND_SAVINGS_ACCOUNTS
-product-category	TERM_DEPOSITS
-product-category	TRAVEL_CARDS
+product-category	BUSINESS_LOANS
+product-category	CRED_AND_CHRG_CARDS
+product-category	LEASES
+product-category	MARGIN_LOANS
+product-category	OVERDRAFTS
+product-category	PERS_LOANS
 product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
-product-category	CRED_AND_CHRG_CARDS
-product-category	PERS_LOANS
-product-category	MARGIN_LOANS
-product-category	LEASES
+product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	OVERDRAFTS
-product-category	BUSINESS_LOANS
+product-category	TRAVEL_CARDS
+product-category	TRANS_AND_SAVINGS_ACCOUNTS
 open-status	OPEN
 open-status	CLOSED
 open-status	ALL
@@ -1965,7 +2047,7 @@ Example responses
     "openStatus": "OPEN",
     "isOwned": true,
     "maskedNumber": "string",
-    "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+    "productCategory": "BUSINESS_LOANS",
     "productName": "string",
     "bsb": "string",
     "accountNumber": "string",
@@ -2009,7 +2091,7 @@ Example responses
     "lendingRate": "string",
     "depositRates": [
       {
-        "depositRateType": "FIXED",
+        "depositRateType": "BONUS",
         "rate": "string",
         "calculationFrequency": "string",
         "applicationFrequency": "string",
@@ -2019,7 +2101,7 @@ Example responses
             "unitOfMeasure": "DOLLAR",
             "minimumValue": 0,
             "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
+            "rateApplicationMethod": "PER_TIER",
             "applicabilityConditions": {
               "additionalInfo": "string",
               "additionalInfoUri": "string"
@@ -2035,12 +2117,12 @@ Example responses
     ],
     "lendingRates": [
       {
-        "lendingRateType": "FIXED",
+        "lendingRateType": "BUNDLE_DISCOUNT_FIXED",
         "rate": "string",
         "comparisonRate": "string",
         "calculationFrequency": "string",
         "applicationFrequency": "string",
-        "interestPaymentDue": "IN_ARREARS",
+        "interestPaymentDue": "IN_ADVANCE",
         "repaymentType": "INTEREST_ONLY",
         "loanPurpose": "OWNER_OCCUPIED",
         "tiers": [
@@ -2049,7 +2131,7 @@ Example responses
             "unitOfMeasure": "DOLLAR",
             "minimumValue": 0,
             "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
+            "rateApplicationMethod": "PER_TIER",
             "applicabilityConditions": {
               "additionalInfo": "string",
               "additionalInfoUri": "string"
@@ -2065,7 +2147,7 @@ Example responses
     ],
     "features": [
       {
-        "featureType": "CARD_ACCESS",
+        "featureType": "ADDITIONAL_CARDS",
         "additionalValue": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string",
@@ -2075,7 +2157,7 @@ Example responses
     "fees": [
       {
         "name": "string",
-        "feeType": "PERIODIC",
+        "feeType": "DEPOSIT",
         "amount": "string",
         "balanceRate": "string",
         "transactionRate": "string",
@@ -2239,7 +2321,7 @@ Example responses
         "accountId": "string",
         "transactionId": "string",
         "isDetailAvailable": true,
-        "type": "FEE",
+        "type": "DIRECT_DEBIT",
         "status": "PENDING",
         "description": "string",
         "postingDateTime": "string",
@@ -2337,7 +2419,7 @@ Example responses
     "accountId": "string",
     "transactionId": "string",
     "isDetailAvailable": true,
-    "type": "FEE",
+    "type": "DIRECT_DEBIT",
     "status": "PENDING",
     "description": "string",
     "postingDateTime": "string",
@@ -2526,18 +2608,18 @@ x-fapi-customer-ip-address	header	string	optional	The customer's original IP add
 x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
-product-category	TRANS_AND_SAVINGS_ACCOUNTS
-product-category	TERM_DEPOSITS
-product-category	TRAVEL_CARDS
+product-category	BUSINESS_LOANS
+product-category	CRED_AND_CHRG_CARDS
+product-category	LEASES
+product-category	MARGIN_LOANS
+product-category	OVERDRAFTS
+product-category	PERS_LOANS
 product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
-product-category	CRED_AND_CHRG_CARDS
-product-category	PERS_LOANS
-product-category	MARGIN_LOANS
-product-category	LEASES
+product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	OVERDRAFTS
-product-category	BUSINESS_LOANS
+product-category	TRAVEL_CARDS
+product-category	TRANS_AND_SAVINGS_ACCOUNTS
 open-status	OPEN
 open-status	CLOSED
 open-status	ALL
@@ -2776,12 +2858,13 @@ Example responses
                 "payId": {
                   "name": "string",
                   "identifier": "string",
-                  "type": "EMAIL"
+                  "type": "ABN"
                 }
               },
               "biller": {
                 "billerCode": "string",
                 "crn": "string",
+                "crnType": "FIXED_CRN",
                 "billerName": "string"
               },
               "international": {
@@ -2918,18 +3001,18 @@ x-fapi-customer-ip-address	header	string	optional	The customer's original IP add
 x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
-product-category	TRANS_AND_SAVINGS_ACCOUNTS
-product-category	TERM_DEPOSITS
-product-category	TRAVEL_CARDS
+product-category	BUSINESS_LOANS
+product-category	CRED_AND_CHRG_CARDS
+product-category	LEASES
+product-category	MARGIN_LOANS
+product-category	OVERDRAFTS
+product-category	PERS_LOANS
 product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
-product-category	CRED_AND_CHRG_CARDS
-product-category	PERS_LOANS
-product-category	MARGIN_LOANS
-product-category	LEASES
+product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	OVERDRAFTS
-product-category	BUSINESS_LOANS
+product-category	TRAVEL_CARDS
+product-category	TRANS_AND_SAVINGS_ACCOUNTS
 open-status	OPEN
 open-status	CLOSED
 open-status	ALL
@@ -2968,12 +3051,13 @@ Example responses
                 "payId": {
                   "name": "string",
                   "identifier": "string",
-                  "type": "EMAIL"
+                  "type": "ABN"
                 }
               },
               "biller": {
                 "billerCode": "string",
                 "crn": "string",
+                "crnType": "FIXED_CRN",
                 "billerName": "string"
               },
               "international": {
@@ -3153,12 +3237,13 @@ Example responses
                 "payId": {
                   "name": "string",
                   "identifier": "string",
-                  "type": "EMAIL"
+                  "type": "ABN"
                 }
               },
               "biller": {
                 "billerCode": "string",
                 "crn": "string",
+                "crnType": "FIXED_CRN",
                 "billerName": "string"
               },
               "international": {
@@ -3295,9 +3380,9 @@ x-fapi-customer-ip-address	header	string	optional	The customer's original IP add
 x-cds-client-headers	header	Base64	optional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Enumerated Values
 Parameter	Value
+type	BILLER
 type	DOMESTIC
 type	INTERNATIONAL
-type	BILLER
 type	ALL
 Example responses
 
@@ -3310,7 +3395,7 @@ Example responses
         "payeeId": "string",
         "nickname": "string",
         "description": "string",
-        "type": "DOMESTIC",
+        "type": "BILLER",
         "creationDate": "string"
       }
     ]
@@ -3396,7 +3481,7 @@ Example responses
     "payeeId": "string",
     "nickname": "string",
     "description": "string",
-    "type": "DOMESTIC",
+    "type": "BILLER",
     "creationDate": "string",
     "payeeUType": "domestic",
     "domestic": {
@@ -3412,12 +3497,13 @@ Example responses
       "payId": {
         "name": "string",
         "identifier": "string",
-        "type": "EMAIL"
+        "type": "ABN"
       }
     },
     "biller": {
       "billerCode": "string",
       "crn": "string",
+      "crnType": "FIXED_CRN",
       "billerName": "string"
     },
     "international": {
@@ -3538,18 +3624,18 @@ Parameter	Value
 effective	CURRENT
 effective	FUTURE
 effective	ALL
-product-category	TRANS_AND_SAVINGS_ACCOUNTS
-product-category	TERM_DEPOSITS
-product-category	TRAVEL_CARDS
+product-category	BUSINESS_LOANS
+product-category	CRED_AND_CHRG_CARDS
+product-category	LEASES
+product-category	MARGIN_LOANS
+product-category	OVERDRAFTS
+product-category	PERS_LOANS
 product-category	REGULATED_TRUST_ACCOUNTS
 product-category	RESIDENTIAL_MORTGAGES
-product-category	CRED_AND_CHRG_CARDS
-product-category	PERS_LOANS
-product-category	MARGIN_LOANS
-product-category	LEASES
+product-category	TERM_DEPOSITS
 product-category	TRADE_FINANCE
-product-category	OVERDRAFTS
-product-category	BUSINESS_LOANS
+product-category	TRAVEL_CARDS
+product-category	TRANS_AND_SAVINGS_ACCOUNTS
 Example responses
 
 200 Response
@@ -3562,7 +3648,7 @@ Example responses
         "effectiveFrom": "string",
         "effectiveTo": "string",
         "lastUpdated": "string",
-        "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+        "productCategory": "BUSINESS_LOANS",
         "name": "string",
         "description": "string",
         "brand": "string",
@@ -3656,7 +3742,7 @@ Example responses
     "effectiveFrom": "string",
     "effectiveTo": "string",
     "lastUpdated": "string",
-    "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+    "productCategory": "BUSINESS_LOANS",
     "name": "string",
     "description": "string",
     "brand": "string",
@@ -3689,7 +3775,7 @@ Example responses
     ],
     "features": [
       {
-        "featureType": "CARD_ACCESS",
+        "featureType": "ADDITIONAL_CARDS",
         "additionalValue": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string"
@@ -3714,7 +3800,7 @@ Example responses
     "fees": [
       {
         "name": "string",
-        "feeType": "PERIODIC",
+        "feeType": "DEPOSIT",
         "amount": "string",
         "balanceRate": "string",
         "transactionRate": "string",
@@ -3750,7 +3836,7 @@ Example responses
     ],
     "depositRates": [
       {
-        "depositRateType": "FIXED",
+        "depositRateType": "BONUS",
         "rate": "string",
         "calculationFrequency": "string",
         "applicationFrequency": "string",
@@ -3760,7 +3846,7 @@ Example responses
             "unitOfMeasure": "DOLLAR",
             "minimumValue": 0,
             "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
+            "rateApplicationMethod": "PER_TIER",
             "applicabilityConditions": {
               "additionalInfo": "string",
               "additionalInfoUri": "string"
@@ -3776,12 +3862,12 @@ Example responses
     ],
     "lendingRates": [
       {
-        "lendingRateType": "FIXED",
+        "lendingRateType": "BUNDLE_DISCOUNT_FIXED",
         "rate": "string",
         "comparisonRate": "string",
         "calculationFrequency": "string",
         "applicationFrequency": "string",
-        "interestPaymentDue": "IN_ARREARS",
+        "interestPaymentDue": "IN_ADVANCE",
         "repaymentType": "INTEREST_ONLY",
         "loanPurpose": "OWNER_OCCUPIED",
         "tiers": [
@@ -3790,7 +3876,7 @@ Example responses
             "unitOfMeasure": "DOLLAR",
             "minimumValue": 0,
             "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
+            "rateApplicationMethod": "PER_TIER",
             "applicabilityConditions": {
               "additionalInfo": "string",
               "additionalInfoUri": "string"
@@ -3883,7 +3969,8 @@ Example responses
       ],
       "prefix": "string",
       "suffix": "string",
-      "occupationCode": "string"
+      "occupationCode": "string",
+      "occupationCodeVersion": "ANZSCO_1220.0_2013_V1.2"
     },
     "organisation": {
       "lastUpdateTime": "string",
@@ -3897,7 +3984,8 @@ Example responses
       "acn": "string",
       "isACNCRegistered": true,
       "industryCode": "string",
-      "organisationType": "SOLE_TRADER",
+      "industryCodeVersion": "ANZSIC_1292.0_2006_V2.0",
+      "organisationType": "COMPANY",
       "registeredCountry": "string",
       "establishmentDate": "string"
     }
@@ -3981,6 +4069,7 @@ Example responses
       "prefix": "string",
       "suffix": "string",
       "occupationCode": "string",
+      "occupationCodeVersion": "ANZSCO_1220.0_2013_V1.2",
       "phoneNumbers": [
         {
           "isPreferred": true,
@@ -4036,7 +4125,7 @@ Example responses
             "postcode": "string",
             "state": "string"
           },
-          "purpose": "REGISTERED"
+          "purpose": "MAIL"
         }
       ]
     },
@@ -4052,7 +4141,8 @@ Example responses
       "acn": "string",
       "isACNCRegistered": true,
       "industryCode": "string",
-      "organisationType": "SOLE_TRADER",
+      "industryCodeVersion": "ANZSIC_1292.0_2006_V2.0",
+      "organisationType": "COMPANY",
       "registeredCountry": "string",
       "establishmentDate": "string",
       "physicalAddresses": [
@@ -4092,7 +4182,7 @@ Example responses
             "postcode": "string",
             "state": "string"
           },
-          "purpose": "REGISTERED"
+          "purpose": "MAIL"
         }
       ]
     }
@@ -4262,7 +4352,7 @@ ResponseBankingProductList
         "effectiveFrom": "string",
         "effectiveTo": "string",
         "lastUpdated": "string",
-        "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+        "productCategory": "BUSINESS_LOANS",
         "name": "string",
         "description": "string",
         "brand": "string",
@@ -4311,7 +4401,7 @@ BankingProductV3
   "effectiveFrom": "string",
   "effectiveTo": "string",
   "lastUpdated": "string",
-  "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+  "productCategory": "BUSINESS_LOANS",
   "name": "string",
   "description": "string",
   "brand": "string",
@@ -4363,7 +4453,7 @@ ResponseBankingProductById
     "effectiveFrom": "string",
     "effectiveTo": "string",
     "lastUpdated": "string",
-    "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+    "productCategory": "BUSINESS_LOANS",
     "name": "string",
     "description": "string",
     "brand": "string",
@@ -4396,7 +4486,7 @@ ResponseBankingProductById
     ],
     "features": [
       {
-        "featureType": "CARD_ACCESS",
+        "featureType": "ADDITIONAL_CARDS",
         "additionalValue": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string"
@@ -4421,7 +4511,7 @@ ResponseBankingProductById
     "fees": [
       {
         "name": "string",
-        "feeType": "PERIODIC",
+        "feeType": "DEPOSIT",
         "amount": "string",
         "balanceRate": "string",
         "transactionRate": "string",
@@ -4457,7 +4547,7 @@ ResponseBankingProductById
     ],
     "depositRates": [
       {
-        "depositRateType": "FIXED",
+        "depositRateType": "BONUS",
         "rate": "string",
         "calculationFrequency": "string",
         "applicationFrequency": "string",
@@ -4467,7 +4557,7 @@ ResponseBankingProductById
             "unitOfMeasure": "DOLLAR",
             "minimumValue": 0,
             "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
+            "rateApplicationMethod": "PER_TIER",
             "applicabilityConditions": {
               "additionalInfo": "string",
               "additionalInfoUri": "string"
@@ -4483,12 +4573,12 @@ ResponseBankingProductById
     ],
     "lendingRates": [
       {
-        "lendingRateType": "FIXED",
+        "lendingRateType": "BUNDLE_DISCOUNT_FIXED",
         "rate": "string",
         "comparisonRate": "string",
         "calculationFrequency": "string",
         "applicationFrequency": "string",
-        "interestPaymentDue": "IN_ARREARS",
+        "interestPaymentDue": "IN_ADVANCE",
         "repaymentType": "INTEREST_ONLY",
         "loanPurpose": "OWNER_OCCUPIED",
         "tiers": [
@@ -4497,7 +4587,7 @@ ResponseBankingProductById
             "unitOfMeasure": "DOLLAR",
             "minimumValue": 0,
             "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
+            "rateApplicationMethod": "PER_TIER",
             "applicabilityConditions": {
               "additionalInfo": "string",
               "additionalInfoUri": "string"
@@ -4530,7 +4620,7 @@ BankingProductDetailV3
   "effectiveFrom": "string",
   "effectiveTo": "string",
   "lastUpdated": "string",
-  "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+  "productCategory": "BUSINESS_LOANS",
   "name": "string",
   "description": "string",
   "brand": "string",
@@ -4563,7 +4653,7 @@ BankingProductDetailV3
   ],
   "features": [
     {
-      "featureType": "CARD_ACCESS",
+      "featureType": "ADDITIONAL_CARDS",
       "additionalValue": "string",
       "additionalInfo": "string",
       "additionalInfoUri": "string"
@@ -4588,7 +4678,7 @@ BankingProductDetailV3
   "fees": [
     {
       "name": "string",
-      "feeType": "PERIODIC",
+      "feeType": "DEPOSIT",
       "amount": "string",
       "balanceRate": "string",
       "transactionRate": "string",
@@ -4624,7 +4714,7 @@ BankingProductDetailV3
   ],
   "depositRates": [
     {
-      "depositRateType": "FIXED",
+      "depositRateType": "BONUS",
       "rate": "string",
       "calculationFrequency": "string",
       "applicationFrequency": "string",
@@ -4634,7 +4724,7 @@ BankingProductDetailV3
           "unitOfMeasure": "DOLLAR",
           "minimumValue": 0,
           "maximumValue": 0,
-          "rateApplicationMethod": "WHOLE_BALANCE",
+          "rateApplicationMethod": "PER_TIER",
           "applicabilityConditions": {
             "additionalInfo": "string",
             "additionalInfoUri": "string"
@@ -4650,12 +4740,12 @@ BankingProductDetailV3
   ],
   "lendingRates": [
     {
-      "lendingRateType": "FIXED",
+      "lendingRateType": "BUNDLE_DISCOUNT_FIXED",
       "rate": "string",
       "comparisonRate": "string",
       "calculationFrequency": "string",
       "applicationFrequency": "string",
-      "interestPaymentDue": "IN_ARREARS",
+      "interestPaymentDue": "IN_ADVANCE",
       "repaymentType": "INTEREST_ONLY",
       "loanPurpose": "OWNER_OCCUPIED",
       "tiers": [
@@ -4664,7 +4754,7 @@ BankingProductDetailV3
           "unitOfMeasure": "DOLLAR",
           "minimumValue": 0,
           "maximumValue": 0,
-          "rateApplicationMethod": "WHOLE_BALANCE",
+          "rateApplicationMethod": "PER_TIER",
           "applicabilityConditions": {
             "additionalInfo": "string",
             "additionalInfoUri": "string"
@@ -4718,7 +4808,7 @@ productIds	[string]	optional	none	Array of product IDs for products included in 
 BankingProductFeature
 
 {
-  "featureType": "CARD_ACCESS",
+  "featureType": "ADDITIONAL_CARDS",
   "additionalValue": "string",
   "additionalInfo": "string",
   "additionalInfoUri": "string"
@@ -4732,28 +4822,28 @@ additionalInfo	string	conditional	none	Display text providing more information o
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on this feature
 Enumerated Values
 Property	Value
-featureType	CARD_ACCESS
 featureType	ADDITIONAL_CARDS
-featureType	UNLIMITED_TXNS
+featureType	BALANCE_TRANSFERS
+featureType	BILL_PAYMENT
+featureType	BONUS_REWARDS
+featureType	CARD_ACCESS
+featureType	COMPLEMENTARY_PRODUCT_DISCOUNTS
+featureType	DIGITAL_BANKING
+featureType	DIGITAL_WALLET
+featureType	DONATE_INTEREST
 featureType	FREE_TXNS
 featureType	FREE_TXNS_ALLOWANCE
+featureType	INSURANCE
+featureType	INTEREST_FREE
+featureType	INTEREST_FREE_TRANSFERS
 featureType	LOYALTY_PROGRAM
+featureType	NOTIFICATIONS
+featureType	NPP_ENABLED
+featureType	NPP_PAYID
 featureType	OFFSET
 featureType	OVERDRAFT
 featureType	REDRAW
-featureType	INSURANCE
-featureType	BALANCE_TRANSFERS
-featureType	INTEREST_FREE
-featureType	INTEREST_FREE_TRANSFERS
-featureType	DIGITAL_WALLET
-featureType	DIGITAL_BANKING
-featureType	NPP_PAYID
-featureType	NPP_ENABLED
-featureType	DONATE_INTEREST
-featureType	BILL_PAYMENT
-featureType	COMPLEMENTARY_PRODUCT_DISCOUNTS
-featureType	BONUS_REWARDS
-featureType	NOTIFICATIONS
+featureType	UNLIMITED_TXNS
 featureType	OTHER
 BankingProductConstraint
 
@@ -4773,10 +4863,10 @@ additionalInfoUri	URIString	optional	none	Link to a web page with more informati
 Enumerated Values
 Property	Value
 constraintType	MIN_BALANCE
-constraintType	MAX_BALANCE
-constraintType	OPENING_BALANCE
-constraintType	MAX_LIMIT
 constraintType	MIN_LIMIT
+constraintType	MAX_BALANCE
+constraintType	MAX_LIMIT
+constraintType	OPENING_BALANCE
 BankingProductEligibility
 
 {
@@ -4795,22 +4885,22 @@ additionalInfoUri	URIString	optional	none	Link to a web page with more informati
 Enumerated Values
 Property	Value
 eligibilityType	BUSINESS
-eligibilityType	PENSION_RECIPIENT
-eligibilityType	MIN_AGE
+eligibilityType	EMPLOYMENT_STATUS
 eligibilityType	MAX_AGE
+eligibilityType	MIN_AGE
 eligibilityType	MIN_INCOME
 eligibilityType	MIN_TURNOVER
+eligibilityType	NATURAL_PERSON
+eligibilityType	PENSION_RECIPIENT
+eligibilityType	RESIDENCY_STATUS
 eligibilityType	STAFF
 eligibilityType	STUDENT
-eligibilityType	EMPLOYMENT_STATUS
-eligibilityType	RESIDENCY_STATUS
-eligibilityType	NATURAL_PERSON
 eligibilityType	OTHER
 BankingProductFee
 
 {
   "name": "string",
-  "feeType": "PERIODIC",
+  "feeType": "DEPOSIT",
   "amount": "string",
   "balanceRate": "string",
   "transactionRate": "string",
@@ -4860,16 +4950,16 @@ additionalInfoUri	URIString	optional	none	Link to a web page with more informati
 discounts	[BankingProductDiscount]	optional	none	An optional list of discounts to this fee that may be available
 Enumerated Values
 Property	Value
-feeType	PERIODIC
-feeType	TRANSACTION
-feeType	WITHDRAWAL
 feeType	DEPOSIT
-feeType	PAYMENT
-feeType	PURCHASE
 feeType	EVENT
-feeType	UPFRONT
 feeType	EXIT
+feeType	PAYMENT
+feeType	PERIODIC
+feeType	PURCHASE
+feeType	TRANSACTION
+feeType	UPFRONT
 feeType	VARIABLE
+feeType	WITHDRAWAL
 BankingProductDiscount
 
 {
@@ -4897,7 +4987,7 @@ Properties
 Name	Type	Required	Restrictions	Description
 description	string	mandatory	none	Description of the discount
 discountType	string	mandatory	none	The type of discount. See the next section for an overview of valid values and their meaning
-amount	AmountString	conditional	none	Value of the discount. When following properties include one of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory
+amount	AmountString	conditional	none	Dollar value of the discount. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory.
 balanceRate	RateString	conditional	none	A discount rate calculated based on a proportion of the balance. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory. Unless noted in additionalInfo, assumes the application and calculation frequency are the same as the corresponding fee
 transactionRate	RateString	conditional	none	A discount rate calculated based on a proportion of a transaction. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory
 accruedRate	RateString	conditional	none	A discount rate calculated based on a proportion of the calculated interest accrued on the account. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory. Unless noted in additionalInfo, assumes the application and calculation frequency are the same as the corresponding fee
@@ -4905,14 +4995,14 @@ feeRate	RateString	conditional	none	A discount rate calculated based on a propor
 additionalValue	string	conditional	none	Generic field containing additional information relevant to the discountType specified. Whether mandatory or not is dependent on the value of discountType
 additionalInfo	string	optional	none	Display text providing more information on the discount
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on this discount
-eligibility	[BankingProductDiscountEligibility]	optional	none	Eligibility constraints that apply to this discount
+eligibility	[BankingProductDiscountEligibility]	conditional	none	Eligibility constraints that apply to this discount. Mandatory if discountType is ELIGIBILITY_ONLY.
 Enumerated Values
 Property	Value
 discountType	BALANCE
 discountType	DEPOSITS
-discountType	PAYMENTS
-discountType	FEE_CAP
 discountType	ELIGIBILITY_ONLY
+discountType	FEE_CAP
+discountType	PAYMENTS
 BankingProductDiscountEligibility
 
 {
@@ -4926,27 +5016,27 @@ Properties
 Name	Type	Required	Restrictions	Description
 discountEligibilityType	string	mandatory	none	The type of the specific eligibility constraint for a discount
 additionalValue	string	conditional	none	Generic field containing additional information relevant to the discountEligibilityType specified. Whether mandatory or not is dependent on the value of discountEligibilityType
-additionalInfo	string	optional	none	Display text providing more information on this eligibility constraint
+additionalInfo	string	conditional	none	Display text providing more information on this eligibility constraint. Whether mandatory or not is dependent on the value of discountEligibilityType
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on this eligibility constraint
 Enumerated Values
 Property	Value
 discountEligibilityType	BUSINESS
-discountEligibilityType	PENSION_RECIPIENT
-discountEligibilityType	MIN_AGE
+discountEligibilityType	EMPLOYMENT_STATUS
+discountEligibilityType	INTRODUCTORY
 discountEligibilityType	MAX_AGE
+discountEligibilityType	MIN_AGE
 discountEligibilityType	MIN_INCOME
 discountEligibilityType	MIN_TURNOVER
+discountEligibilityType	NATURAL_PERSON
+discountEligibilityType	PENSION_RECIPIENT
+discountEligibilityType	RESIDENCY_STATUS
 discountEligibilityType	STAFF
 discountEligibilityType	STUDENT
-discountEligibilityType	EMPLOYMENT_STATUS
-discountEligibilityType	RESIDENCY_STATUS
-discountEligibilityType	NATURAL_PERSON
-discountEligibilityType	INTRODUCTORY
 discountEligibilityType	OTHER
 BankingProductDepositRate
 
 {
-  "depositRateType": "FIXED",
+  "depositRateType": "BONUS",
   "rate": "string",
   "calculationFrequency": "string",
   "applicationFrequency": "string",
@@ -4956,7 +5046,7 @@ BankingProductDepositRate
       "unitOfMeasure": "DOLLAR",
       "minimumValue": 0,
       "maximumValue": 0,
-      "rateApplicationMethod": "WHOLE_BALANCE",
+      "rateApplicationMethod": "PER_TIER",
       "applicabilityConditions": {
         "additionalInfo": "string",
         "additionalInfoUri": "string"
@@ -4982,22 +5072,22 @@ additionalInfo	string	optional	none	Display text providing more information on t
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on this rate
 Enumerated Values
 Property	Value
-depositRateType	FIXED
 depositRateType	BONUS
 depositRateType	BUNDLE_BONUS
-depositRateType	VARIABLE
-depositRateType	INTRODUCTORY
+depositRateType	FIXED
 depositRateType	FLOATING
+depositRateType	INTRODUCTORY
 depositRateType	MARKET_LINKED
+depositRateType	VARIABLE
 BankingProductLendingRateV2
 
 {
-  "lendingRateType": "FIXED",
+  "lendingRateType": "BUNDLE_DISCOUNT_FIXED",
   "rate": "string",
   "comparisonRate": "string",
   "calculationFrequency": "string",
   "applicationFrequency": "string",
-  "interestPaymentDue": "IN_ARREARS",
+  "interestPaymentDue": "IN_ADVANCE",
   "repaymentType": "INTEREST_ONLY",
   "loanPurpose": "OWNER_OCCUPIED",
   "tiers": [
@@ -5006,7 +5096,7 @@ BankingProductLendingRateV2
       "unitOfMeasure": "DOLLAR",
       "minimumValue": 0,
       "maximumValue": 0,
-      "rateApplicationMethod": "WHOLE_BALANCE",
+      "rateApplicationMethod": "PER_TIER",
       "applicabilityConditions": {
         "additionalInfo": "string",
         "additionalInfoUri": "string"
@@ -5036,19 +5126,19 @@ additionalInfo	string	optional	none	Display text providing more information on t
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on this rate
 Enumerated Values
 Property	Value
-lendingRateType	FIXED
-lendingRateType	VARIABLE
-lendingRateType	INTRODUCTORY
-lendingRateType	DISCOUNT
-lendingRateType	PENALTY
-lendingRateType	FLOATING
-lendingRateType	MARKET_LINKED
-lendingRateType	CASH_ADVANCE
-lendingRateType	PURCHASE
 lendingRateType	BUNDLE_DISCOUNT_FIXED
 lendingRateType	BUNDLE_DISCOUNT_VARIABLE
-interestPaymentDue	IN_ARREARS
+lendingRateType	CASH_ADVANCE
+lendingRateType	DISCOUNT
+lendingRateType	FLOATING
+lendingRateType	INTRODUCTORY
+lendingRateType	MARKET_LINKED
+lendingRateType	PENALTY
+lendingRateType	PURCHASE
+lendingRateType	VARIABLE
+lendingRateType	FIXED
 interestPaymentDue	IN_ADVANCE
+interestPaymentDue	IN_ARREARS
 repaymentType	INTEREST_ONLY
 repaymentType	PRINCIPAL_AND_INTEREST
 loanPurpose	OWNER_OCCUPIED
@@ -5060,7 +5150,7 @@ BankingProductRateTierV3
   "unitOfMeasure": "DOLLAR",
   "minimumValue": 0,
   "maximumValue": 0,
-  "rateApplicationMethod": "WHOLE_BALANCE",
+  "rateApplicationMethod": "PER_TIER",
   "applicabilityConditions": {
     "additionalInfo": "string",
     "additionalInfoUri": "string"
@@ -5075,8 +5165,8 @@ Properties
 Name	Type	Required	Restrictions	Description
 name	string	mandatory	none	A display name for the tier
 unitOfMeasure	string	mandatory	none	The unit of measure that applies to the tierValueMinimum and tierValueMaximum values e.g. a DOLLAR amount. PERCENT (in the case of loan-to-value ratio or LVR). Tier term period representing a discrete number of MONTH's or DAY's (in the case of term deposit tiers)
-minimumValue	number	mandatory	none	The number of tierUnitOfMeasure units that form the lower bound of the tier. The tier should be inclusive of this value
-maximumValue	number	optional	none	The number of tierUnitOfMeasure units that form the upper bound of the tier or band. For a tier with a discrete value (as opposed to a range of values e.g. 1 month) this must be the same as tierValueMinimum. Where this is the same as the tierValueMinimum value of the next-higher tier the referenced tier should be exclusive of this value. For example a term deposit of 2 months falls into the upper tier of the following tiers: (1 – 2 months, 2 – 3 months). If absent the tier's range has no upper bound.
+minimumValue	Number	mandatory	none	The number of tierUnitOfMeasure units that form the lower bound of the tier. The tier should be inclusive of this value
+maximumValue	Number	optional	none	The number of tierUnitOfMeasure units that form the upper bound of the tier or band. For a tier with a discrete value (as opposed to a range of values e.g. 1 month) this must be the same as tierValueMinimum. Where this is the same as the tierValueMinimum value of the next-higher tier the referenced tier should be exclusive of this value. For example a term deposit of 2 months falls into the upper tier of the following tiers: (1 – 2 months, 2 – 3 months). If absent the tier's range has no upper bound.
 rateApplicationMethod	string	optional	none	The method used to calculate the amount to be applied using one or more tiers. A single rate may be applied to the entire balance or each applicable tier rate is applied to the portion of the balance that falls into that tier (referred to as 'bands' or 'steps')
 applicabilityConditions	BankingProductRateCondition	optional	none	Defines a condition for the applicability of a tiered rate
 additionalInfo	string	optional	none	Display text providing more information on the rate tier.
@@ -5085,10 +5175,10 @@ Enumerated Values
 Property	Value
 unitOfMeasure	DOLLAR
 unitOfMeasure	PERCENT
-unitOfMeasure	MONTH
 unitOfMeasure	DAY
-rateApplicationMethod	WHOLE_BALANCE
+unitOfMeasure	MONTH
 rateApplicationMethod	PER_TIER
+rateApplicationMethod	WHOLE_BALANCE
 BankingProductRateCondition
 
 {
@@ -5115,7 +5205,7 @@ ResponseBankingAccountList
         "openStatus": "OPEN",
         "isOwned": true,
         "maskedNumber": "string",
-        "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+        "productCategory": "BUSINESS_LOANS",
         "productName": "string"
       }
     ]
@@ -5149,7 +5239,7 @@ BankingAccount
   "openStatus": "OPEN",
   "isOwned": true,
   "maskedNumber": "string",
-  "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+  "productCategory": "BUSINESS_LOANS",
   "productName": "string"
 }
 
@@ -5179,7 +5269,7 @@ ResponseBankingAccountById
     "openStatus": "OPEN",
     "isOwned": true,
     "maskedNumber": "string",
-    "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+    "productCategory": "BUSINESS_LOANS",
     "productName": "string",
     "bsb": "string",
     "accountNumber": "string",
@@ -5223,7 +5313,7 @@ ResponseBankingAccountById
     "lendingRate": "string",
     "depositRates": [
       {
-        "depositRateType": "FIXED",
+        "depositRateType": "BONUS",
         "rate": "string",
         "calculationFrequency": "string",
         "applicationFrequency": "string",
@@ -5233,7 +5323,7 @@ ResponseBankingAccountById
             "unitOfMeasure": "DOLLAR",
             "minimumValue": 0,
             "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
+            "rateApplicationMethod": "PER_TIER",
             "applicabilityConditions": {
               "additionalInfo": "string",
               "additionalInfoUri": "string"
@@ -5249,12 +5339,12 @@ ResponseBankingAccountById
     ],
     "lendingRates": [
       {
-        "lendingRateType": "FIXED",
+        "lendingRateType": "BUNDLE_DISCOUNT_FIXED",
         "rate": "string",
         "comparisonRate": "string",
         "calculationFrequency": "string",
         "applicationFrequency": "string",
-        "interestPaymentDue": "IN_ARREARS",
+        "interestPaymentDue": "IN_ADVANCE",
         "repaymentType": "INTEREST_ONLY",
         "loanPurpose": "OWNER_OCCUPIED",
         "tiers": [
@@ -5263,7 +5353,7 @@ ResponseBankingAccountById
             "unitOfMeasure": "DOLLAR",
             "minimumValue": 0,
             "maximumValue": 0,
-            "rateApplicationMethod": "WHOLE_BALANCE",
+            "rateApplicationMethod": "PER_TIER",
             "applicabilityConditions": {
               "additionalInfo": "string",
               "additionalInfoUri": "string"
@@ -5279,7 +5369,7 @@ ResponseBankingAccountById
     ],
     "features": [
       {
-        "featureType": "CARD_ACCESS",
+        "featureType": "ADDITIONAL_CARDS",
         "additionalValue": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string",
@@ -5289,7 +5379,7 @@ ResponseBankingAccountById
     "fees": [
       {
         "name": "string",
-        "feeType": "PERIODIC",
+        "feeType": "DEPOSIT",
         "amount": "string",
         "balanceRate": "string",
         "transactionRate": "string",
@@ -5384,7 +5474,7 @@ BankingAccountDetail
   "openStatus": "OPEN",
   "isOwned": true,
   "maskedNumber": "string",
-  "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
+  "productCategory": "BUSINESS_LOANS",
   "productName": "string",
   "bsb": "string",
   "accountNumber": "string",
@@ -5428,7 +5518,7 @@ BankingAccountDetail
   "lendingRate": "string",
   "depositRates": [
     {
-      "depositRateType": "FIXED",
+      "depositRateType": "BONUS",
       "rate": "string",
       "calculationFrequency": "string",
       "applicationFrequency": "string",
@@ -5438,7 +5528,7 @@ BankingAccountDetail
           "unitOfMeasure": "DOLLAR",
           "minimumValue": 0,
           "maximumValue": 0,
-          "rateApplicationMethod": "WHOLE_BALANCE",
+          "rateApplicationMethod": "PER_TIER",
           "applicabilityConditions": {
             "additionalInfo": "string",
             "additionalInfoUri": "string"
@@ -5454,12 +5544,12 @@ BankingAccountDetail
   ],
   "lendingRates": [
     {
-      "lendingRateType": "FIXED",
+      "lendingRateType": "BUNDLE_DISCOUNT_FIXED",
       "rate": "string",
       "comparisonRate": "string",
       "calculationFrequency": "string",
       "applicationFrequency": "string",
-      "interestPaymentDue": "IN_ARREARS",
+      "interestPaymentDue": "IN_ADVANCE",
       "repaymentType": "INTEREST_ONLY",
       "loanPurpose": "OWNER_OCCUPIED",
       "tiers": [
@@ -5468,7 +5558,7 @@ BankingAccountDetail
           "unitOfMeasure": "DOLLAR",
           "minimumValue": 0,
           "maximumValue": 0,
-          "rateApplicationMethod": "WHOLE_BALANCE",
+          "rateApplicationMethod": "PER_TIER",
           "applicabilityConditions": {
             "additionalInfo": "string",
             "additionalInfoUri": "string"
@@ -5484,7 +5574,7 @@ BankingAccountDetail
   ],
   "features": [
     {
-      "featureType": "CARD_ACCESS",
+      "featureType": "ADDITIONAL_CARDS",
       "additionalValue": "string",
       "additionalInfo": "string",
       "additionalInfoUri": "string",
@@ -5494,7 +5584,7 @@ BankingAccountDetail
   "fees": [
     {
       "name": "string",
-      "feeType": "PERIODIC",
+      "feeType": "DEPOSIT",
       "amount": "string",
       "balanceRate": "string",
       "transactionRate": "string",
@@ -5625,11 +5715,12 @@ lodgementDate	DateString	mandatory	none	The lodgement date of the original depos
 maturityDate	DateString	mandatory	none	Maturity date for the term deposit
 maturityAmount	AmountString	optional	none	Amount to be paid upon maturity. If absent it implies the amount to paid is variable and cannot currently be calculated
 maturityCurrency	CurrencyString	optional	none	If absent assumes AUD
-maturityInstructions	string	mandatory	none	Current instructions on action to be taken at maturity
+maturityInstructions	string	mandatory	none	Current instructions on action to be taken at maturity. This includes default actions that may be specified in the terms and conditions for the product e.g. roll-over to the same term and frequency of interest payments
 Enumerated Values
 Property	Value
 maturityInstructions	ROLLED_OVER
 maturityInstructions	PAID_OUT_AT_MATURITY
+maturityInstructions	HOLD_ON_MATURITY
 BankingCreditCardAccount
 
 {
@@ -5697,7 +5788,7 @@ ResponseBankingTransactionList
         "accountId": "string",
         "transactionId": "string",
         "isDetailAvailable": true,
-        "type": "FEE",
+        "type": "DIRECT_DEBIT",
         "status": "PENDING",
         "description": "string",
         "postingDateTime": "string",
@@ -5740,7 +5831,7 @@ BankingTransaction
   "accountId": "string",
   "transactionId": "string",
   "isDetailAvailable": true,
-  "type": "FEE",
+  "type": "DIRECT_DEBIT",
   "status": "PENDING",
   "description": "string",
   "postingDateTime": "string",
@@ -5779,13 +5870,13 @@ crn	string	optional	none	BPAY CRN for the transaction (if available)
 apcaNumber	string	optional	none	6 Digit APCA number for the initiating institution. The field is fixed-width and padded with leading zeros if applicable.
 Enumerated Values
 Property	Value
+type	DIRECT_DEBIT
 type	FEE
 type	INTEREST_CHARGED
 type	INTEREST_PAID
+type	PAYMENT
 type	TRANSFER_OUTGOING
 type	TRANSFER_INCOMING
-type	PAYMENT
-type	DIRECT_DEBIT
 type	OTHER
 status	PENDING
 status	POSTED
@@ -5796,7 +5887,7 @@ ResponseBankingTransactionById
     "accountId": "string",
     "transactionId": "string",
     "isDetailAvailable": true,
-    "type": "FEE",
+    "type": "DIRECT_DEBIT",
     "status": "PENDING",
     "description": "string",
     "postingDateTime": "string",
@@ -5840,7 +5931,7 @@ BankingTransactionDetail
   "accountId": "string",
   "transactionId": "string",
   "isDetailAvailable": true,
-  "type": "FEE",
+  "type": "DIRECT_DEBIT",
   "status": "PENDING",
   "description": "string",
   "postingDateTime": "string",
@@ -6004,7 +6095,7 @@ ResponseBankingPayeeList
         "payeeId": "string",
         "nickname": "string",
         "description": "string",
-        "type": "DOMESTIC",
+        "type": "BILLER",
         "creationDate": "string"
       }
     ]
@@ -6035,7 +6126,7 @@ ResponseBankingPayeeById
     "payeeId": "string",
     "nickname": "string",
     "description": "string",
-    "type": "DOMESTIC",
+    "type": "BILLER",
     "creationDate": "string",
     "payeeUType": "domestic",
     "domestic": {
@@ -6051,12 +6142,13 @@ ResponseBankingPayeeById
       "payId": {
         "name": "string",
         "identifier": "string",
-        "type": "EMAIL"
+        "type": "ABN"
       }
     },
     "biller": {
       "billerCode": "string",
       "crn": "string",
+      "crnType": "FIXED_CRN",
       "billerName": "string"
     },
     "international": {
@@ -6098,29 +6190,29 @@ BankingPayee
   "payeeId": "string",
   "nickname": "string",
   "description": "string",
-  "type": "DOMESTIC",
+  "type": "BILLER",
   "creationDate": "string"
 }
 
 Properties
 Name	Type	Required	Restrictions	Description
 payeeId	ASCIIString	mandatory	none	ID of the payee adhering to the rules of ID permanence
-nickname	string	mandatory	none	The short display name of the payee as provided by the customer
+nickname	string	mandatory	none	The short display name of the payee as provided by the customer. Where a customer has not provided a nickname, a display name derived by the bank for the payee consistent with existing digital banking channels
 description	string	optional	none	A description of the payee provided by the customer
 type	string	mandatory	none	The type of payee. DOMESTIC means a registered payee for domestic payments including NPP. INTERNATIONAL means a registered payee for international payments. BILLER means a registered payee for BPAY
 creationDate	DateString	optional	none	The date the payee was created by the customer
 Enumerated Values
 Property	Value
+type	BILLER
 type	DOMESTIC
 type	INTERNATIONAL
-type	BILLER
 BankingPayeeDetail
 
 {
   "payeeId": "string",
   "nickname": "string",
   "description": "string",
-  "type": "DOMESTIC",
+  "type": "BILLER",
   "creationDate": "string",
   "payeeUType": "domestic",
   "domestic": {
@@ -6136,12 +6228,13 @@ BankingPayeeDetail
     "payId": {
       "name": "string",
       "identifier": "string",
-      "type": "EMAIL"
+      "type": "ABN"
     }
   },
   "biller": {
     "billerCode": "string",
     "crn": "string",
+    "crnType": "FIXED_CRN",
     "billerName": "string"
   },
   "international": {
@@ -6200,7 +6293,7 @@ BankingDomesticPayee
   "payId": {
     "name": "string",
     "identifier": "string",
-    "type": "EMAIL"
+    "type": "ABN"
   }
 }
 
@@ -6242,7 +6335,7 @@ BankingDomesticPayeePayId
 {
   "name": "string",
   "identifier": "string",
-  "type": "EMAIL"
+  "type": "ABN"
 }
 
 Properties
@@ -6252,23 +6345,30 @@ identifier	string	mandatory	none	The identifier of the PayID (dependent on type)
 type	string	mandatory	none	The type of the PayID
 Enumerated Values
 Property	Value
-type	EMAIL
-type	TELEPHONE
 type	ABN
+type	EMAIL
 type	ORG_IDENTIFIER
+type	TELEPHONE
 BankingBillerPayee
 
 {
   "billerCode": "string",
   "crn": "string",
+  "crnType": "FIXED_CRN",
   "billerName": "string"
 }
 
 Properties
 Name	Type	Required	Restrictions	Description
 billerCode	string	mandatory	none	BPAY Biller Code of the Biller
-crn	string	conditional	none	BPAY CRN of the Biller. If the contents of the CRN match the format of a Credit Card PAN then it should be masked using the rules applicable for the MaskedPANString common type
+crn	string	conditional	none	BPAY CRN of the Biller. Where the crn contains sensitive information, it should be masked inline with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN or are otherwise sensitive, then it should be masked using the rules applicable for the MaskedPANString common type
+crnType	string	mandatory	none	Denotes the type of CRN. FIXED_CRN A unique reference number such as a credit card or a fixed reference number identifying a customer's account that does not change with each bill. VARIABLE_CRN Biller generated reference number provided to the customer that is unique to each bill. INTELLIGENT_CRN Biller generated reference number provided to the customer that is unique to each bill which fixes the amount of the bill being paid, expiry date or both.
 billerName	string	mandatory	none	Name of the Biller
+Enumerated Values
+Property	Value
+crnType	FIXED_CRN
+crnType	VARIABLE_CRN
+crnType	INTELLIGENT_CRN
 BankingInternationalPayee
 
 {
@@ -6420,12 +6520,13 @@ ResponseBankingScheduledPaymentsList
                 "payId": {
                   "name": "string",
                   "identifier": "string",
-                  "type": "EMAIL"
+                  "type": "ABN"
                 }
               },
               "biller": {
                 "billerCode": "string",
                 "crn": "string",
+                "crnType": "FIXED_CRN",
                 "billerName": "string"
               },
               "international": {
@@ -6535,12 +6636,13 @@ BankingScheduledPayment
           "payId": {
             "name": "string",
             "identifier": "string",
-            "type": "EMAIL"
+            "type": "ABN"
           }
         },
         "biller": {
           "billerCode": "string",
           "crn": "string",
+          "crnType": "FIXED_CRN",
           "billerName": "string"
         },
         "international": {
@@ -6613,8 +6715,8 @@ recurrence	BankingScheduledPaymentRecurrence	mandatory	none	Object containing th
 Enumerated Values
 Property	Value
 status	ACTIVE
-status	SKIP
 status	INACTIVE
+status	SKIP
 BankingScheduledPaymentSet
 
 {
@@ -6635,12 +6737,13 @@ BankingScheduledPaymentSet
       "payId": {
         "name": "string",
         "identifier": "string",
-        "type": "EMAIL"
+        "type": "ABN"
       }
     },
     "biller": {
       "billerCode": "string",
       "crn": "string",
+      "crnType": "FIXED_CRN",
       "billerName": "string"
     },
     "international": {
@@ -6697,12 +6800,13 @@ BankingScheduledPaymentTo
     "payId": {
       "name": "string",
       "identifier": "string",
-      "type": "EMAIL"
+      "type": "ABN"
     }
   },
   "biller": {
     "billerCode": "string",
     "crn": "string",
+    "crnType": "FIXED_CRN",
     "billerName": "string"
   },
   "international": {
@@ -6934,8 +7038,8 @@ Enumerated Values
 Property	Value
 status	OK
 status	PARTIAL_FAILURE
-status	UNAVAILABLE
 status	SCHEDULED_OUTAGE
+status	UNAVAILABLE
 ResponseDiscoveryOutagesList
 
 {
@@ -6974,7 +7078,7 @@ Properties
 Name	Type	Required	Restrictions	Description
 outageTime	DateTimeString	mandatory	none	Date and time that the outage is scheduled to begin
 duration	ExternalRef	mandatory	none	Planned duration of the outage. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
-isPartial	boolean	optional	none	Flag that indicates, if present and set to true, that the outage is only partial meaning that only a subset of normally available end points will be affected by the outage
+isPartial	Boolean	optional	none	Flag that indicates, if present and set to true, that the outage is only partial meaning that only a subset of normally available end points will be affected by the outage
 explanation	string	mandatory	none	Provides an explanation of the current outage that can be displayed to an end customer
 ResponseCommonCustomer
 
@@ -6990,7 +7094,8 @@ ResponseCommonCustomer
       ],
       "prefix": "string",
       "suffix": "string",
-      "occupationCode": "string"
+      "occupationCode": "string",
+      "occupationCodeVersion": "ANZSCO_1220.0_2013_V1.2"
     },
     "organisation": {
       "lastUpdateTime": "string",
@@ -7004,7 +7109,8 @@ ResponseCommonCustomer
       "acn": "string",
       "isACNCRegistered": true,
       "industryCode": "string",
-      "organisationType": "SOLE_TRADER",
+      "industryCodeVersion": "ANZSIC_1292.0_2006_V2.0",
+      "organisationType": "COMPANY",
       "registeredCountry": "string",
       "establishmentDate": "string"
     }
@@ -7042,6 +7148,7 @@ ResponseCommonCustomerDetail
       "prefix": "string",
       "suffix": "string",
       "occupationCode": "string",
+      "occupationCodeVersion": "ANZSCO_1220.0_2013_V1.2",
       "phoneNumbers": [
         {
           "isPreferred": true,
@@ -7097,7 +7204,7 @@ ResponseCommonCustomerDetail
             "postcode": "string",
             "state": "string"
           },
-          "purpose": "REGISTERED"
+          "purpose": "MAIL"
         }
       ]
     },
@@ -7113,7 +7220,8 @@ ResponseCommonCustomerDetail
       "acn": "string",
       "isACNCRegistered": true,
       "industryCode": "string",
-      "organisationType": "SOLE_TRADER",
+      "industryCodeVersion": "ANZSIC_1292.0_2006_V2.0",
+      "organisationType": "COMPANY",
       "registeredCountry": "string",
       "establishmentDate": "string",
       "physicalAddresses": [
@@ -7153,7 +7261,7 @@ ResponseCommonCustomerDetail
             "postcode": "string",
             "state": "string"
           },
-          "purpose": "REGISTERED"
+          "purpose": "MAIL"
         }
       ]
     }
@@ -7187,7 +7295,8 @@ CommonPerson
   ],
   "prefix": "string",
   "suffix": "string",
-  "occupationCode": "string"
+  "occupationCode": "string",
+  "occupationCodeVersion": "ANZSCO_1220.0_2013_V1.2"
 }
 
 Properties
@@ -7198,7 +7307,14 @@ lastName	string	mandatory	none	For people with single names the single name shou
 middleNames	[string]	mandatory	none	Field is mandatory but array may be empty
 prefix	string	optional	none	Also known as title or salutation. The prefix to the name (e.g. Mr, Mrs, Ms, Miss, Sir, etc)
 suffix	string	optional	none	Used for a trailing suffix to the name (e.g. Jr)
-occupationCode	string	optional	none	Value is a valid ANZSCO v1.2 Standard Occupation classification.
+occupationCode	ExternalRef	optional	none	Value is a valid ANZSCO Standard Occupation classification code. If the occupation code held by the data holder is not one of the supported ANZSCO versions, then it must not be supplied.
+occupationCodeVersion	string	conditional	none	The applicable ANZSCO release version of the occupation code provided. Mandatory if an occupationCode is supplied. If occupationCode is supplied but occupationCodeVersion is absent, default is ANZSCO_1220.0_2013_V1.2
+Enumerated Values
+Property	Value
+occupationCodeVersion	ANZSCO_1220.0_2013_V1.3
+occupationCodeVersion	ANZSCO_1220.0_2013_V1.2
+occupationCodeVersion	ANZSCO_1220.0_2006_V1.1
+occupationCodeVersion	ANZSCO_1220.0_2006_V1.0
 CommonPersonDetail
 
 {
@@ -7211,6 +7327,7 @@ CommonPersonDetail
   "prefix": "string",
   "suffix": "string",
   "occupationCode": "string",
+  "occupationCodeVersion": "ANZSCO_1220.0_2013_V1.2",
   "phoneNumbers": [
     {
       "isPreferred": true,
@@ -7266,7 +7383,7 @@ CommonPersonDetail
         "postcode": "string",
         "state": "string"
       },
-      "purpose": "REGISTERED"
+      "purpose": "MAIL"
     }
   ]
 }
@@ -7297,7 +7414,8 @@ CommonOrganisation
   "acn": "string",
   "isACNCRegistered": true,
   "industryCode": "string",
-  "organisationType": "SOLE_TRADER",
+  "industryCodeVersion": "ANZSIC_1292.0_2006_V2.0",
+  "organisationType": "COMPANY",
   "registeredCountry": "string",
   "establishmentDate": "string"
 }
@@ -7314,17 +7432,20 @@ shortName	string	optional	none	Short name used for communication, if different t
 abn	string	optional	none	Australian Business Number for the organisation
 acn	string	optional	none	Australian Company Number for the organisation. Required only if an ACN is applicable for the organisation type
 isACNCRegistered	Boolean	optional	none	True if registered with the ACNC. False if not. Absent or null if not confirmed.
-industryCode	string	optional	none	ANZSIC (2006) code for the organisation.
+industryCode	ExternalRef	optional	none	A valid ANZSIC code for the organisation. If the industry code held by the data holder is not one of the supported ANZSIC versions, then it must not be supplied.
+industryCodeVersion	string	conditional	none	The applicable ANZSIC release version of the industry code provided. Should only be supplied if industryCode is also supplied. If industryCode is supplied but industryCodeVersion is absent, default is ANZSIC_1292.0_2006_V2.0
 organisationType	string	mandatory	none	Legal organisation type
 registeredCountry	ExternalRef	optional	none	Enumeration with values from ISO 3166 Alpha-3 country codes. Assumed to be AUS if absent
 establishmentDate	DateString	optional	none	The date the organisation described was established
 Enumerated Values
 Property	Value
-organisationType	SOLE_TRADER
+industryCodeVersion	ANZSIC_1292.0_2006_V2.0
+industryCodeVersion	ANZSIC_1292.0_2006_V1.0
 organisationType	COMPANY
-organisationType	PARTNERSHIP
-organisationType	TRUST
 organisationType	GOVERNMENT_ENTITY
+organisationType	PARTNERSHIP
+organisationType	SOLE_TRADER
+organisationType	TRUST
 organisationType	OTHER
 CommonOrganisationDetail
 
@@ -7340,7 +7461,8 @@ CommonOrganisationDetail
   "acn": "string",
   "isACNCRegistered": true,
   "industryCode": "string",
-  "organisationType": "SOLE_TRADER",
+  "industryCodeVersion": "ANZSIC_1292.0_2006_V2.0",
+  "organisationType": "COMPANY",
   "registeredCountry": "string",
   "establishmentDate": "string",
   "physicalAddresses": [
@@ -7380,7 +7502,7 @@ CommonOrganisationDetail
         "postcode": "string",
         "state": "string"
       },
-      "purpose": "REGISTERED"
+      "purpose": "MAIL"
     }
   ]
 }
@@ -7420,9 +7542,9 @@ Enumerated Values
 Property	Value
 purpose	MOBILE
 purpose	HOME
+purpose	INTERNATIONAL
 purpose	WORK
 purpose	OTHER
-purpose	INTERNATIONAL
 purpose	UNSPECIFIED
 CommonEmailAddress
 
@@ -7481,7 +7603,7 @@ CommonPhysicalAddressWithPurpose
     "postcode": "string",
     "state": "string"
   },
-  "purpose": "REGISTERED"
+  "purpose": "MAIL"
 }
 
 Properties
@@ -7496,9 +7618,9 @@ anonymous	object	mandatory	none	none
 » purpose	string	mandatory	none	Enumeration of values indicating the purpose of the physical address
 Enumerated Values
 Property	Value
-purpose	REGISTERED
 purpose	MAIL
 purpose	PHYSICAL
+purpose	REGISTERED
 purpose	WORK
 purpose	OTHER
 CommonPhysicalAddress
@@ -7692,7 +7814,7 @@ errors	[object]	mandatory	none	none
 » meta	object	optional	none	Optional additional data for specific error types
 BankingProductCategory
 
-"TRANS_AND_SAVINGS_ACCOUNTS"
+"BUSINESS_LOANS"
 
 The category to which a product or account belongs. See here for more details
 
@@ -7701,67 +7823,67 @@ Name	Type	Required	Restrictions	Description
 anonymous	string	mandatory	none	The category to which a product or account belongs. See here for more details
 Enumerated Values
 Property	Value
-anonymous	TRANS_AND_SAVINGS_ACCOUNTS
-anonymous	TERM_DEPOSITS
-anonymous	TRAVEL_CARDS
+anonymous	BUSINESS_LOANS
+anonymous	CRED_AND_CHRG_CARDS
+anonymous	LEASES
+anonymous	MARGIN_LOANS
+anonymous	OVERDRAFTS
+anonymous	PERS_LOANS
 anonymous	REGULATED_TRUST_ACCOUNTS
 anonymous	RESIDENTIAL_MORTGAGES
-anonymous	CRED_AND_CHRG_CARDS
-anonymous	PERS_LOANS
-anonymous	MARGIN_LOANS
-anonymous	LEASES
+anonymous	TERM_DEPOSITS
 anonymous	TRADE_FINANCE
-anonymous	OVERDRAFTS
-anonymous	BUSINESS_LOANS
+anonymous	TRAVEL_CARDS
+anonymous	TRANS_AND_SAVINGS_ACCOUNTS
 Product Categories
 The Product Category enumeration lists the available product categories for categorising products and accounts. These are explained in the following tables:
 
 Deposit Products
 
 Enum	Description
-TRANS_AND_SAVINGS_ACCOUNTS	This grouping of products includes all accounts where cash is deposited in the account and is accessible to the customer when they choose. These are given many names on the market including Cash Accounts, Saving Accounts, Transaction Accounts, Current Accounts, Cheque Accounts, Passbook Accounts, etc...
-TERM_DEPOSITS	This grouping of products includes all accounts where cash is deposited in the account for a set time period with restrictions on when funds can be withdrawn. Includes traditional Term Deposits and specialised deposits with either fixed terms or notice periods for withdrawal of funds.
-TRAVEL_CARDS	This grouping of products includes prepaid cards with multi-currency capabilities.
 REGULATED_TRUST_ACCOUNTS	This grouping of products includes accounts were funds are held in trust in regulated industries with complex rules embedded on how the products must operate. Industries that require this sort of product include real estate agents, solicitors and conveyancers.
+TERM_DEPOSITS	This grouping of products includes all accounts where cash is deposited in the account for a set time period with restrictions on when funds can be withdrawn. Includes traditional Term Deposits and specialised deposits with either fixed terms or notice periods for withdrawal of funds.
+TRANS_AND_SAVINGS_ACCOUNTS	This grouping of products includes all accounts where cash is deposited in the account and is accessible to the customer when they choose. These are given many names on the market including Cash Accounts, Saving Accounts, Transaction Accounts, Current Accounts, Cheque Accounts, Passbook Accounts, etc...
+TRAVEL_CARDS	This grouping of products includes prepaid cards with multi-currency capabilities.
 Lending Products
 
 Enum	Description
-RESIDENTIAL_MORTGAGES	This grouping of products includes all lending products that are available for the primary purpose of borrowing for the purpose of purchasing or renovating residential property, where a residential property will be used as security. This group will include both fixed, variable & secured overdraft types of product and may include both owner-occupied and investment purpose borrowing.
-CRED_AND_CHRG_CARDS	This grouping of products includes all lending products that are issued for the purpose of allowing a flexible line of credit accessed through use of a card. These may be called various names including Credit Cards, Charge Cards and Store Cards.
-PERS_LOANS	This grouping of products includes all lending for personal purposes that is not a residential mortgage, credit card or margin lending. These loans may be unsecured loans and term loans for purchase assets used as security such as motor vehicles. These may be called various names including Personal Loans and Car Loans.
-MARGIN_LOANS	This grouping of products includes all types of margin loans which let you borrow money to invest in traded assets including shares & commodities or in managed funds.
-LEASES	This grouping of products will include all types of leases including Financial Lease, Operating Lease, Sale and leaseback, etc...
-TRADE FINANCE	This grouping of products includes specialised lending products specifically designed to facilitate domestic & international trade. This includes the issuance of letters of credit, factoring, export credit.
-OVERDRAFTS	This grouping of products includes all types of lending which allows for the loan amount to be withdrawn, repaid, and redrawn again in any manner and any number of times, until the arrangement expires. These loans may be secured or unsecured, and generally don’t have set / minimum repayment requirements.
 BUSINESS_LOANS	This grouping of products incorporates all types of lending for business purpose that is not a trade finance facility, lease, overdraft, residential mortgage, credit card or margin lending. It includes traditional term loans, bank guarantees and commercial bills. This category would incorporate both secured and unsecured business purpose lending including all business purpose equipment finance that is not covered by a lease.
+CRED_AND_CHRG_CARDS	This grouping of products includes all lending products that are issued for the purpose of allowing a flexible line of credit accessed through use of a card. These may be called various names including Credit Cards, Charge Cards and Store Cards.
+LEASES	This grouping of products will include all types of leases including Financial Lease, Operating Lease, Sale and leaseback, etc...
+MARGIN_LOANS	This grouping of products includes all types of margin loans which let you borrow money to invest in traded assets including shares & commodities or in managed funds.
+OVERDRAFTS	This grouping of products includes all types of lending which allows for the loan amount to be withdrawn, repaid, and redrawn again in any manner and any number of times, until the arrangement expires. These loans may be secured or unsecured, and generally don’t have set / minimum repayment requirements.
+PERS_LOANS	This grouping of products includes all lending for personal purposes that is not a residential mortgage, credit card or margin lending. These loans may be unsecured loans and term loans for purchase assets used as security such as motor vehicles. These may be called various names including Personal Loans and Car Loans.
+RESIDENTIAL_MORTGAGES	This grouping of products includes all lending products that are available for the primary purpose of borrowing for the purpose of purchasing or renovating residential property, where a residential property will be used as security. This group will include both fixed, variable & secured overdraft types of product and may include both owner-occupied and investment purpose borrowing.
+TRADE FINANCE	This grouping of products includes specialised lending products specifically designed to facilitate domestic & international trade. This includes the issuance of letters of credit, factoring, export credit.
 Product & Account Components
 
 Product Feature Types
 Description of the usage of the featureType field as it applies to products.
 
 Value	Description	Use of additionalValue Field
-CARD_ACCESS	A card is available for the product to access funds	Text describing list of card types that this product can be linked to
 ADDITIONAL_CARDS	Additional cards can be requested	The maximum number of additional cards. If no maximum then should be set to null
-UNLIMITED_TXNS	Unlimited free transactions available	NA
-FREE_TXNS	A set number of free transactions available per month	The number of free transactions
+BALANCE_TRANSFERS	Balance transfers can be made to the account (eg. for credit cards)	NA
+BILL_PAYMENT	The product can be attached to an automatic budgeting and bill payment service	Optional name of the service
+BONUS_REWARDS	Bonus loyalty rewards points are available	Number of points available
+CARD_ACCESS	A card is available for the product to access funds	Text describing list of card types that this product can be linked to
+COMPLEMENTARY_PRODUCT_DISCOUNTS	Indicates that complementary, discounted offerings (such as gift cards, or discounted travel) is available	Description of the complementary offering
+DIGITAL_BANKING	Access is available to online banking features for the product	NA
+DIGITAL_WALLET	A Digital wallet can be attached to the product	The name or brand of the wallet
+DONATE_INTEREST	Indicates that interest generated from the product can be automatically donated to a charity or community group	NA
 FREE_TXNS_ALLOWANCE	A set amount of transaction fee value that is discounted per month	The amount of transaction fee discounted (in AUD)
+FREE_TXNS	A set number of free transactions available per month	The number of free transactions
+INSURANCE	Insurance is provided as an additional feature of the product	Text description of the type of insurance (e.g. Travel Insurance)
+INTEREST_FREE_TRANSFERS	Interest free period for balance transfers	Interest free period. Formatted according to ISO 8601 Durations
+INTEREST_FREE	Interest free period for purchases	Interest free period. Formatted according to ISO 8601 Durations
 LOYALTY_PROGRAM	A points based loyalty program is available	Name of the loyalty program
+NOTIFICATIONS	Advanced notifications are available for the product	Description of the notification capability
+NPP_ENABLED	An account of this product type can be used to receive funds as a result of a BSB/Number based NPP payment	NA
+NPP_PAYID	An account of this product type can be used as the target of an NPP PayID	NA
 OFFSET	An offset account can be connected to the product	NA
 OVERDRAFT	An overdraft can be applied for	NA
 REDRAW	Redraw of repaid principal above minimum required is available	NA
-INSURANCE	Insurance is provided as an additional feature of the product	Text description of the type of insurance (e.g. Travel Insurance)
-BALANCE_TRANSFERS	Balance transfers can be made to the account (eg. for credit cards)	NA
-INTEREST_FREE	Interest free period for purchases	Interest free period. Formatted according to ISO 8601 Durations
-INTEREST_FREE_TRANSFERS	Interest free period for balance transfers	Interest free period. Formatted according to ISO 8601 Durations
-DIGITAL_WALLET	A Digital wallet can be attached to the product	The name or brand of the wallet
-DIGITAL_BANKING	Access is available to online banking features for the product	NA
-NPP_PAYID	An account of this product type can be used as the target of an NPP PayID	NA
-NPP_ENABLED	An account of this product type can be used to receive funds as a result of a BSB/Number based NPP payment	NA
-DONATE_INTEREST	Indicates that interest generated from the product can be automatically donated to a charity or community group	NA
-BILL_PAYMENT	The product can be attached to an automatic budgeting and bill payment service	Optional name of the service
-COMPLEMENTARY_PRODUCT_DISCOUNTS	Indicates that complementary, discounted offerings (such as gift cards, or discounted travel) is available	Description of the complementary offering
-BONUS_REWARDS	Bonus loyalty rewards points are available	Number of points available
-NOTIFICATIONS	Advanced notifications are available for the product	Description of the notification capability
+UNLIMITED_TXNS	Unlimited free transactions available	NA
 OTHER	Another feature that can not be included in any of the other categories. The additionalInfo field is mandatory for this type	NA
 
 Product Constraint Types
@@ -7769,42 +7891,42 @@ Description of the usage of the constraintType field as it applies to products.
 
 Value	Description	Use of additionalValue Field
 MIN_BALANCE	A minimum balance is required for the product	The minimum balance in AmountString format
-MAX_BALANCE	A maximum balance is required for the product	The maximum balance in AmountString format
-OPENING_BALANCE	An opening balance is required for the product	The minimum opening balance in AmountString format
-MAX_LIMIT	A maximum limit exists (such as a maximum loan balance denoting the borrowable amount or maximum allowable credit limit)	The maximum limit in AmountString format
 MIN_LIMIT	A minimum limit exists (such as a minimum loan balance denoting the borrowable amount or minimum credit limit)	The minimum limit in AmountString format
+MAX_BALANCE	A maximum balance is required for the product	The maximum balance in AmountString format
+MAX_LIMIT	A maximum limit exists (such as a maximum loan balance denoting the borrowable amount or maximum allowable credit limit)	The maximum limit in AmountString format
+OPENING_BALANCE	An opening balance is required for the product	The minimum opening balance in AmountString format
 
 Product Eligibility Types
 Description of the usage of the eligibilityType field as it applies to products.
 
 Value	Description	Use of additionalValue Field
 BUSINESS	Only business may apply for the account	NA
-PENSION_RECIPIENT	A recipient of a government pension may apply for the product	NA
-MIN_AGE	Only customers older than a minimum age may apply	The minimum age in years
+EMPLOYMENT_STATUS	An eligibility constraint based on employment status applies	A description of the status required
 MAX_AGE	Only customers younger than a maximum age may apply	The maximum age in years
+MIN_AGE	Only customers older than a minimum age may apply	The minimum age in years
 MIN_INCOME	The customer must have an income greater than a specified threshold to obtain the product	Minimum income in AmountString format
 MIN_TURNOVER	Only a business with greater than a minimum turnover may apply	Minimum turnover in AmountString format
+NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
+PENSION_RECIPIENT	A recipient of a government pension may apply for the product	NA
+RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
 STAFF	Only a staff member of the provider may apply	NA
 STUDENT	Only students may apply for the product	NA
-EMPLOYMENT_STATUS	An eligibility constraint based on employment status applies	A description of the status required
-RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
-NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
 OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
 
 Product Fee Types
 Description of the usage of the feeType field as it applies to products.
 
 Value	Description	Use of additionalValue Field
-PERIODIC	A periodic fee such as a monthly account servicing fee	The period of charge. Formatted according to ISO 8601 Durations
-TRANSACTION	A fee associated with any transaction (incorporates WITHDRAWAL, DEPOSIT, PAYMENT and PURCHASE)	NA
-WITHDRAWAL	A fee associated with making a withdrawal	NA
 DEPOSIT	A fee associated with making a deposit	NA
-PAYMENT	A fee associated with making a payment	NA
-PURCHASE	A fee associated with making a purchase at a merchant	NA
 EVENT	A fee in relation to a particular event (e.g. NA ordering a new card, viewing a balance or stopping a cheque)	NA
-UPFRONT	A fee paid at the beginning of the product NA lifecycle, such as an establishment fee, loyalty program fee or application fee	NA
 EXIT	A fee for closing the product	NA
+PAYMENT	A fee associated with making a payment	NA
+PERIODIC	A periodic fee such as a monthly account servicing fee	The period of charge. Formatted according to ISO 8601 Durations
+PURCHASE	A fee associated with making a purchase at a merchant	NA
+TRANSACTION	A fee associated with any transaction (incorporates WITHDRAWAL, DEPOSIT, PAYMENT and PURCHASE)	NA
+UPFRONT	A fee paid at the beginning of the product NA lifecycle, such as an establishment fee, loyalty program fee or application fee	NA
 VARIABLE	An at-cost fee that is relevant to a customer's circumstances where the amount or rate may not be known until negotiated with the customer	NA
+WITHDRAWAL	A fee associated with making a withdrawal	NA
 
 Product Discount Types
 Description of the usage of the discountType field as it applies to products.
@@ -7812,55 +7934,69 @@ Description of the usage of the discountType field as it applies to products.
 Value	Description	Use of additionalValue Field
 BALANCE	Discount on a fee for maintaining a set balance. As the discount applies to a fee the period is the same as for the fee	The minimum balance in AmountString format
 DEPOSITS	Discount for depositing a certain amount of money in a period. As the discount applies to a fee the period is the same as for the fee	The minimum deposit amount in AmountString format
-PAYMENTS	Discount for outbound payments from the account under a certain amount of money in a period. As the discount applies to a fee the period is the same as for the fee	The payment threshold amount in AmountString format
-FEE_CAP	The amount, balanceRate, transactionRate or calculatedInterestRate fields of the discount represent the maximum amount charged in a time period	The time period for which the fee cap applies. Formatted according to ISO 8601 Durations
 ELIGIBILITY_ONLY	Discount applies based on customer eligibility (eligibility array must be populated)	N/A
+FEE_CAP	The amount, balanceRate, transactionRate, accruedRate or feeRate fields of the discount represent the maximum amount charged in a time period	The time period for which the fee cap applies. Formatted according to ISO 8601 Durations
+PAYMENTS	Discount for outbound payments from the account under a certain amount of money in a period. As the discount applies to a fee the period is the same as for the fee	The payment threshold amount in AmountString format
 
 Product Discount Eligibility Types
 Description of the usage of the discountEligibilityType field as it applies to products.
 
 Value	Description	Use of additionalValue Field
 BUSINESS	A business or other non-person legal entity	NA
-PENSION_RECIPIENT	A recipient of a government pension may receive the discount	Optional. Should contain a description of which pensions qualify
-MIN_AGE	Only customers older than a minimum age receive the discount	The minimum age in years
+EMPLOYMENT_STATUS	An eligibility constraint based on employment status applies	A description of the status required
+INTRODUCTORY	The discount is only available during an introductory period	The period of time for the introductory discount. Formatted according to ISO 8601 Durations
 MAX_AGE	Only customers younger than a maximum age receive the discount	The maximum age in years
+MIN_AGE	Only customers older than a minimum age receive the discount	The minimum age in years
 MIN_INCOME	The customer must have an income greater than a specified threshold to obtain the discount	Minimum income in AmountString format
 MIN_TURNOVER	Only a business with greater than a minimum turnover is eligible	Minimum turnover in AmountString format
+NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
+PENSION_RECIPIENT	A recipient of a government pension may receive the discount	Optional. Should contain a description of which pensions qualify
+RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
 STAFF	Only a staff member of the provider may receive the discount	NA
 STUDENT	Only students may receive the discount	Optional. Should contain a description of who qualifies as a student, e.g. do apprentices qualify?
-EMPLOYMENT_STATUS	An eligibility constraint based on employment status applies	A description of the status required
-RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
-NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
-INTRODUCTORY	The discount is only available during an introductory period	The period of time for the introductory discount. Formatted according to ISO 8601 Durations
 OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
 
 Product Deposit Rate Types
 Description of the usage of the depositRateType field as it applies to products.
 
 Value	Description	Use of additionalValue Field
-FIXED	Fixed rate for a period of time	The period of time fixed. Formatted according to ISO 8601 Durations
 BONUS	A bonus rate available by meeting a specific criteria	A description of the criteria to obtain the bonus
 BUNDLE_BONUS	A bonus rate obtained by originating a bundle instead of a standalone product	The name of the bundle
-VARIABLE	A variable base rate for the product	NA
-INTRODUCTORY	An introductory bonus that will expire after a set period	The period of time for the introductory rate. Formatted according to ISO 8601 Durations
+FIXED	Fixed rate for a period of time	The period of time fixed. Formatted according to ISO 8601 Durations
 FLOATING	A floating rate is relatively fixed but still adjusts under specific circumstances	Details of the float parameters
+INTRODUCTORY	An introductory bonus that will expire after a set period	The period of time for the introductory rate. Formatted according to ISO 8601 Durations
 MARKET_LINKED	A rate that is linked to a specific market, commodity or asset class	Details of the market linkage
+VARIABLE	A variable base rate for the product	NA
 
 Product Lending Rate Types
 Description of the usage of the lendingRateType field as it applies to products.
 
 Value	Description	Use of additionalValue Field
-FIXED	Fixed rate for a period of time	The period of time fixed. Formatted according to ISO 8601 Durations
-VARIABLE	A variable base rate for the product	NA
-INTRODUCTORY	An introductory discount that will expire after a set period	The period of time for the introductory rate. Formatted according to ISO 8601 Durations
-DISCOUNT	A specific discount rate that may be applied. A discount rate reduces the interest payable	Description of the discount rate that is applicable
-PENALTY	A specific penalty rate that may be applied. A penalty rate increases the interest payable	Description of the penalty rate that is applicable
-FLOATING	A floating rate is relatively fixed but still adjusts under specific circumstances	Details of the float parameters
-MARKET_LINKED	A rate that is linked to a specific market, commodity or asset class	Details of the market linkage
-CASH_ADVANCE	Specific rate applied to cash advances from the account	NA
-PURCHASE	Specific rate applied to purchases from the account	NA
 BUNDLE_DISCOUNT_FIXED	A discount rate off the fixed rate obtained by originating a bundle instead of a standalone product	The name of the bundle
 BUNDLE_DISCOUNT_VARIABLE	A discount rate off the variable rate obtained by originating a bundle instead of a standalone product	The name of the bundle
+CASH_ADVANCE	Specific rate applied to cash advances from the account	NA
+DISCOUNT	A specific discount rate that may be applied. A discount rate reduces the interest payable	Description of the discount rate that is applicable
+FIXED	Fixed rate for a period of time	The period of time fixed. Formatted according to ISO 8601 Durations
+FLOATING	A floating rate is relatively fixed but still adjusts under specific circumstances	Details of the float parameters
+INTRODUCTORY	An introductory discount that will expire after a set period	The period of time for the introductory rate. Formatted according to ISO 8601 Durations
+MARKET_LINKED	A rate that is linked to a specific market, commodity or asset class	Details of the market linkage
+PENALTY	A specific penalty rate that may be applied. A penalty rate increases the interest payable	Description of the penalty rate that is applicable
+PURCHASE	Specific rate applied to purchases from the account	NA
+VARIABLE	A variable base rate for the product	NA
+
+Banking Term Deposit Account Types
+Description of the usage of the maturityInstructions field as it applies to accounts.
+
+Value	Description	Use of additionalValue Field
+HOLD_ON_MATURITY	Funds are held in a facility or similar mechanism managed by the data holder for a period of time until the customer provides instructions or the maximum period of the hold has elapsed. Funds may be renewed or withdrawn upon instructions by the customer	NA
+
+Banking CRN Types
+Description of the usage of the crn types.
+
+Value	Description	Use of additionalValue Field
+FIXED_CRN	A unique reference number such as a credit card or a fixed reference number identifying a customer's account that does not change with each bill	NA
+VARIABLE_CRN	Biller generated reference number provided to the customer that is unique to each bill	NA
+INTELLIGENT_CRN	Biller generated reference number provided to the customer that is unique to each bill which fixes the amount of the bill being paid, expiry date or both	NA
 Admin APIs
 This provides an overview of CDS Administration Endpoints. Please note this API is intended for Data Holders/ Recipients only.
 
@@ -7952,8 +8088,12 @@ GET /admin/metrics
 
 This end point allows the ACCC to obtain operational statistics from the Data Holder on the operation of their CDR compliant implementation. The statistics obtainable from this end point are determined by the non-functional requirements for the CDR regime.
 
+NOTE: This version must be implemented by July 31st 2021
+
+Obsolete versions: v1
+
 Endpoint Version
-Version	1
+Version	2
 Parameters
 Name	In	Type	Required	Description
 period	query	string	optional	The period of metrics to be requested. Values can be CURRENT (meaning metrics for current day), HISTORIC (meaning metrics for previous days or months) or ALL. If absent the default is ALL.
@@ -8072,10 +8212,18 @@ Example responses
       ]
     },
     "rejections": {
-      "currentDay": 0,
-      "previousDays": [
-        0
-      ]
+      "authenticated": {
+        "currentDay": 0,
+        "previousDays": [
+          0
+        ]
+      },
+      "unauthenticated": {
+        "currentDay": 0,
+        "previousDays": [
+          0
+        ]
+      }
     },
     "customerCount": 0,
     "recipientCount": 0
@@ -8087,7 +8235,7 @@ Example responses
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Success	ResponseMetricsList
+200	OK	Success	ResponseMetricsListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -8110,7 +8258,7 @@ meta	Meta	optional	none	none
 Enumerated Values
 Property	Value
 action	REFRESH
-ResponseMetricsList
+ResponseMetricsListV2
 
 {
   "data": {
@@ -8216,10 +8364,18 @@ ResponseMetricsList
       ]
     },
     "rejections": {
-      "currentDay": 0,
-      "previousDays": [
-        0
-      ]
+      "authenticated": {
+        "currentDay": 0,
+        "previousDays": [
+          0
+        ]
+      },
+      "unauthenticated": {
+        "currentDay": 0,
+        "previousDays": [
+          0
+        ]
+      }
     },
     "customerCount": 0,
     "recipientCount": 0
@@ -8242,7 +8398,7 @@ data	object	mandatory	none	none
 » averageTps	AverageTPSMetrics	conditional	none	Transactions per second over time
 » peakTps	PeakTPSMetrics	conditional	none	Maximum record transactions per second over time
 » errors	ErrorMetrics	conditional	none	Number of calls resulting in error due to server execution over time
-» rejections	RejectionMetrics	conditional	none	Number of calls rejected due to traffic thresholds over time
+» rejections	RejectionMetricsV2	conditional	none	Number of calls rejected due to traffic thresholds over time
 » customerCount	integer	conditional	none	Number of customers with active authorisations at the time of the call
 » recipientCount	integer	conditional	none	Number of data recipients with active authorisations at the time of the call
 links	Links	mandatory	none	none
@@ -8445,21 +8601,33 @@ Properties
 Name	Type	Required	Restrictions	Description
 currentDay	number	conditional	none	Number of errors for current day
 previousDays	[number]	conditional	none	Number of errors for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available
-RejectionMetrics
+RejectionMetricsV2
 
 {
-  "currentDay": 0,
-  "previousDays": [
-    0
-  ]
+  "authenticated": {
+    "currentDay": 0,
+    "previousDays": [
+      0
+    ]
+  },
+  "unauthenticated": {
+    "currentDay": 0,
+    "previousDays": [
+      0
+    ]
+  }
 }
 
 Number of calls rejected due to traffic thresholds over time
 
 Properties
 Name	Type	Required	Restrictions	Description
-currentDay	number	conditional	none	Number of calls rejected for current day
-previousDays	[number]	conditional	none	Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+authenticated	object	optional	none	Rejection counts for all authenticated end points
+» currentDay	number	optional	none	Number of calls rejected for current day
+» previousDays	[number]	optional	none	Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
+unauthenticated	object	optional	none	Rejection counts for all uauthenticated end points
+» currentDay	number	optional	none	Number of calls rejected for current day
+» previousDays	[number]	optional	none	Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
 Links
 
 {
@@ -8529,6 +8697,7 @@ Authenticated: API requests to API end points that the standards require to be p
 Unauthenticated: API requests to API end points that the standards deem to be publically available. This implies that these end points may be accessed by any client without the client performing any authentication or authorisation actions
 High Traffic Period: Any time in the 18 hour period between 6am and 12am (midnight) is considered to be a high traffic period
 Low Traffic Period: Any time of the day not considered to be included in a high traffic period.
+Large Payload: An API which is capable of returning a large data response that would reasonably impose higher data retrieval times on the resource server. Typically bulk request end points.
 Session Requirements
 A expiry time of a unique session should be set according to the statements included in the Security Profile.
 
@@ -8558,11 +8727,14 @@ In light of these considerations, the performance requirement for data holders i
 The nominated threshold for each end point will be according to the following table:
 
 Tier	Response Time	Applies To…
-Unauthenticated	1500ms	All unauthenticated end points
-High Priority	1000ms	Customer Present calls to the following end points:
-InfoSec end points
+Unauthenticated	1500ms	All Unauthenticated end points not otherwise specified in a separate threshold.
+High Priority	1000ms	All calls to the following end points:
+All InfoSec end points including Dynamic Client Registration
+CDR Arrangement Revocation
+The following Unauthenticated end points:
 Get Status
 Get Outages
+Customer Present calls to the following end points:
 Get Accounts
 Get Customer
 Get Customer Detail
@@ -8579,10 +8751,11 @@ Get Direct Debits For Account
 Get Scheduled Payments For Account
 Get Scheduled Payments Bulk
 Get Scheduled Payments For Specific Accounts
-Unattended	4000ms	Unattended calls to High Priority or Low Priority end points.
-Additional Admin end points.
-Large Payload	6000ms	Any call to the following end points:
-Get Transactions For Account
+Unattended	4000ms	Unattended calls to the following end points that are not Large Payload end points:
+High Priority Authenticated end points
+Low Priority Authenticated end points
+All Admin end points.
+Large Payload	6000ms	Any Unattended calls to the following end points:
 Get Bulk Direct Debits
 Get Direct Debits For Specific Accounts
 Note that calls initiated in excess of a traffic threshold (see next section) may be excluded from the performance requirement.
@@ -8669,6 +8842,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+16/9/2020	1.5.0	Second Banking Maintenance Iteration 4 Release	See release notes for details
 12/8/2020	1.4.0	Banking Maintenance Iteration 4 Release	See release notes for details
 22/5/2020	1.3.1	Maintenance updates	Error Fixes
 See release notes for detail
@@ -8755,7 +8929,8 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
-22/5/2020	1.3.1	May Banking Maintenance Iteration 3 Release
+22/5/2020	1.4.0	Banking Maintenance Iteration 3 Release
+22/5/2020	1.3.1	May Banking Maintenance Iteration 2 Release
 17/4/2020	1.3.0	April 1.3.0 Release
 31/1/2020	1.2.0	January 1.2.0 Release
 30/9/2019	1.0.0	September 1.0.0 Release
