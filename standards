@@ -8,13 +8,12 @@ Common APIs
 Schemas
 Admin APIs
 Authorisation Scopes
+Non-functional Requirements
 Known Issues
 Change Log
 Consumer Data Standards Home
 CDR Standards on GitHub
-
-CDR Standards Archives
-
+CDR Register
 Swagger (JSON)
 Swagger (YAML)
 Introduction
@@ -25,8 +24,10 @@ The Consumer Data Right is intended to be applied sector by sector across the wh
 
 CSIRO’s Data61 has been appointed as the technical advisor and provider of operational support to the interim data standards body. These standards have been prepared by the Consumer Data Standards team at Data61. The work of the team is overseen by Mr. Andrew Stevens as interim Chair, with industry and consumer advice provided by an Advisory Committee. Data61’s Consumer Data Standards team works closely with the Australian Competition and Consumer Commission (ACCC) as lead regulator of the Consumer Data Right, supported by the Office of the Australian Information Commissioner (OAIC).
 
+These standards are considered binding subject to the passing of the Consumer Data Right legislation and in accordance with the rules of the Consumer Data Right regime published by the ACCC.
+
 Standards
-These standards represent version 0.9.3 of the high level standards which will support the creation of version 1. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 0.9.5 of the high level standards which will support the creation of version 1. See the versioning section for more information on how versions are managed in the standard.
 
 Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
 
@@ -90,7 +91,7 @@ minor: Significant changes to the standards. This would include changes that req
 bug fix: Minor documentation changes that clarify or correct the standards but do not meaningfully alter the standards.
 Uniform Resource Identifier (URI) Versioning
 The base URI structure containing the version for this standard is:
-http://<provider path>/cds-au/v<major version>/<resource>
+http://<holder path>/cds-au/v<major version>/<resource>
 
 The high level standard will be versioned as described above. The major component of this version will be embedded in the URI Structure for the APIs. This allows for a data holder to support multiple major versions of the standards in production even if the significant breaking changes occur between major versions.
 
@@ -104,12 +105,12 @@ http://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products
 http://www.energyretailer.com.au/api/cds-au/v1/energy/usage
 
 The URI structure for API end points in the standards MUST be implemented as follows:
-<provider path> / cds-au / <version> / <industry> / <resource>
+<holder path> / cds-au / <version> / <industry> / <resource>
 
 The components of this URI structure are described as follows:
 
-Provider Path: The provider path is a base path set by the data provider. It can be any URI desired by the provider. While all authenticated end points must be accessible under the same provider path the data provider may stipulate a different provider path for unauthenticated end points.
-“cds-au”: This is a static string representing the end points defined by the Consumer Data Standards for Australia. This static string allows for separation from other APIs available at the same base provider path and also allows for extension if the standards are adopted by another jurisdiction in whole or in part.
+Holder Path: The holder path is a base path set by the data holder. It can be any URI desired by the holder. While all authenticated end points must be accessible under the same holder path the data holder may stipulate a different holder path for unauthenticated end points.
+“cds-au”: This is a static string Holderepresenting the end points defined by the Consumer Data Standards for Australia. This static string allows for separation from other APIs available at the same base holder path and also allows for extension if the standards are adopted by another jurisdiction in whole or in part.
 Version: The major version of the high level standards. This is not the version of the endpoint or the payload being requested but the version of the overall standards being applied. This version number will be “v” followed by the major version of the standards as a positive integer (e.g. v1, v12 or v76).
 Industry: A static string used to separate APIs for a specific industry. As standards for new industries are defined the list of industry strings will be extended.
 Resource: The URI for the specific resource requested. This end point URI will be defined as part of the end point definitions for each API group.
@@ -145,28 +146,26 @@ x-v = 5
 x-min-v = 3
 x-fapi-interaction-id = 6ba7b814-9dad-11d1-80b4-00c04fd430c8
 
-Header Field	Description
-Content-Type	Standard HTTP Header. Represents the format of the payload provided in the request. Must be set to application/json.
+Header Field	Description	Mandatory?
+Content-Type	Standard HTTP Header. Represents the format of the payload provided in the request. Must be set to application/json.	Mandatory
 Accept	Standard HTTP Header. Specify the Content-Type that is required from the Server.
 If specified, must be set to application/json unless otherwise specified in the resource end point standard.
-If set to an unacceptable value the provider must respond with a 406 Not Acceptable. If not specified, default is application/json.
+If set to an unacceptable value the provider must respond with a 406 Not Acceptable. If not specified, default is application/json.	Optional
 x-v	Version of the API end point requested by the client. Must be set to a positive integer.
-If the version(s) requested is not supported then the provider should respond with a 406 Not Acceptable.
+If the version(s) requested is not supported then the provider should respond with a 406 Not Acceptable.	Mandatory
 x-min-v	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The provider should respond with the highest supported version between x-min-v and x-v.
-If all versions requested are not supported then the provider should respond with a 406 Not Acceptable.
-x-<PID>-v	A provider specific version of extension fields. Should not be used in conjunction with x-min-v.
-x-fapi-auth-date	The time when the customer last logged in to the data recipient
-x-fapi-customer-ip-address	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context
-x-fapi-interaction-id	An RFC4122 UID used as a correlation id. If provided, the data provider must "play back" this value in the x-fapi-interaction-id response header.
+If all versions requested are not supported then the provider should respond with a 406 Not Acceptable.	Optional
+x-<PID>-v	A provider specific version of extension fields. Should not be used in conjunction with x-min-v.	Optional
+x-fapi-auth-date	The time when the customer last logged in to the data recipient. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.	Conditional
+x-fapi-customer-ip-address	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not required for unattended or unauthenticated calls.	Conditional
+x-cds-User-Agent	The customer's original User Agent header if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.	Conditional
+x-fapi-interaction-id	An RFC4122 UID used as a correlation id. If provided, the data provider must "play back" this value in the x-fapi-interaction-id response header.	Mandatory
 Response headers
 Header Field	Description	Mandatory?
 Content-Type	Standard HTTP Header. Represents the format of the payload returned in the response.
 Must be application/json unless otherwise specified in the resource end point standard.	Mandatory
 Retry-After	Header indicating the time (in seconds) that the client should wait before retrying an operation. The provider should include this header along with responses with the HTTP status code of 429 Too many requests.	Optional
 x-v	The version of the API end point that the provider has responded with.	Mandatory
-x-Correlation-Id	Reflected value of the correlation ID provided by the data consumer in the request headers.
-If no correlation ID was provided in the request this header should not be supplied.
-If a correlation ID was provided in the request then this header is mandatory.	Optional
 x-fapi-interaction-id	An RFC4122 UID used as a correlation id. The data provider must set the response header x-fapi-interaction-id to the value received from the corresponding fapi client request header or to a new RFC4122 UUID value if the request header was not provided to track the interaction.	Mandatory
 Additional Headers
 Generally understood headers used in HTTP transactions to provide caching guidance and the use of the compression are not specified but are considered acceptable. It is at the discretion of the data provider if these headers are used for a specific implementation. Data providers should not require these headers for successful API access, however.
@@ -181,11 +180,11 @@ Delete operation completed successfully	204 No Content		No	No	Yes
 The response is not modified since last call	304 Not Modified	May be returned if standard caching headers such as ETag or If-modified-since are utilised	Yes	Yes	No
 Request has malformed, missing or non-compliant JSON body or URL parameters	400 Bad Request	The requested operation will not be carried out.	Yes	Yes	Yes
 Authorization header missing or invalid token	401 Unauthorized	The operation was refused access. Re-authenticating may result in an appropriate token that may be used.	Yes	Yes	Yes
-Token has incorrect scope or a security policy was violated.	403 Forbidden	The operation was refused access. Re-authenticating is unlikely to remediate the situation.	Yes	Yes	Yes
+Token has incorrect scope or a security policy was violated.	403 Forbidden	The operation was refused access. Re-authenticating is unlikely to remediate the situation. It is expected that this error will result in an error payload	Yes	Yes	Yes
 The consumer tried to access the resource with a method that is not supported.	405 Method Not Allowed		Yes	Yes	Yes
 The request contained an Accept header other than permitted media types, a character set other than UTF-8 or a version that was not supported	406 Not Acceptable		Yes	Yes	Yes
 The operation was refused because the payload is in a format not supported by this method on the target resource.	415 Unsupported Media Type		Yes	No	No
-The request was well formed but was unable to be processed due to business logic specific to the request	422 Unprocessable Entity	If applicable to the HTTP method it is expected that this error will result in an error payload	Yes	No	No
+The request was well formed but was unable to be processed due to business logic specific to the request	422 Unprocessable Entity	If applicable to the HTTP method it is expected that this error will result in an error payload	Yes	Yes	No
 The operation was refused as too many requests have been made within a certain timeframe.	429 Too Many Requests	Throttling is a NFR. The data provider should include a Retry-After header in the response indicating how long the data consumer must wait before retrying the operation.	Yes	Yes	Yes
 Something went wrong on the API gateway or micro-service	500 Internal Server Error	The operation failed.	Yes	Yes	Yes
 Service is currently unavailable	503 Service Unavailable		Yes	Yes	Yes
@@ -251,7 +250,7 @@ MUST contain a data object
 MUST contain a links object
 MAY contain a meta object if REQUIRED by the definition of the specific end point
 If the response is unsuccessful (not 200 OK) the root object:
-MUST contain an errors object
+MAY contain an errors object (as per the specific end point definition)
 The definition of the contents for the data object and meta object will be defined separately for each end point.
 
 The links object will contain links to related API end points. This will include links to support pagination.
@@ -462,51 +461,51 @@ The Consumer Data Right standards will not cover all possible data sets or APIs 
 
 At the same time, it is important that a participant seeking to provide extensions does not hinder a data consumer that is only built for the published standards.
 
-To accommodate these concerns the standards incorporate the following considerations specifically related to extension by data providers.
+To accommodate these concerns the standards incorporate the following considerations specifically related to extension by data holders.
 
 The three types of extension that the standards address are:
 
-Data provider offering entirely new API categories that are not covered by the API Standards
-Data provider offering additional end points to an API category that is already covered by the standards
-Data provider offering additional fields to the response payloads for an end point defined in the standards
-Provider Identifier
+Data holder offering entirely new API categories that are not covered by the API Standards
+Data holder offering additional end points to an API category that is already covered by the standards
+Data holder offering additional fields to the response payloads for an end point defined in the standards
+Holder Identifier
 For example, the prefixes for the four major Banks required to implement by 1st July 2019 would be:
 
 CBA – Commonwealth Bank
 WBC – Westpac Banking Corporation
 ANZ – ANZ Banking Group
 NAB – National Australia Bank
-Data providers seeking to extend the standards MUST nominate a prefix to identify all extensions. Extended fields and end points and would use this prefix consistently. This prefix would be, by preference, the ASX symbol for the provider. Care should be taken not to use a prefix already adopted by another provider in the regime.
+Data holders seeking to extend the standards MUST nominate a prefix to identify all extensions. Extended fields and end points and would use this prefix consistently. This prefix would be, by preference, the ASX symbol for the holder. Care should be taken not to use a prefix already adopted by another holder in the regime.
 
-In these standards, where a Provider Identifier would be included, the term <PID> will be used.
+In these standards, where a holder Identifier would be included, the term <PID> will be used.
 
 New API Categories
-When extending by adding new API categories a provider MUST add these to the overall URI structure by substituting the industry element with the Provider ID.
+When extending by adding new API categories a holder MUST add these to the overall URI structure by substituting the industry element with the Holder (Provider) ID.
 
 For instance, the standard URI base path is structured as:
-<provider path> / cds-au / <version> / <industry> / <resource>
+<holder path> / cds-au / <version> / <industry> / <resource>
 
-For the extension API categories for a specific provider they would be structured as:
-<provider path> / cds-au / <version> / <PID> / <resource>
+For the extension API categories for a specific holder they would be structured as:
+<holder path> / cds-au / <version> / <PID> / <resource>
 
-The end points defined under this structure, including the payloads of these end points do not need to be prefixed in any way. The fact that they are underneath the provider section implies that they are additional to the standard.
+The end points defined under this structure, including the payloads of these end points do not need to be prefixed in any way. The fact that they are underneath the holder section implies that they are additional to the standard.
 
 Note that:
 
 This mechanism MUST NOT be used to create modified duplicates of the end points defined in the API Standards
 The end points in this area MUST comply with the standard's conventions and principles including naming conventions and data types.
 New End Points In Existing API Categories
-When creating new end points that are in parallel to existing API categories in the standard the Provider Identifier MUST be used to prefix the highest URI element where divergence occurs.
+When creating new end points that are in parallel to existing API categories in the standard the Holder Identifier MUST be used to prefix the highest URI element where divergence occurs.
 
 For example, assume an existing balance end point is defined as follows:
 <base path>/accounts/{account ID}/transactions
 
-and the provider wishes to add an end point that summarises balance movement for a specific time period then they may define the end point as:
+and the holder wishes to add an end point that summarises balance movement for a specific time period then they may define the end point as:
 <base path>/account/{account ID}/<PID>-balance-movement
 
 Note that:
 
-The prefix is defined as the Provider Identifier followed by a hyphen.
+The prefix is defined as the Holder Identifier followed by a hyphen.
 As the entire end point is new, the request and payload fields do not need to be prefixed in any way.
 Care should be taken to ensure there is no collision with an end point defined in the standards by specifying an extension at the same level as a variable URI element (such as at the same level of the {account ID} in the example above).
 If an end point has multiple levels in the resource path only the highest point where divergence with the standard occurs needs to be prefixed.
@@ -525,7 +524,7 @@ New query parameters MAY be added along the same lines as a new field in a reque
 New headers MAY be added along the same lines as a new field in a request payload with the exception that the new header should be prefixed x-<PID>-.
 New fields MUST comply with the naming conventions and data type standards used.
 Additional Query Parameters
-When adding support for a new query parameter to an existing end point that a data consumer is expected to supply, the new parameter should be prefixed by the string <PID>- to avoid potential collision with extension by another data provider.
+When adding support for a new query parameter to an existing end point that a data consumer is expected to supply, the new parameter should be prefixed by the string <PID>- to avoid potential collision with extension by another data holder.
 
 Extension Versioning
 As described previously in the versioning section the standard provides for multiple versions of each API end point. This implies the need for extensions to also be versioned.
@@ -576,8 +575,8 @@ Data Holder:
 Multiple Data Holders will be supported.
 Data Recipient:
 Multiple Data Recipients will be supported.
-Registry:
-It is envisaged that only one registry will be supported and will be maintained by the Australian Competition and Consumer Commission (ACCC).
+Register:
+A register will be supported and will be maintained by the Australian Competition and Consumer Commission (ACCC).
 Data Holder
 The Data Holder (DH) is a system entity that authenticates a consumer (resource owner or user), as part of an authorisation process initiated by a Data Recipient, and issues an authorisation for that Data Recipient to access the consumer's data via published APIs.
 
@@ -590,13 +589,13 @@ A Data Recipient MUST be accredited in order to participate in the CDR Federatio
 
 A Data Recipient assumes the role of an [OIDC] Relying Party (Client).
 
-Registry
- NOTE: This section is reflective of the positioning of the Registry in the CDR Rules Exposure Draft
-The Registry is a central point of discovery for both Data Holders and Data Recipients. Data Holders and Data Recipients must be created as entities in the Registry in order for them to participate as members of the CDR Federation. The functionality of the Registry will include but will not be limited to:
+Register
+ NOTE: This section is reflective of the positioning of the Register in the CDR Rules Exposure Draft
+The Register is a central point of discovery for both Data Holders and Data Recipients. Data Holders and Data Recipients must be created as entities in the Register in order for them to participate as members of the CDR Federation. The functionality of the Register will include but will not be limited to:
 
-Management of Identities and Access: The Registry will allow registered persons, on behalf of Data Holders and Data Recipients, to manage the metadata of their associated organisations and systems.
-Management of Certificates: The Registry will facilitate the issuing, management and revocation of digital certificates.
-Discoverability and Search: The Registry will expose APIs and Web Interfaces in order to support metadata queries across Registry entities.
+Management of Identities and Access: The Register will allow registered persons, on behalf of Data Holders and Data Recipients, to manage the metadata of their associated organisations and systems.
+Management of Certificates: The Register will facilitate the issuing, management and revocation of digital certificates.
+Discoverability and Search: The Register will expose APIs and Web Interfaces in order to support metadata queries across Register entities.
 Authentication Flows
 This profile supports the authentication flows specified by OpenID Connect [OIDC] as constrained further by FAPI [FAPI].
 
@@ -612,13 +611,21 @@ Only a response_type (see section 3 of [OIDC]) of code id_token SHALL be allowed
 
 The request_uri parameter SHALL NOT be supported.
 
- NOTE: This process of customer authentication and the customer experience of the subsequent process to obtain customer consent has been the subject of significant consultation and feedback. To date, a consensus position has not been achieved to the satisfaction of the Data Standards Body. As a result of this lack of consensus this decision does not contain additional specificity around the requirements for the authentication flow. Additional specificity will be added to the profile once a position on the authentication flow has been reached. The following specific options for the authentication flow have been identified:
-Standard Redirect Flow: Username and password are captured in a redirected web page and consent is then obtained in the redirected web page.
-Redirect With OTP Flow: Username is captured in a redirected page. The Data Holder then provides a one-time password via another channel, which is then captured in the redirected page to authenticate the customer. Consent is then obtained in that same web page.
-Redirect With Known Channel: Username is captured in a redirected page. Customer then proceeds to a known digital channel, authenticates and provides consent.
-Client Initiated Backchannel Authentication: A decoupled and asynchronous authentication flow that is defined by FAPI.
-CDR Specific Decoupled: A decoupled flow proposed by a community member where a one-time identifier is obtained from a known digital channel and then provided to the data recipient with consent being completed afterwards in an experience provided by the Data Holder.
-Previously, a decision to pursue Redirect With Known Channel had been made by the Data Standards Body and a proposal for how this was to be implemented had been provided for consultation. This proposal is not included in this decision. CX testing of the flows described above is ongoing.
+In addition, the following statements are applicable for this flow:
+
+Data Holders MUST request a user identifier that can uniquely identify the customer and that is already known by the customer in the redirected page
+Data Holders MUST NOT request that the customer enter an existing password in the redirected page
+Data Holders MUST provide a one-time password (OTP) to the customer through an existing channel or mechanism that the customer can then enter into the redirected page
+The delivery mechanism for the OTP is at the discretion of the Data Holder but MUST align to existing and preferred channels for the customer and MUST NOT introduce unwarranted friction into the authorisation process
+Data Holders SHOULD implement additional controls to minimise the risk of interception of the OTP through the selected delivery mechanism
+The provided OTP MUST be used only for authentication for CDR based sharing and MUST NOT be usable for the authorisation of other transactions or actions
+The provided OTP MUST be invalidated after a period of time at the discretion of the Data Holder. This expiry period SHOULD facilitate enough time for the customer to reasonably complete the authorisation process
+The provided OTP MUST be numeric digits and be between 4 and 6 digits in length
+The algorithm for the creation of the OTP is at the discretion of the Data Holder but SHOULD incorporate a level of pseudorandomness appropriate for the use case
+Data Holders SHOULD implement additional controls to minimise the risk of enumeration attacks via the redirect page
+Data holders MUST clearly refer to the OTP as a “one-time password” in consumer-facing interactions and material
+Data holders MUST state in consumer-facing interactions and material that ADRs will never ask consumers for their banking password to access CDR data
+Data recipients SHOULD record the following information each time an authorisation flow is executed: username (consumer’s ID at the data recipient), timestamp, IP, consent scopes and duration.
 
 Client Authentication
 Data Holders MUST support the authentication of Data Recipients using the private_key_jwt Client Authentication method specified at section 9 of [OIDC].
@@ -658,7 +665,7 @@ grant_type=authorization_code&
 }
 The private_key_jwt authentication method is enabled through the delivery of an encoded [JWT] signed using the Data Recipient's private key and thus facilitates non-repudiation.
 
-Client public keys MUST only be obtained from the CDR Registry.
+Client public keys MUST only be obtained from the CDR Register.
 
 The [JWT] represents an assertion that MUST include the following claims:
 
@@ -688,26 +695,8 @@ Public clients MUST NOT be supported.
 Consent
 Consent requirements will be communicated between the Data Recipient and Data Holder via the authorisation request object. The primary mechanism for capturing consent will be scopes and claims under [OIDC].
 
- NOTE: Previously the CDR Information Security profile indicated that a separate API, a Consent API, for establishing complex consent prior to authorisation being initiated would be included.
+Other patterns for the establishment of consent may be considered in the future, including the incorporation of fine-grained consent for specific use cases.
 
-Additional clarification and insight obtained from various sources that steer the standards has indicated the reasons for requiring a Consent API, such as the need to support fine-grained permissions or consent mutability, are no longer needed for the initial implementation of the CDR regime. As a result, support for a Consent API is not included in this decision.
-
-It is possible that such a mechanism will be needed in the future, or maybe needed to support Data Holder specific extensions. If this is the case then a Consent API would need to be considered for inclusion in this profile.
-
-It should be noted that, in considering this issue, it is a salient point that there is no current international standard for a Consent API. A number of candidate draft standards are being proposed to various organisations but these are still in progress. The draft candidate to the OpenID Foundation’s Financial API (FAPI) Working Group can be found at:
-https://bitbucket.org/openid/fapi/src/master/Financial_API_Lodging_Intent.md
-It should be noted that this is a candidate for a pattern and does not include specifics for payloads or interfaces. These would have to be defined specifically for the CDR regime.
-
-During consultation various community members indicated the preference for inclusion of the Consent ID for the initial implementation. This is being considered by the Data Standards Body and will be the subject of further consultation. To help focus consultation, the following options for a Consent API have been identified.
-
-Option 1: Defer inclusion of a Consent API until a requirement exists
-In this option the inclusion of a Consent API will be deferred until a later date when a specific requirement is introduced that requires such a pattern to be adopted. Until this time the profile would be managed to ensure that the inclusion of the Consent API would be a non-breaking change and therefore able to be easily accommodated.
-
-Option 2: Include a Consent API as an optional mechanism
-In this option the specifics of a CDR Consent API would be defined but would be defined as optional. No mandated CDR requirements would be dependent on the Consent API to function. The operation of the Consent API in the context of the CDR would, however, be clearly defined and if a Data Holder wished to include the pattern to support extension functionality (such as payment initiation) this could be accommodated.
-
-Option 3: Include a Consent API as a mandatory mechanism
-Equivalent to option 2 except that the implementation of the Consent API would be mandatory. The initial definition of the Consent API payload would, however, be minimalistic until a specific need is identified that would result in fields being added to the payload.
 Scopes and Claims
 OIDC Scopes
 In addition to CDR data scopes the following scopes MUST be supported:
@@ -732,9 +721,6 @@ The following additional claims MUST be supported:
 
 refresh_token_expires_at: indicates the date-time at which the most recently provided refresh token will expire. Its value MUST be a number containing a NumericDate value, as specified in section 2 of section 2 [JWT]. If no refresh token has been provided then a zero value should be returned.
 sharing_expires_at: indicates the date-time at which the current sharing arrangement will expire. Its value MUST be a number containing a NumericDate value, as specified in section 2 of [JWT]. If consent is not complete or a sharing_duration was not requested in the authorisation request object then a zero value should be returned.
- NOTE: During consultation it was proposed that sharing and refresh token expiry would be obtained via additional fields on the token and introspection end points via a Sharing ID to be provided by the Data Holder. In response to feedback this position has been modified. The Sharing ID concept has now been eliminated and the expiration of sharing is now being accessed via an additional claim as described above.
-
-This is approach is aligned to the use of the `http://openbanking.org.uk/refresh_token_expires_at` claim specified in the Read/Write Data Specification for the UK Open Banking standards.
 Tokens
 ID Token
 Non-Normative Example - acr
@@ -787,7 +773,7 @@ The s_hash value MUST be generated according to section 5.1 of [FAPI-RW].
 Access Token
 Access Tokens MUST be used as specified in section 10.3 of [OAUTH2].
 
-An Access Token MUST expire 10 minutes after the Data Holder issues it.
+An Access Token MUST expire between 2 minutes to 10 minutes after the Data Holder issues it (at the discretion of the Data Holder).
 
 The process for refreshing an Access Token is described in section 12.1 of [OIDC].
 
@@ -811,9 +797,6 @@ In order to achieve this:
 
 The Data Holder MUST indicate the lifetime in seconds of the access token in the expires_in field of the JSON object returned by the token end-point (see section 4.2.2 of [OAUTH2]).
 The Data Holder MUST indicate the expiration time of the refresh token using the refresh_token_expires_at claim.
- NOTE: During consultation it was proposed that sharing and refresh token expiry would be obtained via additional fields on the token and introspection end points via a Sharing ID to be provided by the Data Holder. In response to feedback this position has been modified. The Sharing ID concept has now been eliminated and the expiration of a refresh token is now being accessed via an additional claim as described above.
-
-This is approach is aligned to the use of the `http://openbanking.org.uk/refresh_token_expires_at` claim specified in the Read/Write Data Specification for the UK Open Banking standards.
 
 Identifiers and Subject Types
 The identifier for an authenticated end-user (subject) MUST be passed in the sub claim of an ID Token and UserInfo response as defined by [OIDC].
@@ -855,8 +838,9 @@ The presented Server transport certificate MUST be issued by the CDR Certificate
 End points for transferring CDR Data that are classified as not requiring authentication do not require the use of [MTLS].
 
 Holder of Key Mechanism
- NOTE: As a clarification to questions raised during consultation this section asserts that resource requests must be validated to ensure the client certificate and access token match. This is an equivalent position to section 6.2.1 of the UK Open Banking Information Security Profile.
 [MTLS] MUST be supported as a Holder of Key (HoK) Mechanism.
+
+Note that, by implication, resource requests MUST be validated to ensure the client certificate and access token match. This is an equivalent position to section 6.2.1 of the UK Open Banking Information Security Profile.
 
 OAUTB SHALL NOT be supported due to a lack industry support.
 
@@ -922,11 +906,8 @@ If the sharing_duration value is zero or absent then once off access will be ass
 If the sharing_duration value is negative then the authorisation should fail.
 The Data Recipient is able to obtain the expiration of sharing via the sharing_expires_at claim.
 
- NOTE: During consultation it was proposed that sharing and refresh token expiry would be obtained via additional fields on the token and introspection end points via a Sharing ID to be provided by the Data Holder. In response to feedback this position has been modified. The Sharing ID concept has now been eliminated and the expiration of sharing is now being accessed via an additional claim as described above.
-
-This is approach is aligned to the use of the `http://openbanking.org.uk/refresh_token_expires_at` claim specified in the Read/Write Data Specification for the UK Open Banking standards.
 End Points
- NOTE: This section does not yet include any end points that will be defined by the design of the CDR Registry. This includes end points related to Data Recipient registration, certificate revocation, Data Recipient discovery or Data Holder discovery.
+ NOTE: This section does not yet include any end points that will be defined by the design of the CDR Register. This includes end points related to Data Recipient registration, certificate revocation, Data Recipient discovery or Data Holder discovery.
 OpenID Provider Configuration End Point
 Non-Normative Example
 
@@ -1092,7 +1073,7 @@ If consent is withdrawn by a Customer in writing or by using the Data Holder’s
 Requirements for Data Recipient implementations
 The Revocation End Point, when implemented by the Data Recipient allows a Data Holder to notify the Data Recipient of the revocation of a sharing arrangement by the Customer in totality as required by the ACCC CDR Rules. This revocation will have been actioned by the Customer via the Data Holder’s consent dashboard as described in the ACCC CDR Rules.
 
-Revocation of Access Tokens MUST be not be supported.
+Revocation of Access Tokens MUST not be supported.
 
 Revocation of Refresh Tokens MUST be supported and will be used to notify the Data Recipient of sharing revocation
 
@@ -1101,24 +1082,6 @@ If consent is withdrawn by a Customer in writing or by using the Data Recipient�
 Reauthorisation mechanism
 When an authorisation has expired due to the expiration of the time requested using the sharing_duration claim in the request object then authorisation needs to be re-established using the full authorisation process.
 
- NOTE: The specification of a simplified flow for reauthorisation is intended and consultation has begun on this topic. Currently the Data Standards Body believes that more consultation on this topic is required to ensure the standards represent the best position for the regime. Once a single approach is decided upon the text for this section will be replaced with the new position.
-
-To simplify further consultation the following two options have been identified as the focus for further feedback. The Data Standards Body does not have a specific recommendation or preference regarding these two options.
-
-Option 1: Client Initiated Backchannel Authentication
-FAPI defines a protocol for an asynchronous and de-coupled mechanism for a Data Recipient to request authentication from a Data Holder known as Client Initiated Backchannel Authentication (CIBA). The specification for CIBA can be found at:
-[FAPI-CIBA] https://bitbucket.org/openid/fapi/src/master/Financial_API_WD_CIBA.md?fileviewer=file-view-default
-
-This mechanism could be used to initiate a reauthorisation of an existing consent that has been established for an extended duration.
-
-Previous consultation elicited feedback that this mechanism is quite complex and the implementation costs for Data Recipients and Data Holders are unwarranted for the relatively simple use case of reauthorisation. Alternate feedback supported this option due to the fact that it is an established standard.
-
-Option 2: CDR Specific Mechanism
-An alternative option is to define a CDR specific mechanism for reauthorisation. The specifics of such a mechanism are to be determined but, as an example, it could consist of the following:
-an end point to be implemented by Data Holders that would be called by Data Recipients to initiate reauthorisation
-determination that reauthorisation has occurred would be obtained by a Data Recipient by requesting an id_token with the sharing_expires_at claim
-specifics of how the Data Recipient and Data Holder interact with the Customer to obtain consent for reauthorisation would be defined by the CDR CX Guidelines
-This mechanism would be specific to the CDR regime and would not be supported by an external standard. Implementation of this mechanism would, however, be relatively simple.
 Normative References
 Reference	Description
 [FAPI-R]	Financial-grade API - Part 1: Read Only API Security Profile: https://openid.net/specs/openid-financial-api-part-1.html
@@ -1152,17 +1115,21 @@ Get Accounts
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts',
   method: 'get',
 
   headers: headers,
@@ -1182,6 +1149,8 @@ open-status	query	string	optional	Used to filter results according to open/close
 is-owned	query	Boolean	optional	Filters accounts based on whether they are owned by the authorised customer. True for owned accounts, false for unowned accounts and absent for all accounts
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Enumerated Values
 Parameter	Value
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
@@ -1212,7 +1181,7 @@ Example responses
         "displayName": "string",
         "nickname": "string",
         "openStatus": "OPEN",
-        "isOwned": "true",
+        "isOwned": true,
         "maskedNumber": "string",
         "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
         "productName": "string"
@@ -1234,22 +1203,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_basic_accounts
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Bulk Balances
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/balances HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/balances HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/balances',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/balances',
   method: 'get',
 
   headers: headers,
@@ -1269,6 +1245,8 @@ open-status	query	string	optional	Used to filter results according to open/close
 is-owned	query	Boolean	optional	Filters accounts based on whether they are owned by the authorised customer. True for owned accounts, false for unowned accounts and absent for all accounts
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Enumerated Values
 Parameter	Value
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
@@ -1323,25 +1301,32 @@ Example responses
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	resource listing the financial balances for the account	ResponseBankingAccountsBalanceList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_basic_accounts
+200	OK	Success	ResponseBankingAccountsBalanceList
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Balances For Specific Accounts
 
 Code samples
 
-POST https://data.provider.com.au/cds-au/v1/banking/accounts/balances HTTP/1.1
-Host: data.provider.com.au
+POST https://data.holder.com.au/cds-au/v1/banking/accounts/balances HTTP/1.1
+Host: data.holder.com.au
 Content-Type: application/json
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
   'Content-Type':'application/json',
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/balances',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/balances',
   method: 'post',
 
   headers: headers,
@@ -1368,6 +1353,8 @@ Parameters
 Name	In	Type	Required	Description
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 body	body	RequestAccountIds	mandatory	The list of account IDs to obtain balances for
 Example responses
 
@@ -1408,22 +1395,29 @@ Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountsBalanceList
 422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request	ResponseErrorList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_basic_accounts
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Account Balance
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/balance HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/balance HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/balance',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/balance',
   method: 'get',
 
   headers: headers,
@@ -1439,6 +1433,8 @@ Obtain the balance for a single specified account
 Parameters
 Name	In	Type	Required	Description
 accountId	path	ASCIIString	mandatory	ID of the specific account requested
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -1459,32 +1455,36 @@ Example responses
     ]
   },
   "links": {
-    "self": "string",
-    "first": "string",
-    "prev": "string",
-    "next": "string",
-    "last": "string"
-  }
+    "self": "string"
+  },
+  "meta": {}
 }
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountsBalanceById
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_basic_accounts
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Account Detail
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId} HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId} HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}',
   method: 'get',
 
   headers: headers,
@@ -1500,6 +1500,8 @@ Obtain detailed information on a single account
 Parameters
 Name	In	Type	Required	Description
 accountId	path	ASCIIString	mandatory	A tokenised identifier for the account which is unique but not shareable
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -1511,7 +1513,7 @@ Example responses
     "displayName": "string",
     "nickname": "string",
     "openStatus": "OPEN",
-    "isOwned": "true",
+    "isOwned": true,
     "maskedNumber": "string",
     "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
     "productName": "string",
@@ -1631,7 +1633,7 @@ Example responses
         "additionalValue": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string",
-        "isActivated": "true"
+        "isActivated": true
       }
     ],
     "fees": [
@@ -1690,7 +1692,9 @@ Example responses
           "thoroughfareNumber1Suffix": "string",
           "thoroughfareNumber2": 0,
           "thoroughfareNumber2Suffix": "string",
+          "flatUnitType": "string",
           "flatUnitNumber": "string",
+          "floorLevelType": "string",
           "floorLevelNumber": "string",
           "lotNumber": 0,
           "buildingName1": "string",
@@ -1717,22 +1721,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountById
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_detailed_accounts
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.detail:read
 Get Transactions For Account
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/transactions HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/transactions HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/transactions',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/transactions',
   method: 'get',
 
   headers: headers,
@@ -1748,7 +1759,7 @@ Obtain transactions for a specific account.
 Some general notes that apply to all end points that retrieve transactions:
 
 Where multiple transactions are returned, transactions should be ordered according to effective date in descending order
-As the date and time for a transaction can alter depending on status and transaction type two separate date/times are included in the payload. There are still some scenarios where neither of these time stamps is available. For the purpose of filtering and ordering it is expected that the provider will use the “effective” date/time which will be defined as: - Posted date/time if available, then - Execution date/time if available, then - A reasonable date/time nominated by the data provider using internal data structures
+As the date and time for a transaction can alter depending on status and transaction type two separate date/times are included in the payload. There are still some scenarios where neither of these time stamps is available. For the purpose of filtering and ordering it is expected that the holder will use the “effective” date/time which will be defined as: - Posted date/time if available, then - Execution date/time if available, then - A reasonable date/time nominated by the data holder using internal data structures
 For transaction amounts it should be assumed that a negative value indicates a reduction of the available balance on the account while a positive value indicates an increase in the available balance on the account
 Parameters
 Name	In	Type	Required	Description
@@ -1757,9 +1768,11 @@ oldest-time	query	DateTimeString	optional	Constrain the transaction history requ
 newest-time	query	DateTimeString	optional	Constrain the transaction history request to transactions with effective time at or before this date/time. If absent defaults to today. Format is aligned to DateTimeString common type
 min-amount	query	AmountString	optional	Filter transactions to only transactions with amounts higher or equal to than this amount
 max-amount	query	AmountString	optional	Filter transactions to only transactions with amounts less than or equal to than this amount
-text	query	string	optional	Filter transactions to only transactions where this string value is found as a substring of either the reference or description fields. Format is arbitrary ASCII string
+text	query	string	optional	Filter transactions to only transactions where this string value is found as a substring of either the reference or description fields. Format is arbitrary ASCII string. This parameter is optionally implemented by data holders. If it is not implemented then a response should be provided as normal without text filtering applied
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -1804,22 +1817,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingTransactionList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_transactions
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:transactions:read
 Get Transaction Detail
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/transactions/{transactionId} HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/transactions/{transactionId} HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/transactions/{transactionId}',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/transactions/{transactionId}',
   method: 'get',
 
   headers: headers,
@@ -1836,6 +1856,8 @@ Parameters
 Name	In	Type	Required	Description
 accountId	path	ASCIIString	mandatory	ID of the account to get transactions for. Must have previously been returned by one of the account list end points
 transactionId	path	ASCIIString	mandatory	ID of the transaction obtained from a previous call to one of the other transaction end points
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -1863,8 +1885,12 @@ Example responses
     "extendedData": {
       "payer": "string",
       "payee": "string",
-      "extensionUType": "extendedDescription",
-      "extendedDescription": "string",
+      "extensionUType": "x2p101Payload",
+      "x2p101Payload": {
+        "extendedDescription": "string",
+        "endToEndId": "string",
+        "purposeCode": "string"
+      },
       "service": "X2P1.01"
     }
   },
@@ -1876,218 +1902,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingTransactionById
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_transactions
-Get Transactions For Multiple Accounts
-
-Code samples
-
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/transactions HTTP/1.1
-Host: data.provider.com.au
-Accept: application/json
-
-var headers = {
-  'Accept':'application/json'
-
-};
-
-$.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/transactions',
-  method: 'get',
-
-  headers: headers,
-  success: function(data) {
-    console.log(JSON.stringify(data));
-  }
-})
-
-GET /banking/accounts/transactions
-
-Obtain transactions for multiple, filtered accounts
-
-Parameters
-Name	In	Type	Required	Description
-product-category	query	string	optional	Used to filter results on the productCategory field applicable to accounts. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
-open-status	query	string	optional	Used to filter results according to open/closed status. Values can be OPEN, CLOSED or ALL. If absent then ALL is assumed
-is-owned	query	Boolean	optional	Filters accounts based on whether they are owned by the authorised customer. True for owned accounts, false for unowned accounts and absent for all accounts
-newest-time	query	DateTimeString	optional	Constrain the transaction history request to transactions with effective time at or before this date/time. If absent defaults to today. Format is aligned to DateTimeString common type
-oldest-time	query	DateTimeString	optional	Constrain the transaction history request to transactions with effective time at or after this date/time. If absent defaults to newest-time minus 90 days. Format is aligned to DateTimeString common type
-min-amount	query	AmountString	optional	Filter transactions to only transactions with amounts higher or equal to than this amount
-max-amount	query	AmountString	optional	Filter transactions to only transactions with amounts less than or equal to than this amount
-text	query	string	optional	Filter transactions to only transactions where this string value is found as a substring of either the reference or description fields. Format is arbitrary ASCII string
-page	query	PositiveInteger	optional	Page of results to request (standard pagination)
-page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
-Enumerated Values
-Parameter	Value
-product-category	TRANS_AND_SAVINGS_ACCOUNTS
-product-category	TERM_DEPOSITS
-product-category	TRAVEL_CARDS
-product-category	REGULATED_TRUST_ACCOUNTS
-product-category	RESIDENTIAL_MORTGAGES
-product-category	CRED_AND_CHRG_CARDS
-product-category	PERS_LOANS
-product-category	MARGIN_LOANS
-product-category	LEASES
-product-category	TRADE_FINANCE
-product-category	OVERDRAFTS
-product-category	BUSINESS_LOANS
-open-status	OPEN
-open-status	CLOSED
-open-status	ALL
-Example responses
-
-200 Response
-
-{
-  "data": {
-    "transactions": [
-      {
-        "accountId": "string",
-        "transactionId": "string",
-        "isDetailAvailable": true,
-        "type": "FEE",
-        "status": "PENDING",
-        "description": "string",
-        "postingDateTime": "string",
-        "valueDateTime": "string",
-        "executionDateTime": "string",
-        "amount": "string",
-        "currency": "string",
-        "reference": "string",
-        "merchantName": "string",
-        "merchantCategoryCode": "string",
-        "billerCode": "string",
-        "billerName": "string",
-        "crn": "string",
-        "apcaNumber": "string"
-      }
-    ]
-  },
-  "links": {
-    "self": "string",
-    "first": "string",
-    "prev": "string",
-    "next": "string",
-    "last": "string"
-  },
-  "meta": {
-    "totalRecords": 0,
-    "totalPages": 0
-  }
-}
-Responses
-Status	Meaning	Description	Schema
-200	OK	Success	ResponseBankingTransactionList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_transactions
-Get Transactions For Specific Accounts
-
-Code samples
-
-POST https://data.provider.com.au/cds-au/v1/banking/accounts/transactions HTTP/1.1
-Host: data.provider.com.au
-Content-Type: application/json
-Accept: application/json
-
-var headers = {
-  'Content-Type':'application/json',
-  'Accept':'application/json'
-
-};
-
-$.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/transactions',
-  method: 'post',
-
-  headers: headers,
-  success: function(data) {
-    console.log(JSON.stringify(data));
-  }
-})
-
-POST /banking/accounts/transactions
-
-Obtain transactions for a specified list of transactions.
-
-Body parameter
-
-{
-  "data": {
-    "accountIds": [
-      "string"
-    ]
-  },
-  "meta": {}
-}
-Parameters
-Name	In	Type	Required	Description
-newest-time	query	DateTimeString	optional	Constrain the transaction history request to transactions with effective time at or before this date/time. If absent defaults to today. Format is aligned to DateTimeString common type
-oldest-time	query	DateTimeString	optional	Constrain the transaction history request to transactions with effective time at or after this date/time. If absent defaults to newest-time minus 90 days. Format is aligned to DateTimeString common type
-min-amount	query	AmountString	optional	Filter transactions to only transactions with amounts higher or equal to than this amount
-max-amount	query	AmountString	optional	Filter transactions to only transactions with amounts less than or equal to than this amount
-text	query	string	optional	Filter transactions to only transactions where this string value is found as a substring of either the reference or description fields. Format is arbitrary ASCII string
-page	query	PositiveInteger	optional	Page of results to request (standard pagination)
-page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
-body	body	RequestAccountIds	mandatory	The list of account IDs to obtain information for
-Example responses
-
-200 Response
-
-{
-  "data": {
-    "transactions": [
-      {
-        "accountId": "string",
-        "transactionId": "string",
-        "isDetailAvailable": true,
-        "type": "FEE",
-        "status": "PENDING",
-        "description": "string",
-        "postingDateTime": "string",
-        "valueDateTime": "string",
-        "executionDateTime": "string",
-        "amount": "string",
-        "currency": "string",
-        "reference": "string",
-        "merchantName": "string",
-        "merchantCategoryCode": "string",
-        "billerCode": "string",
-        "billerName": "string",
-        "crn": "string",
-        "apcaNumber": "string"
-      }
-    ]
-  },
-  "links": {
-    "self": "string",
-    "first": "string",
-    "prev": "string",
-    "next": "string",
-    "last": "string"
-  },
-  "meta": {
-    "totalRecords": 0,
-    "totalPages": 0
-  }
-}
-Responses
-Status	Meaning	Description	Schema
-200	OK	Success	ResponseBankingTransactionList
-422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request	ResponseErrorList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_transactions
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:transactions:read
 Get Direct Debits For Account
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/direct-debits HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/direct-debits HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/direct-debits',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/direct-debits',
   method: 'get',
 
   headers: headers,
@@ -2105,6 +1942,8 @@ Name	In	Type	Required	Description
 accountId	path	ASCIIString	mandatory	ID of the account to get direct debit authorisations for. Must have previously been returned by one of the account list end points.
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -2141,22 +1980,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingDirectDebitAuthorisationList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_regular_payments
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Bulk Direct Debits
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/direct-debits HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/direct-debits HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/direct-debits',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/direct-debits',
   method: 'get',
 
   headers: headers,
@@ -2176,6 +2022,8 @@ open-status	query	string	optional	Used to filter results according to open/close
 is-owned	query	Boolean	optional	Filters accounts based on whether they are owned by the authorised customer. True for owned accounts, false for unowned accounts and absent for all accounts
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Enumerated Values
 Parameter	Value
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
@@ -2229,24 +2077,31 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingDirectDebitAuthorisationList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_regular_payments
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Direct Debits For Specific Accounts
 
 Code samples
 
-POST https://data.provider.com.au/cds-au/v1/banking/accounts/direct-debits HTTP/1.1
-Host: data.provider.com.au
+POST https://data.holder.com.au/cds-au/v1/banking/accounts/direct-debits HTTP/1.1
+Host: data.holder.com.au
 Content-Type: application/json
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
   'Content-Type':'application/json',
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/direct-debits',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/direct-debits',
   method: 'post',
 
   headers: headers,
@@ -2273,6 +2128,8 @@ Parameters
 Name	In	Type	Required	Description
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 body	body	RequestAccountIds	mandatory	Array of specific accountIds to obtain authorisations for
 Example responses
 
@@ -2311,22 +2168,29 @@ Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingDirectDebitAuthorisationList
 422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request	ResponseErrorList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_regular_payments
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments for Account
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/payments/scheduled HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/payments/scheduled HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/accounts/{accountId}/payments/scheduled',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/accounts/{accountId}/payments/scheduled',
   method: 'get',
 
   headers: headers,
@@ -2344,6 +2208,8 @@ Name	In	Type	Required	Description
 accountId	path	ASCIIString	mandatory	ID of the account to get scheduled payments for. Must have previously been returned by one of the account list end points. The account specified is the source account for the payment
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -2360,58 +2226,60 @@ Example responses
         "from": {
           "accountId": "string"
         },
-        "paymentSet": {
-          "to": {
-            "toUType": "accountId",
-            "accountId": "string",
-            "payeeId": "string",
-            "domestic": {
-              "payeeAccountUType": "account",
-              "account": {
-                "accountName": "string",
-                "bsb": "string",
-                "accountNumber": "string"
-              },
-              "card": {
-                "cardNumber": "string"
-              },
-              "payId": {
-                "name": "string",
-                "identifier": "string",
-                "type": "EMAIL"
-              }
-            },
-            "biller": {
-              "billerCode": "string",
-              "crn": "string",
-              "billerName": "string"
-            },
-            "international": {
-              "beneficiaryDetails": {
-                "name": "string",
-                "country": "string",
-                "message": "string"
-              },
-              "bankDetails": {
-                "country": "string",
-                "accountNumber": "string",
-                "bankAddress": {
-                  "name": "string",
-                  "address": "string"
+        "paymentSet": [
+          {
+            "to": {
+              "toUType": "accountId",
+              "accountId": "string",
+              "payeeId": "string",
+              "domestic": {
+                "payeeAccountUType": "account",
+                "account": {
+                  "accountName": "string",
+                  "bsb": "string",
+                  "accountNumber": "string"
                 },
-                "beneficiaryBankBIC": "string",
-                "fedWireNumber": "string",
-                "sortCode": "string",
-                "chipNumber": "string",
-                "routingNumber": "string",
-                "legalEntityIdentifier": "string"
+                "card": {
+                  "cardNumber": "string"
+                },
+                "payId": {
+                  "name": "string",
+                  "identifier": "string",
+                  "type": "EMAIL"
+                }
+              },
+              "biller": {
+                "billerCode": "string",
+                "crn": "string",
+                "billerName": "string"
+              },
+              "international": {
+                "beneficiaryDetails": {
+                  "name": "string",
+                  "country": "string",
+                  "message": "string"
+                },
+                "bankDetails": {
+                  "country": "string",
+                  "accountNumber": "string",
+                  "bankAddress": {
+                    "name": "string",
+                    "address": "string"
+                  },
+                  "beneficiaryBankBIC": "string",
+                  "fedWireNumber": "string",
+                  "sortCode": "string",
+                  "chipNumber": "string",
+                  "routingNumber": "string",
+                  "legalEntityIdentifier": "string"
+                }
               }
-            }
-          },
-          "isAmountCalculated": true,
-          "amount": "string",
-          "currency": "string"
-        },
+            },
+            "isAmountCalculated": true,
+            "amount": "string",
+            "currency": "string"
+          }
+        ],
         "recurrence": {
           "nextPaymentDate": "string",
           "recurrenceUType": "onceOff",
@@ -2421,9 +2289,7 @@ Example responses
           "intervalSchedule": {
             "finalPaymentDate": "string",
             "paymentsRemaining": 0,
-            "nonBusinessDayTreatment": [
-              "ON"
-            ],
+            "nonBusinessDayTreatment": "ON",
             "intervals": [
               {
                 "interval": "string",
@@ -2459,22 +2325,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingScheduledPaymentsList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_regular_payments
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments Bulk
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/payments/scheduled HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/payments/scheduled HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/payments/scheduled',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/payments/scheduled',
   method: 'get',
 
   headers: headers,
@@ -2494,6 +2367,8 @@ open-status	query	string	optional	Used to filter results according to open/close
 is-owned	query	Boolean	optional	Filters accounts based on whether they are owned by the authorised customer. True for owned accounts, false for unowned accounts and absent for all accounts
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Enumerated Values
 Parameter	Value
 product-category	TRANS_AND_SAVINGS_ACCOUNTS
@@ -2527,58 +2402,60 @@ Example responses
         "from": {
           "accountId": "string"
         },
-        "paymentSet": {
-          "to": {
-            "toUType": "accountId",
-            "accountId": "string",
-            "payeeId": "string",
-            "domestic": {
-              "payeeAccountUType": "account",
-              "account": {
-                "accountName": "string",
-                "bsb": "string",
-                "accountNumber": "string"
-              },
-              "card": {
-                "cardNumber": "string"
-              },
-              "payId": {
-                "name": "string",
-                "identifier": "string",
-                "type": "EMAIL"
-              }
-            },
-            "biller": {
-              "billerCode": "string",
-              "crn": "string",
-              "billerName": "string"
-            },
-            "international": {
-              "beneficiaryDetails": {
-                "name": "string",
-                "country": "string",
-                "message": "string"
-              },
-              "bankDetails": {
-                "country": "string",
-                "accountNumber": "string",
-                "bankAddress": {
-                  "name": "string",
-                  "address": "string"
+        "paymentSet": [
+          {
+            "to": {
+              "toUType": "accountId",
+              "accountId": "string",
+              "payeeId": "string",
+              "domestic": {
+                "payeeAccountUType": "account",
+                "account": {
+                  "accountName": "string",
+                  "bsb": "string",
+                  "accountNumber": "string"
                 },
-                "beneficiaryBankBIC": "string",
-                "fedWireNumber": "string",
-                "sortCode": "string",
-                "chipNumber": "string",
-                "routingNumber": "string",
-                "legalEntityIdentifier": "string"
+                "card": {
+                  "cardNumber": "string"
+                },
+                "payId": {
+                  "name": "string",
+                  "identifier": "string",
+                  "type": "EMAIL"
+                }
+              },
+              "biller": {
+                "billerCode": "string",
+                "crn": "string",
+                "billerName": "string"
+              },
+              "international": {
+                "beneficiaryDetails": {
+                  "name": "string",
+                  "country": "string",
+                  "message": "string"
+                },
+                "bankDetails": {
+                  "country": "string",
+                  "accountNumber": "string",
+                  "bankAddress": {
+                    "name": "string",
+                    "address": "string"
+                  },
+                  "beneficiaryBankBIC": "string",
+                  "fedWireNumber": "string",
+                  "sortCode": "string",
+                  "chipNumber": "string",
+                  "routingNumber": "string",
+                  "legalEntityIdentifier": "string"
+                }
               }
-            }
-          },
-          "isAmountCalculated": true,
-          "amount": "string",
-          "currency": "string"
-        },
+            },
+            "isAmountCalculated": true,
+            "amount": "string",
+            "currency": "string"
+          }
+        ],
         "recurrence": {
           "nextPaymentDate": "string",
           "recurrenceUType": "onceOff",
@@ -2588,9 +2465,7 @@ Example responses
           "intervalSchedule": {
             "finalPaymentDate": "string",
             "paymentsRemaining": 0,
-            "nonBusinessDayTreatment": [
-              "ON"
-            ],
+            "nonBusinessDayTreatment": "ON",
             "intervals": [
               {
                 "interval": "string",
@@ -2626,24 +2501,31 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingScheduledPaymentsList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_regular_payments
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments For Specific Accounts
 
 Code samples
 
-POST https://data.provider.com.au/cds-au/v1/banking/payments/scheduled HTTP/1.1
-Host: data.provider.com.au
+POST https://data.holder.com.au/cds-au/v1/banking/payments/scheduled HTTP/1.1
+Host: data.holder.com.au
 Content-Type: application/json
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
   'Content-Type':'application/json',
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/payments/scheduled',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/payments/scheduled',
   method: 'post',
 
   headers: headers,
@@ -2670,6 +2552,8 @@ Parameters
 Name	In	Type	Required	Description
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 body	body	RequestAccountIds	mandatory	Array of specific accountIds to obtain scheduled payments for. The accounts specified are the source of funds for the payments returned
 Example responses
 
@@ -2687,58 +2571,60 @@ Example responses
         "from": {
           "accountId": "string"
         },
-        "paymentSet": {
-          "to": {
-            "toUType": "accountId",
-            "accountId": "string",
-            "payeeId": "string",
-            "domestic": {
-              "payeeAccountUType": "account",
-              "account": {
-                "accountName": "string",
-                "bsb": "string",
-                "accountNumber": "string"
-              },
-              "card": {
-                "cardNumber": "string"
-              },
-              "payId": {
-                "name": "string",
-                "identifier": "string",
-                "type": "EMAIL"
-              }
-            },
-            "biller": {
-              "billerCode": "string",
-              "crn": "string",
-              "billerName": "string"
-            },
-            "international": {
-              "beneficiaryDetails": {
-                "name": "string",
-                "country": "string",
-                "message": "string"
-              },
-              "bankDetails": {
-                "country": "string",
-                "accountNumber": "string",
-                "bankAddress": {
-                  "name": "string",
-                  "address": "string"
+        "paymentSet": [
+          {
+            "to": {
+              "toUType": "accountId",
+              "accountId": "string",
+              "payeeId": "string",
+              "domestic": {
+                "payeeAccountUType": "account",
+                "account": {
+                  "accountName": "string",
+                  "bsb": "string",
+                  "accountNumber": "string"
                 },
-                "beneficiaryBankBIC": "string",
-                "fedWireNumber": "string",
-                "sortCode": "string",
-                "chipNumber": "string",
-                "routingNumber": "string",
-                "legalEntityIdentifier": "string"
+                "card": {
+                  "cardNumber": "string"
+                },
+                "payId": {
+                  "name": "string",
+                  "identifier": "string",
+                  "type": "EMAIL"
+                }
+              },
+              "biller": {
+                "billerCode": "string",
+                "crn": "string",
+                "billerName": "string"
+              },
+              "international": {
+                "beneficiaryDetails": {
+                  "name": "string",
+                  "country": "string",
+                  "message": "string"
+                },
+                "bankDetails": {
+                  "country": "string",
+                  "accountNumber": "string",
+                  "bankAddress": {
+                    "name": "string",
+                    "address": "string"
+                  },
+                  "beneficiaryBankBIC": "string",
+                  "fedWireNumber": "string",
+                  "sortCode": "string",
+                  "chipNumber": "string",
+                  "routingNumber": "string",
+                  "legalEntityIdentifier": "string"
+                }
               }
-            }
-          },
-          "isAmountCalculated": true,
-          "amount": "string",
-          "currency": "string"
-        },
+            },
+            "isAmountCalculated": true,
+            "amount": "string",
+            "currency": "string"
+          }
+        ],
         "recurrence": {
           "nextPaymentDate": "string",
           "recurrenceUType": "onceOff",
@@ -2748,9 +2634,7 @@ Example responses
           "intervalSchedule": {
             "finalPaymentDate": "string",
             "paymentsRemaining": 0,
-            "nonBusinessDayTreatment": [
-              "ON"
-            ],
+            "nonBusinessDayTreatment": "ON",
             "intervals": [
               {
                 "interval": "string",
@@ -2787,22 +2671,29 @@ Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingScheduledPaymentsList
 422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request	ResponseErrorList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_regular_payments
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Payees
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/payees HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/payees HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/payees',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/payees',
   method: 'get',
 
   headers: headers,
@@ -2820,6 +2711,8 @@ Name	In	Type	Required	Description
 type	query	string	optional	Filter on the payee type field. In addition to normal type field values, ALL can be specified to retrieve all payees. If absent the assumed value is ALL
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Enumerated Values
 Parameter	Value
 type	DOMESTIC
@@ -2857,22 +2750,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingPayeeList
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_basic_accounts
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Payee Detail
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/payees/{payeeId} HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/payees/{payeeId} HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/payees/{payeeId}',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/payees/{payeeId}',
   method: 'get',
 
   headers: headers,
@@ -2888,6 +2788,8 @@ Obtain detailed information on a single payee
 Parameters
 Name	In	Type	Required	Description
 payeeId	path	ASCIIString	mandatory	The ID used to locate the details of a particular payee
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -2951,22 +2853,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingPayeeById
- To perform this operation, you must be authenticated and authorised with the following scopes: bank_payees
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: bank:payees:read
 Get Products
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/products HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/products HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/products',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/products',
   method: 'get',
 
   headers: headers,
@@ -2994,7 +2903,7 @@ An element in these arrays of the same type may appear more than once. For insta
 An element in these arrays may contain an additionalInfo and additionalInfoUri field. The additionalInfo field is used to provide displayable text clarifying the purpose of the element in some way when the product is presented to a customer. The additionalInfoUri provides a link to externally hosted information specifically relevant to that feature of the product.
 Depending on the type of data being represented there may be additional specific fields.
 URIs To More Information
-As the complexities and nuances of a financial product can not easily be fully expressed in a data structure without a high degree of complexity it is necessary to provide additional reference information that a potential customer can access so that they are fully informed of the features and implications of the product. The payloads for product reference therefore contain numerous fields that are provided to allow the product provider to describe the product more fully using a web page hosted on their on channels.
+As the complexities and nuances of a financial product can not easily be fully expressed in a data structure without a high degree of complexity it is necessary to provide additional reference information that a potential customer can access so that they are fully informed of the features and implications of the product. The payloads for product reference therefore contain numerous fields that are provided to allow the product holder to describe the product more fully using a web page hosted on their online channels.
 
 These URIs do not need to all link to different pages. If desired, they can all link to a single hosted page and use difference HTML anchors to focus on a specific topic such as eligibility or fees.
 
@@ -3018,6 +2927,8 @@ brand	query	string	optional	Filter results based on a specific brand
 product-category	query	string	optional	Used to filter results on the productCategory field applicable to accounts. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Enumerated Values
 Parameter	Value
 effective	CURRENT
@@ -3079,22 +2990,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingProductList
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
  This operation does not require authentication
 Get Product Detail
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/banking/products/{productId} HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/banking/products/{productId} HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/banking/products/{productId}',
+  url: 'https://data.holder.com.au/cds-au/v1/banking/products/{productId}',
   method: 'get',
 
   headers: headers,
@@ -3110,6 +3028,8 @@ Obtain detailed information on a single product offered openly to the market
 Parameters
 Name	In	Type	Required	Description
 productId	path	ASCIIString	mandatory	ID of the specific product requested
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -3287,23 +3207,30 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingProductById
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
  This operation does not require authentication
 Common APIs
 Get Customer
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/common/customer HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/common/customer HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/common/customer',
+  url: 'https://data.holder.com.au/cds-au/v1/common/customer',
   method: 'get',
 
   headers: headers,
@@ -3316,6 +3243,10 @@ GET /common/customer
 
 Obtain basic information on the customer that has authorised the current session
 
+Parameters
+Name	In	Type	Required	Description
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -3359,22 +3290,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseCommonCustomer
- To perform this operation, you must be authenticated and authorised with the following scopes: common_basic_customer
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: common:customer.basic:read
 Get Customer Detail
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/common/customer/detail HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/common/customer/detail HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/common/customer/detail',
+  url: 'https://data.holder.com.au/cds-au/v1/common/customer/detail',
   method: 'get',
 
   headers: headers,
@@ -3387,6 +3325,10 @@ GET /common/customer/detail
 
 Obtain detailed information on the authorised customer within the current session.
 
+Parameters
+Name	In	Type	Required	Description
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -3424,7 +3366,6 @@ Example responses
       ],
       "physicalAddresses": [
         {
-          "purpose": "REGISTERED",
           "addressUType": "simple",
           "simple": {
             "mailingName": "string",
@@ -3442,7 +3383,9 @@ Example responses
             "thoroughfareNumber1Suffix": "string",
             "thoroughfareNumber2": 0,
             "thoroughfareNumber2Suffix": "string",
+            "flatUnitType": "string",
             "flatUnitNumber": "string",
+            "floorLevelType": "string",
             "floorLevelNumber": "string",
             "lotNumber": 0,
             "buildingName1": "string",
@@ -3457,7 +3400,8 @@ Example responses
             "localityName": "string",
             "postcode": "string",
             "state": "string"
-          }
+          },
+          "purpose": "REGISTERED"
         }
       ]
     },
@@ -3478,7 +3422,6 @@ Example responses
       "establishmentDate": "string",
       "physicalAddresses": [
         {
-          "purpose": "REGISTERED",
           "addressUType": "simple",
           "simple": {
             "mailingName": "string",
@@ -3496,7 +3439,9 @@ Example responses
             "thoroughfareNumber1Suffix": "string",
             "thoroughfareNumber2": 0,
             "thoroughfareNumber2Suffix": "string",
+            "flatUnitType": "string",
             "flatUnitNumber": "string",
+            "floorLevelType": "string",
             "floorLevelNumber": "string",
             "lotNumber": 0,
             "buildingName1": "string",
@@ -3511,7 +3456,8 @@ Example responses
             "localityName": "string",
             "postcode": "string",
             "state": "string"
-          }
+          },
+          "purpose": "REGISTERED"
         }
       ]
     }
@@ -3524,22 +3470,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseCommonCustomerDetail
- To perform this operation, you must be authenticated and authorised with the following scopes: common_detailed_customer
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ To perform this operation, you must be authenticated and authorised with the following scopes: common:customer.detail:read
 Get Status
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/discovery/status HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/discovery/status HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/discovery/status',
+  url: 'https://data.holder.com.au/cds-au/v1/discovery/status',
   method: 'get',
 
   headers: headers,
@@ -3552,6 +3505,10 @@ GET /discovery/status
 
 Obtain a health check status for the implementation
 
+Parameters
+Name	In	Type	Required	Description
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -3572,22 +3529,29 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseDiscoveryStatus
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
  This operation does not require authentication
 Get Outages
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/discovery/outages HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/discovery/outages HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/discovery/outages',
+  url: 'https://data.holder.com.au/cds-au/v1/discovery/outages',
   method: 'get',
 
   headers: headers,
@@ -3600,6 +3564,10 @@ GET /discovery/outages
 
 Obtain a list of scheduled outages for the implementation
 
+Parameters
+Name	In	Type	Required	Description
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Example responses
 
 200 Response
@@ -3622,7 +3590,10 @@ Example responses
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Success	ResponseDiscoveryOutages
+200	OK	Success	ResponseDiscoveryOutagesList
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
  This operation does not require authentication
 Schemas
 RequestAccountIds
@@ -3712,14 +3683,14 @@ BankingProduct
 
 Properties
 Name	Type	Required	Restrictions	Description
-productId	ASCIIString	mandatory	none	A provider specific unique identifier for this product. This identifier must be unique to a product but does not otherwise need to adhere to ID permanence guidelines.
+productId	ASCIIString	mandatory	none	A holder specific unique identifier for this product. This identifier must be unique to a product but does not otherwise need to adhere to ID permanence guidelines.
 effectiveFrom	DateTimeString	optional	none	The date and time from which this product is effective (ie. is available for origination). Used to enable the articulation of products to the regime before they are available for customers to originate
 effectiveTo	DateTimeString	optional	none	The date and time at which this product will be retired and will no longer be offered. Used to enable the managed deprecation of products
 lastUpdated	DateTimeString	mandatory	none	The last date and time that the information for this product was changed (or the creation date for the product if it has never been altered)
-productCategory	BankingEnumProductCategory	mandatory	none	The category to which a product or account belongs. See here for more details
+productCategory	BankingProductCategory	mandatory	none	The category to which a product or account belongs. See here for more details
 name	string	mandatory	none	The display name of the product
 description	string	mandatory	none	A description of the product
-brand	string	mandatory	none	A label of the brand for the product. Able to be used for filtering. For data providers with single brands this value is still required
+brand	string	mandatory	none	A label of the brand for the product. Able to be used for filtering. For data holders with single brands this value is still required
 brandName	string	optional	none	An optional display name of the brand
 applicationUri	URIString	optional	none	A link to an application web page where this product can be applied for.
 isTailored	Boolean	mandatory	none	Indicates whether the product is specifically tailored to a circumstance. In this case fees and prices are significantly negotiated depending on context. While all products are open to a degree of tailoring this flag indicates that tailoring is expected and thus that the provision of specific fees and rates is not applicable
@@ -4108,7 +4079,7 @@ name	string	mandatory	none	Name of the bundle
 description	string	mandatory	none	Description of the bundle
 additionalInfo	string	optional	none	Display text providing more information on the bundle
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on the bundle criteria and benefits
-productIds	[string]	mandatory	none	Array of product IDs for products included in the bundle
+productIds	[string]	optional	none	Array of product IDs for products included in the bundle that are available via the product end points. Note that this array is not intended to represent a comprehensive model of the products included in the bundle and some products available for the bundle may not be available via the product reference end points
 BankingProductFeature
 
 {
@@ -4121,7 +4092,7 @@ BankingProductFeature
 Properties
 Name	Type	Required	Restrictions	Description
 featureType	string	mandatory	none	The type of feature described
-additionalValue	string	conditional	none	Generic field containing additional information relevant to the featureType specified. Whether mandatory or not is dependent on the value of featureType
+additionalValue	string	conditional	none	Generic field containing additional information relevant to the featureType specified. Whether mandatory or not is dependent on the value of the featureType.
 additionalInfo	string	conditional	none	Display text providing more information on the feature. Mandatory if the feature type is set to OTHER
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on this feature
 Enumerated Values
@@ -4184,7 +4155,7 @@ Properties
 Name	Type	Required	Restrictions	Description
 eligibilityType	string	mandatory	none	The type of eligibility criteria described. See the next section for an overview of valid values and their meaning
 additionalValue	string	conditional	none	Generic field containing additional information relevant to the eligibilityType specified. Whether mandatory or not is dependent on the value of eligibilityType
-additionalInfo	string	conditional	none	Display text providing more information on the eligibility criteria. Mandatory if the eligibilityType field is set to OTHER
+additionalInfo	string	conditional	none	Display text providing more information on the eligibility criteria. Mandatory if the field is set to OTHER
 additionalInfoUri	URIString	optional	none	Link to a web page with more information on this eligibility criteria
 Enumerated Values
 Property	Value
@@ -4290,7 +4261,7 @@ Properties
 Name	Type	Required	Restrictions	Description
 description	string	mandatory	none	Description of the discount
 discountType	string	mandatory	none	The type of discount. See the next section for an overview of valid values and their meaning
-amount	AmountString	mandatory	none	Value of the discount
+amount	AmountString	conditional	none	Value of the discount. When following properties include one of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory
 balanceRate	RateString	conditional	none	A discount rate calculated based on a proportion of the balance. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory. Unless noted in additionalInfo, assumes the application and calculation frequency are the same as the corresponding fee
 transactionRate	RateString	conditional	none	A discount rate calculated based on a proportion of a transaction. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory
 accruedRate	RateString	conditional	none	A discount rate calculated based on a proportion of the calculated interest accrued on the account. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory. Unless noted in additionalInfo, assumes the application and calculation frequency are the same as the corresponding fee
@@ -4536,7 +4507,7 @@ ResponseBankingAccountList
         "displayName": "string",
         "nickname": "string",
         "openStatus": "OPEN",
-        "isOwned": "true",
+        "isOwned": true,
         "maskedNumber": "string",
         "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
         "productName": "string"
@@ -4570,7 +4541,7 @@ BankingAccount
   "displayName": "string",
   "nickname": "string",
   "openStatus": "OPEN",
-  "isOwned": "true",
+  "isOwned": true,
   "maskedNumber": "string",
   "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
   "productName": "string"
@@ -4585,8 +4556,8 @@ nickname	string	optional	none	A customer supplied nick name for the account
 openStatus	string	optional	none	Open or closed status for the account. If not present then OPEN is assumed
 isOwned	Boolean	optional	none	Flag indicating that the customer associated with the authorisation is an owner of the account. Does not indicate sole ownership, however. If not present then 'true' is assumed
 maskedNumber	MaskedAccountString	mandatory	none	A masked version of the account. Whether BSB/Account Number, Credit Card PAN or another number
-productCategory	BankingEnumProductCategory	mandatory	none	The category to which a product or account belongs. See here for more details
-productName	string	mandatory	none	The unique identifier of the account as defined by the account provider (akin to model number for the account)
+productCategory	BankingProductCategory	mandatory	none	The category to which a product or account belongs. See here for more details
+productName	string	mandatory	none	The unique identifier of the account as defined by the account holder (akin to model number for the account)
 Enumerated Values
 Property	Value
 openStatus	OPEN
@@ -4600,7 +4571,7 @@ ResponseBankingAccountById
     "displayName": "string",
     "nickname": "string",
     "openStatus": "OPEN",
-    "isOwned": "true",
+    "isOwned": true,
     "maskedNumber": "string",
     "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
     "productName": "string",
@@ -4720,7 +4691,7 @@ ResponseBankingAccountById
         "additionalValue": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string",
-        "isActivated": "true"
+        "isActivated": true
       }
     ],
     "fees": [
@@ -4779,7 +4750,9 @@ ResponseBankingAccountById
           "thoroughfareNumber1Suffix": "string",
           "thoroughfareNumber2": 0,
           "thoroughfareNumber2Suffix": "string",
+          "flatUnitType": "string",
           "flatUnitNumber": "string",
+          "floorLevelType": "string",
           "floorLevelNumber": "string",
           "lotNumber": 0,
           "buildingName1": "string",
@@ -4817,7 +4790,7 @@ BankingAccountDetail
   "displayName": "string",
   "nickname": "string",
   "openStatus": "OPEN",
-  "isOwned": "true",
+  "isOwned": true,
   "maskedNumber": "string",
   "productCategory": "TRANS_AND_SAVINGS_ACCOUNTS",
   "productName": "string",
@@ -4937,7 +4910,7 @@ BankingAccountDetail
       "additionalValue": "string",
       "additionalInfo": "string",
       "additionalInfoUri": "string",
-      "isActivated": "true"
+      "isActivated": true
     }
   ],
   "fees": [
@@ -4996,7 +4969,9 @@ BankingAccountDetail
         "thoroughfareNumber1Suffix": "string",
         "thoroughfareNumber2": 0,
         "thoroughfareNumber2Suffix": "string",
+        "flatUnitType": "string",
         "flatUnitNumber": "string",
+        "floorLevelType": "string",
         "floorLevelNumber": "string",
         "lotNumber": 0,
         "buildingName1": "string",
@@ -5220,9 +5195,9 @@ currency	CurrencyString	optional	none	The currency for the transaction amount. A
 reference	string	mandatory	none	The reference for the transaction provided by the originating institution. Empty string if no data provided
 merchantName	string	optional	none	Name of the merchant for an outgoing payment to a merchant
 merchantCategoryCode	string	optional	none	The merchant category code (or MCC) for an outgoing payment to a merchant
-billerCode	string	optional	none	BPay Biller Code for the transaction (if available)
-billerName	string	optional	none	Name of the BPay biller for the transaction (if available)
-crn	string	optional	none	BPay CRN for the transaction (if available)
+billerCode	string	optional	none	BPAY Biller Code for the transaction (if available)
+billerName	string	optional	none	Name of the BPAY biller for the transaction (if available)
+crn	string	optional	none	BPAY CRN for the transaction (if available)
 apcaNumber	string	optional	none	6 Digit APCA number for the initiating institution
 Enumerated Values
 Property	Value
@@ -5261,8 +5236,12 @@ ResponseBankingTransactionById
     "extendedData": {
       "payer": "string",
       "payee": "string",
-      "extensionUType": "extendedDescription",
-      "extendedDescription": "string",
+      "extensionUType": "x2p101Payload",
+      "x2p101Payload": {
+        "extendedDescription": "string",
+        "endToEndId": "string",
+        "purposeCode": "string"
+      },
       "service": "X2P1.01"
     }
   },
@@ -5301,8 +5280,12 @@ BankingTransactionDetail
   "extendedData": {
     "payer": "string",
     "payee": "string",
-    "extensionUType": "extendedDescription",
-    "extendedDescription": "string",
+    "extensionUType": "x2p101Payload",
+    "x2p101Payload": {
+      "extendedDescription": "string",
+      "endToEndId": "string",
+      "purposeCode": "string"
+    },
     "service": "X2P1.01"
   }
 }
@@ -5318,13 +5301,16 @@ Name	Type	Required	Restrictions	Description
 anonymous	object	optional	none	none
 » extendedData	object	mandatory	none	none
 »» payer	string	conditional	none	Label of the originating payer. Mandatory for inbound payment
-»» payee	string	conditional	none	Label of the target PayID. Mandatory for an outbound payment
+»» payee	string	conditional	none	Label of the target PayID. Mandatory for an outbound payment. The name assigned to the BSB/Account Number or PayID (by the owner of the PayID)
 »» extensionUType	string	optional	none	Optional extended data provided specific to transaction originated via NPP
-»» extendedDescription	string	conditional	none	An extended string description. Only present if specified by the extensionUType field
+»» x2p101Payload	object	optional	none	none
+»»» extendedDescription	string	mandatory	none	An extended string description. Only present if specified by the extensionUType field
+»»» endToEndId	string	optional	none	An end to end ID for the payment created at initiation
+»»» purposeCode	string	optional	none	Purpose of the payment. Format is defined by NPP standards for the x2p1.01 overlay service
 »» service	string	mandatory	none	Identifier of the applicable overlay service. Valid values are: X2P1.01
 Enumerated Values
 Property	Value
-extensionUType	extendedDescription
+extensionUType	x2p101Payload
 service	X2P1.01
 ResponseBankingAccountsBalanceList
 
@@ -5384,18 +5370,16 @@ ResponseBankingAccountsBalanceById
     ]
   },
   "links": {
-    "self": "string",
-    "first": "string",
-    "prev": "string",
-    "next": "string",
-    "last": "string"
-  }
+    "self": "string"
+  },
+  "meta": {}
 }
 
 Properties
 Name	Type	Required	Restrictions	Description
 data	BankingBalance	mandatory	none	none
-links	LinksPaginated	mandatory	none	none
+links	Links	mandatory	none	none
+meta	Meta	optional	none	none
 BankingBalance
 
 {
@@ -5691,9 +5675,9 @@ type	string	mandatory	none	The type of the PayID
 Enumerated Values
 Property	Value
 type	EMAIL
-type	MOBILE
-type	ORG_NUMBER
-type	ORG_NAME
+type	TELEPHONE
+type	ABN
+type	ORG_IDENTIFIER
 BankingBillerPayee
 
 {
@@ -5704,8 +5688,8 @@ BankingBillerPayee
 
 Properties
 Name	Type	Required	Restrictions	Description
-billerCode	string	mandatory	none	BPay Biller Code of the Biller
-crn	string	conditional	none	BPay CRN of the Biller. If the contents of the CRN match the format of a Credit Card PAN then it should be masked using the rules applicable for the MaskedPANString common type
+billerCode	string	mandatory	none	BPAY Biller Code of the Biller
+crn	string	conditional	none	BPAY CRN of the Biller. If the contents of the CRN match the format of a Credit Card PAN then it should be masked using the rules applicable for the MaskedPANString common type
 billerName	string	mandatory	none	Name of the Biller
 BankingInternationalPayee
 
@@ -5839,58 +5823,60 @@ ResponseBankingScheduledPaymentsList
         "from": {
           "accountId": "string"
         },
-        "paymentSet": {
-          "to": {
-            "toUType": "accountId",
-            "accountId": "string",
-            "payeeId": "string",
-            "domestic": {
-              "payeeAccountUType": "account",
-              "account": {
-                "accountName": "string",
-                "bsb": "string",
-                "accountNumber": "string"
-              },
-              "card": {
-                "cardNumber": "string"
-              },
-              "payId": {
-                "name": "string",
-                "identifier": "string",
-                "type": "EMAIL"
-              }
-            },
-            "biller": {
-              "billerCode": "string",
-              "crn": "string",
-              "billerName": "string"
-            },
-            "international": {
-              "beneficiaryDetails": {
-                "name": "string",
-                "country": "string",
-                "message": "string"
-              },
-              "bankDetails": {
-                "country": "string",
-                "accountNumber": "string",
-                "bankAddress": {
-                  "name": "string",
-                  "address": "string"
+        "paymentSet": [
+          {
+            "to": {
+              "toUType": "accountId",
+              "accountId": "string",
+              "payeeId": "string",
+              "domestic": {
+                "payeeAccountUType": "account",
+                "account": {
+                  "accountName": "string",
+                  "bsb": "string",
+                  "accountNumber": "string"
                 },
-                "beneficiaryBankBIC": "string",
-                "fedWireNumber": "string",
-                "sortCode": "string",
-                "chipNumber": "string",
-                "routingNumber": "string",
-                "legalEntityIdentifier": "string"
+                "card": {
+                  "cardNumber": "string"
+                },
+                "payId": {
+                  "name": "string",
+                  "identifier": "string",
+                  "type": "EMAIL"
+                }
+              },
+              "biller": {
+                "billerCode": "string",
+                "crn": "string",
+                "billerName": "string"
+              },
+              "international": {
+                "beneficiaryDetails": {
+                  "name": "string",
+                  "country": "string",
+                  "message": "string"
+                },
+                "bankDetails": {
+                  "country": "string",
+                  "accountNumber": "string",
+                  "bankAddress": {
+                    "name": "string",
+                    "address": "string"
+                  },
+                  "beneficiaryBankBIC": "string",
+                  "fedWireNumber": "string",
+                  "sortCode": "string",
+                  "chipNumber": "string",
+                  "routingNumber": "string",
+                  "legalEntityIdentifier": "string"
+                }
               }
-            }
-          },
-          "isAmountCalculated": true,
-          "amount": "string",
-          "currency": "string"
-        },
+            },
+            "isAmountCalculated": true,
+            "amount": "string",
+            "currency": "string"
+          }
+        ],
         "recurrence": {
           "nextPaymentDate": "string",
           "recurrenceUType": "onceOff",
@@ -5900,9 +5886,7 @@ ResponseBankingScheduledPaymentsList
           "intervalSchedule": {
             "finalPaymentDate": "string",
             "paymentsRemaining": 0,
-            "nonBusinessDayTreatment": [
-              "ON"
-            ],
+            "nonBusinessDayTreatment": "ON",
             "intervals": [
               {
                 "interval": "string",
@@ -5953,58 +5937,60 @@ BankingScheduledPayment
   "from": {
     "accountId": "string"
   },
-  "paymentSet": {
-    "to": {
-      "toUType": "accountId",
-      "accountId": "string",
-      "payeeId": "string",
-      "domestic": {
-        "payeeAccountUType": "account",
-        "account": {
-          "accountName": "string",
-          "bsb": "string",
-          "accountNumber": "string"
-        },
-        "card": {
-          "cardNumber": "string"
-        },
-        "payId": {
-          "name": "string",
-          "identifier": "string",
-          "type": "EMAIL"
-        }
-      },
-      "biller": {
-        "billerCode": "string",
-        "crn": "string",
-        "billerName": "string"
-      },
-      "international": {
-        "beneficiaryDetails": {
-          "name": "string",
-          "country": "string",
-          "message": "string"
-        },
-        "bankDetails": {
-          "country": "string",
-          "accountNumber": "string",
-          "bankAddress": {
-            "name": "string",
-            "address": "string"
+  "paymentSet": [
+    {
+      "to": {
+        "toUType": "accountId",
+        "accountId": "string",
+        "payeeId": "string",
+        "domestic": {
+          "payeeAccountUType": "account",
+          "account": {
+            "accountName": "string",
+            "bsb": "string",
+            "accountNumber": "string"
           },
-          "beneficiaryBankBIC": "string",
-          "fedWireNumber": "string",
-          "sortCode": "string",
-          "chipNumber": "string",
-          "routingNumber": "string",
-          "legalEntityIdentifier": "string"
+          "card": {
+            "cardNumber": "string"
+          },
+          "payId": {
+            "name": "string",
+            "identifier": "string",
+            "type": "EMAIL"
+          }
+        },
+        "biller": {
+          "billerCode": "string",
+          "crn": "string",
+          "billerName": "string"
+        },
+        "international": {
+          "beneficiaryDetails": {
+            "name": "string",
+            "country": "string",
+            "message": "string"
+          },
+          "bankDetails": {
+            "country": "string",
+            "accountNumber": "string",
+            "bankAddress": {
+              "name": "string",
+              "address": "string"
+            },
+            "beneficiaryBankBIC": "string",
+            "fedWireNumber": "string",
+            "sortCode": "string",
+            "chipNumber": "string",
+            "routingNumber": "string",
+            "legalEntityIdentifier": "string"
+          }
         }
-      }
-    },
-    "isAmountCalculated": true,
-    "amount": "string",
-    "currency": "string"
-  },
+      },
+      "isAmountCalculated": true,
+      "amount": "string",
+      "currency": "string"
+    }
+  ],
   "recurrence": {
     "nextPaymentDate": "string",
     "recurrenceUType": "onceOff",
@@ -6014,9 +6000,7 @@ BankingScheduledPayment
     "intervalSchedule": {
       "finalPaymentDate": "string",
       "paymentsRemaining": 0,
-      "nonBusinessDayTreatment": [
-        "ON"
-      ],
+      "nonBusinessDayTreatment": "ON",
       "intervals": [
         {
           "interval": "string",
@@ -6044,7 +6028,7 @@ payerReference	string	mandatory	none	The reference for the transaction that will
 payeeReference	string	mandatory	none	The reference for the transaction that will be provided by the originating institution. Empty string if no data provided
 status	string	mandatory	none	Indicates whether the schedule is currently active. The value SKIP is equivalent to ACTIVE except that the customer has requested the next normal occurrence to be skipped.
 from	BankingScheduledPaymentFrom	mandatory	none	Object containing details of the source of the payment. Currently only specifies an account ID but provided as an object to facilitate future extensibility and consistency with the to object
-paymentSet	BankingScheduledPaymentSet	mandatory	none	The set of payment amounts and destination accounts for this payment accommodating multi-part payments. A single entry indicates a simple payment with one destination account. Must have at least one entry
+paymentSet	[BankingScheduledPaymentSet]	mandatory	none	[The set of payment amounts and destination accounts for this payment accommodating multi-part payments. A single entry indicates a simple payment with one destination account. Must have at least one entry]
 recurrence	BankingScheduledPaymentRecurrence	mandatory	none	Object containing the detail of the schedule for the payment
 Enumerated Values
 Property	Value
@@ -6203,9 +6187,7 @@ BankingScheduledPaymentRecurrence
   "intervalSchedule": {
     "finalPaymentDate": "string",
     "paymentsRemaining": 0,
-    "nonBusinessDayTreatment": [
-      "ON"
-    ],
+    "nonBusinessDayTreatment": "ON",
     "intervals": [
       {
         "interval": "string",
@@ -6256,9 +6238,7 @@ BankingScheduledPaymentRecurrenceIntervalSchedule
 {
   "finalPaymentDate": "string",
   "paymentsRemaining": 0,
-  "nonBusinessDayTreatment": [
-    "ON"
-  ],
+  "nonBusinessDayTreatment": "ON",
   "intervals": [
     {
       "interval": "string",
@@ -6291,7 +6271,7 @@ BankingScheduledPaymentInterval
 Properties
 Name	Type	Required	Restrictions	Description
 interval	ExternalRef	mandatory	none	An interval for the payment. Formatted according to ISO 8601 Durations with components less than a day in length ignored. This duration defines the period between payments starting with nextPaymentDate
-dayInInterval	ExternalRef	optional	none	Uses an interval to define the ordinal day within the interval defined by the interval field on which the payment occurs. If the resulting duration is 0 days in length or larger than the number of days in the interval then the payment will occur on the last day of the interval. A duration of 1 day indicates the first day of the interval. If absent the assumed value is P1D. Formatted according to ISO 8601 Durations with components less than a day in length ignored. The first day of a week is considered to be Sunday.
+dayInInterval	ExternalRef	optional	none	Uses an interval to define the ordinal day within the interval defined by the interval field on which the payment occurs. If the resulting duration is 0 days in length or larger than the number of days in the interval then the payment will occur on the last day of the interval. A duration of 1 day indicates the first day of the interval. If absent the assumed value is P1D. Formatted according to ISO 8601 Durations with components less than a day in length ignored. The first day of a week is considered to be Monday.
 BankingScheduledPaymentRecurrenceLastWeekday
 
 {
@@ -6352,7 +6332,7 @@ status	OK
 status	PARTIAL_FAILURE
 status	UNAVAILABLE
 status	SCHEDULED_OUTAGE
-ResponseDiscoveryOutages
+ResponseDiscoveryOutagesList
 
 {
   "data": {
@@ -6478,7 +6458,6 @@ ResponseCommonCustomerDetail
       ],
       "physicalAddresses": [
         {
-          "purpose": "REGISTERED",
           "addressUType": "simple",
           "simple": {
             "mailingName": "string",
@@ -6496,7 +6475,9 @@ ResponseCommonCustomerDetail
             "thoroughfareNumber1Suffix": "string",
             "thoroughfareNumber2": 0,
             "thoroughfareNumber2Suffix": "string",
+            "flatUnitType": "string",
             "flatUnitNumber": "string",
+            "floorLevelType": "string",
             "floorLevelNumber": "string",
             "lotNumber": 0,
             "buildingName1": "string",
@@ -6511,7 +6492,8 @@ ResponseCommonCustomerDetail
             "localityName": "string",
             "postcode": "string",
             "state": "string"
-          }
+          },
+          "purpose": "REGISTERED"
         }
       ]
     },
@@ -6532,7 +6514,6 @@ ResponseCommonCustomerDetail
       "establishmentDate": "string",
       "physicalAddresses": [
         {
-          "purpose": "REGISTERED",
           "addressUType": "simple",
           "simple": {
             "mailingName": "string",
@@ -6550,7 +6531,9 @@ ResponseCommonCustomerDetail
             "thoroughfareNumber1Suffix": "string",
             "thoroughfareNumber2": 0,
             "thoroughfareNumber2Suffix": "string",
+            "flatUnitType": "string",
             "flatUnitNumber": "string",
+            "floorLevelType": "string",
             "floorLevelNumber": "string",
             "lotNumber": 0,
             "buildingName1": "string",
@@ -6565,7 +6548,8 @@ ResponseCommonCustomerDetail
             "localityName": "string",
             "postcode": "string",
             "state": "string"
-          }
+          },
+          "purpose": "REGISTERED"
         }
       ]
     }
@@ -6604,7 +6588,7 @@ CommonPerson
 
 Properties
 Name	Type	Required	Restrictions	Description
-lastUpdateTime	DateTimeString	mandatory	none	The date and time that this record was last updated by the customer. If no update has occurred then this date should reflect the initial creation date for the data
+lastUpdateTime	DateTimeString	optional	none	The date and time that this record was last updated by the customer. If no update has occurred then this date should reflect the initial creation date for the data
 firstName	string	optional	none	For people with single names this field need not be present. The single name should be in the lastName field
 lastName	string	mandatory	none	For people with single names the single name should be in this field
 middleNames	[string]	mandatory	none	Field is mandatory but array may be empty
@@ -6643,7 +6627,6 @@ CommonPersonDetail
   ],
   "physicalAddresses": [
     {
-      "purpose": "REGISTERED",
       "addressUType": "simple",
       "simple": {
         "mailingName": "string",
@@ -6661,7 +6644,9 @@ CommonPersonDetail
         "thoroughfareNumber1Suffix": "string",
         "thoroughfareNumber2": 0,
         "thoroughfareNumber2Suffix": "string",
+        "flatUnitType": "string",
         "flatUnitNumber": "string",
+        "floorLevelType": "string",
         "floorLevelNumber": "string",
         "lotNumber": 0,
         "buildingName1": "string",
@@ -6676,7 +6661,8 @@ CommonPersonDetail
         "localityName": "string",
         "postcode": "string",
         "state": "string"
-      }
+      },
+      "purpose": "REGISTERED"
     }
   ]
 }
@@ -6714,7 +6700,7 @@ CommonOrganisation
 
 Properties
 Name	Type	Required	Restrictions	Description
-lastUpdateTime	DateTimeString	mandatory	none	The date and time that this record was last updated by the customer. If no update has occurred then this date should reflect the initial creation date for the data
+lastUpdateTime	DateTimeString	optional	none	The date and time that this record was last updated by the customer. If no update has occurred then this date should reflect the initial creation date for the data
 agentFirstName	string	optional	none	The first name of the individual providing access on behalf of the organisation. For people with single names this field need not be present. The single name should be in the lastName field
 agentLastName	string	mandatory	none	The last name of the individual providing access on behalf of the organisation. For people with single names the single name should be in this field
 agentRole	string	mandatory	none	The role of the individual identified as the agent who is providing authorisation. Expected to be used for display. Default to “Unspecified” if the role is not known
@@ -6755,7 +6741,6 @@ CommonOrganisationDetail
   "establishmentDate": "string",
   "physicalAddresses": [
     {
-      "purpose": "REGISTERED",
       "addressUType": "simple",
       "simple": {
         "mailingName": "string",
@@ -6773,7 +6758,9 @@ CommonOrganisationDetail
         "thoroughfareNumber1Suffix": "string",
         "thoroughfareNumber2": 0,
         "thoroughfareNumber2Suffix": "string",
+        "flatUnitType": "string",
         "flatUnitNumber": "string",
+        "floorLevelType": "string",
         "floorLevelNumber": "string",
         "lotNumber": 0,
         "buildingName1": "string",
@@ -6788,7 +6775,8 @@ CommonOrganisationDetail
         "localityName": "string",
         "postcode": "string",
         "state": "string"
-      }
+      },
+      "purpose": "REGISTERED"
     }
   ]
 }
@@ -6817,7 +6805,7 @@ CommonPhoneNumber
 
 Properties
 Name	Type	Required	Restrictions	Description
-isPreferred	Boolean	conditional	none	Required to be true for one and only one entry to indicate the preferred phone number. Assumed to be 'false' if not present
+isPreferred	Boolean	optional	none	Required to be true for one and only one entry to indicate the preferred phone number. Assumed to be 'false' if not present
 purpose	string	mandatory	none	The purpose of the number as specified by the customer
 countryCode	string	optional	none	If absent, assumed to be Australia (+61). The + should be included
 areaCode	string	conditional	none	Required for non Mobile Phones, if field is present and refers to Australian code - the leading 0 should be omitted.
@@ -6842,7 +6830,7 @@ CommonEmailAddress
 
 Properties
 Name	Type	Required	Restrictions	Description
-isPreferred	Boolean	mandatory	none	Required for one and only one email record in the collection. Denotes the default email address
+isPreferred	Boolean	optional	none	Required for one and only one email record in the collection. Denotes the default email address
 purpose	string	mandatory	none	The purpose for the email, as specified by the customer (Enumeration)
 address	ExternalRef	mandatory	none	A correctly formatted email address, as defined by the addr_spec format in RFC 5322
 Enumerated Values
@@ -6854,7 +6842,6 @@ purpose	UNSPECIFIED
 CommonPhysicalAddressWithPurpose
 
 {
-  "purpose": "REGISTERED",
   "addressUType": "simple",
   "simple": {
     "mailingName": "string",
@@ -6872,7 +6859,9 @@ CommonPhysicalAddressWithPurpose
     "thoroughfareNumber1Suffix": "string",
     "thoroughfareNumber2": 0,
     "thoroughfareNumber2Suffix": "string",
+    "flatUnitType": "string",
     "flatUnitNumber": "string",
+    "floorLevelType": "string",
     "floorLevelNumber": "string",
     "lotNumber": 0,
     "buildingName1": "string",
@@ -6887,19 +6876,20 @@ CommonPhysicalAddressWithPurpose
     "localityName": "string",
     "postcode": "string",
     "state": "string"
-  }
+  },
+  "purpose": "REGISTERED"
 }
 
 Properties
 allOf
 
 Name	Type	Required	Restrictions	Description
-anonymous	object	optional	none	none
-» purpose	string	mandatory	none	Enumeration of values indicating the purpose of the physical address
+anonymous	CommonPhysicalAddress	optional	none	none
 and
 
 Name	Type	Required	Restrictions	Description
-anonymous	CommonPhysicalAddress	optional	none	none
+anonymous	object	optional	none	none
+» purpose	string	mandatory	none	Enumeration of values indicating the purpose of the physical address
 Enumerated Values
 Property	Value
 purpose	REGISTERED
@@ -6927,7 +6917,9 @@ CommonPhysicalAddress
     "thoroughfareNumber1Suffix": "string",
     "thoroughfareNumber2": 0,
     "thoroughfareNumber2Suffix": "string",
+    "flatUnitType": "string",
     "flatUnitNumber": "string",
+    "floorLevelType": "string",
     "floorLevelNumber": "string",
     "lotNumber": 0,
     "buildingName1": "string",
@@ -6985,7 +6977,9 @@ CommonPAFAddress
   "thoroughfareNumber1Suffix": "string",
   "thoroughfareNumber2": 0,
   "thoroughfareNumber2Suffix": "string",
+  "flatUnitType": "string",
   "flatUnitNumber": "string",
+  "floorLevelType": "string",
   "floorLevelNumber": "string",
   "lotNumber": 0,
   "buildingName1": "string",
@@ -7011,7 +7005,9 @@ thoroughfareNumber1	PositiveInteger	optional	none	Thoroughfare number for a prop
 thoroughfareNumber1Suffix	string	optional	none	Suffix for the thoroughfare number. Only relevant is thoroughfareNumber1 is populated
 thoroughfareNumber2	PositiveInteger	optional	none	Second thoroughfare number (only used if the property has a ranged address eg 23-25)
 thoroughfareNumber2Suffix	string	optional	none	Suffix for the second thoroughfare number. Only relevant is thoroughfareNumber2 is populated
+flatUnitType	string	optional	none	Type of flat or unit for the address
 flatUnitNumber	string	optional	none	Unit number (including suffix, if applicable)
+floorLevelType	string	optional	none	Type of floor or level for the address
 floorLevelNumber	string	optional	none	Floor or level number (including alpha characters)
 lotNumber	PositiveInteger	optional	none	Allotment number for the address
 buildingName1	string	optional	none	Building/Property name 1
@@ -7090,7 +7086,7 @@ errors	[object]	mandatory	none	none
 » title	string	mandatory	none	Must be one of the following: Invalid account
 » detail	string	mandatory	none	ID of the account not found
 » meta	object	optional	none	Optional additional data for specific error types
-BankingEnumProductCategory
+BankingProductCategory
 
 "TRANS_AND_SAVINGS_ACCOUNTS"
 
@@ -7189,7 +7185,7 @@ STUDENT	Only students may apply for the product	NA
 EMPLOYMENT_STATUS	An eligibility constraint based on employment status applies	A description of the status required
 RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
 NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
-OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	Value relevant to the criteria
+OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
 
 Product Fee Types
 Description of the usage of the feeType field as it applies to products.
@@ -7261,7 +7257,7 @@ PURCHASE	Specific rate applied to purchases from the account	NA
 BUNDLE_DISCOUNT_FIXED	A discount rate off the fixed rate obtained by originating a bundle instead of a standalone product	The name of the bundle
 BUNDLE_DISCOUNT_VARIABLE	A discount rate off the variable rate obtained by originating a bundle instead of a standalone product	The name of the bundle
 Admin APIs
-This provides an overview of CDS Administration Endpoints. Please note this API is intended for Data Holders only.
+This provides an overview of CDS Administration Endpoints. Please note this API is intended for Data Holders/ Recipients only.
 
 
 Admin Swagger (JSON)
@@ -7270,17 +7266,22 @@ Metadata Update
 
 Code samples
 
-POST https://data.provider.com.au/cds-au/v1/admin/registry/metadata HTTP/1.1
-Host: data.provider.com.au
+POST https://data.holder.com.au/cds-au/v1/admin/registry/metadata HTTP/1.1
+Host: data.holder.com.au
 Content-Type: application/json
 
+x-v: string
+x-min-v: string
+
 var headers = {
-  'Content-Type':'application/json'
+  'Content-Type':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/admin/registry/metadata',
+  url: 'https://data.holder.com.au/cds-au/v1/admin/registry/metadata',
   method: 'post',
 
   headers: headers,
@@ -7303,26 +7304,35 @@ Body parameter
 }
 Parameters
 Name	In	Type	Required	Description
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 body	body	RequestMetaDataUpdate	mandatory	none
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	None
- This operation may only be call by the CDR Registry
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ This operation may only be call by the CDR Register
 Get Metrics
 
 Code samples
 
-GET https://data.provider.com.au/cds-au/v1/admin/metrics HTTP/1.1
-Host: data.provider.com.au
+GET https://data.holder.com.au/cds-au/v1/admin/metrics HTTP/1.1
+Host: data.holder.com.au
 Accept: application/json
+x-v: string
+x-min-v: string
 
 var headers = {
-  'Accept':'application/json'
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string'
 
 };
 
 $.ajax({
-  url: 'https://data.provider.com.au/cds-au/v1/admin/metrics',
+  url: 'https://data.holder.com.au/cds-au/v1/admin/metrics',
   method: 'get',
 
   headers: headers,
@@ -7338,9 +7348,10 @@ This end point allows the ACCC to obtain operational statistics from the Data Ho
 Parameters
 Name	In	Type	Required	Description
 period	query	string	optional	The period of metrics to be requested. Values can be CURRENT_DAY (meaning metrics for current day), HISTORIC (meaning metrics for previous days or months) or ALL. If absent the default is ALL.
+x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. If the version(s) requested is not supported then the holder should respond with a 406 Not Acceptable. See here
+x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the holder should respond with a 406 Not Acceptable.
 Enumerated Values
 Parameter	Value
-period	CURRENT
 period	CURRENT_DAY
 period	HISTORIC
 period	ALL
@@ -7458,17 +7469,21 @@ Example responses
       ]
     },
     "customerCount": 0,
-    "recipientCount": 0,
-    "links": {
-      "self": "string"
-    },
-    "meta": {}
-  }
+    "recipientCount": 0
+  },
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
 }
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseMetricsList
- This operation may only be call by the CDR Registry
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the holder has responded with.
+ This operation may only be call by the CDR Register
+Schemas
 RequestMetaDataUpdate
 
 {
@@ -7598,12 +7613,12 @@ ResponseMetricsList
       ]
     },
     "customerCount": 0,
-    "recipientCount": 0,
-    "links": {
-      "self": "string"
-    },
-    "meta": {}
-  }
+    "recipientCount": 0
+  },
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
 }
 
 Properties
@@ -7621,8 +7636,8 @@ data	object	mandatory	none	none
 » rejections	RejectionMetrics	conditional	none	Number of calls rejected due to traffic thresholds over time
 » customerCount	integer	conditional	none	Number of customers with active authorisations at the time of the call
 » recipientCount	integer	conditional	none	Number of data recipients with active authorisations at the time of the call
-» links	Links	mandatory	none	none
-» meta	Meta	optional	none	none
+links	Links	mandatory	none	none
+meta	Meta	optional	none	none
 AvailabilityMetrics
 
 {
@@ -7860,49 +7875,206 @@ Authorisation Scopes
 The following authorisation scopes have been defined for the standards. Each API end point will specify which scopes are required to access the data available via that end point.
 
 Scope Name	Scope ID	Description
-Basic Bank Account Data	bank_basic_accounts	This scope would allow for the third party to access basic information of the customer’s accounts.
+Basic Bank Account Data	bank:accounts.basic:read	This scope would allow for the third party to access basic information of the customer’s accounts.
 
 Includes simple account information including balance.
 Does not include account identifiers, product information or transaction data.
-Detailed Bank Account Data	bank_detailed_accounts	This scope would allow for the third party to access detailed information of the customer’s accounts. This scope is effectively additional authorisation to the Basic Bank Account Data scope. Granting this authorisation only makes sense if the Bank Account Data scope is also authorised.
+Detailed Bank Account Data	bank:accounts.detail:read	This scope would allow for the third party to access detailed information of the customer’s accounts. This scope is effectively additional authorisation to the Basic Bank Account Data scope. Granting this authorisation only makes sense if the Bank Account Data scope is also authorised.
 
 Includes basic account information plus account identifiers and product information.
 Does not include transaction data.
-Bank Transaction Data	bank_transactions	This scope would allow the third party to access transaction data for accounts. This scope is effectively additional authorisation to the Basic Bank Account Data scope. Granting this authorisation only makes sense if the Basic Bank Account Data scope is also authorised.
+Bank Transaction Data	bank:transactions:read	This scope would allow the third party to access transaction data for accounts. This scope is effectively additional authorisation to the Basic Bank Account Data scope. Granting this authorisation only makes sense if the Basic Bank Account Data scope is also authorised.
 
 Includes all account transaction data.
-Bank Payee Data	bank_payees	This scope allows access to payee information stored by the customer.
+Bank Payee Data	bank:payees:read	This scope allows access to payee information stored by the customer.
 
 Includes payee information such as billers, international beneficiaries and domestic payees.
-Bank Regular Payments	bank_regular_payments	The scope would allow the third party to access regular payments. Includes Direct Debits and Scheduled Payments.
-Basic Customer Data	common_basic_customer	The scope would allow the third party to access personally identifiable information about the customer. For retail customers this would be information about the customer themselves. For business customers it would imply the name of specific user but also information about the business.
+Bank Regular Payments	bank:regular_payments:read	The scope would allow the third party to access regular payments. Includes Direct Debits and Scheduled Payments.
+Basic Customer Data	common:customer.basic:read	The scope would allow the third party to access personally identifiable information about the customer. For retail customers this would be information about the customer themselves. For business customers it would imply the name of specific user but also information about the business.
 
 Includes name and occupation for individuals or name, business numbers and industry code for organisations
-Detailed Customer Data	common_detailed_customer	The scope would allow the third party to access more detailed information about the customer. Includes the data available with the Basic Customer Data scope plus contact details.
+Detailed Customer Data	common:customer.detail:read	The scope would allow the third party to access more detailed information about the customer. Includes the data available with the Basic Customer Data scope plus contact details.
 
 Includes basic data plus phone, email and address information.
 Public	NA	Openly accessible information. A customer would never need to grant this scope. This scope is included so that end points that can be called without requiring authorisation can be identified.
 
 Includes access to openly available information such as generic product information.
+Non-functional Requirements
+ This section of the standards are not yet considered binding.
+
+It is intended that an analysis of actual usage in a production implementation for a period of time is conducted to validate that the specific thresholds stipulated in this section are made binding.
+The non-functional requirements (NFRs) for the Consumer Data Right regime cover a number of considerations:
+
+Minimum performance and availability expectations for data holders. Included to ensure a reliable and performant service is offered to data recipients and customers.
+Maximum traffic expectations for data holders. Included to ensure there is a ceiling for the amount of traffic that a data holder is expected to service.
+Requirements for reporting of performance. Included to provide transparency of performance without the need for time consuming auditing or inspection.
+Requirements for data latency and quality. Included to give a clear indication to the depth and recency of the data available under the regime.
+Limitations on the number of calls that a data recipient can make to a single provider. Included to protect data holders from poorly designed or overly transactional data recipient implementations.
+Definitions
+In the following definition of NFRs specific terms have the following meanings:
+
+Data Recipient: For the purposes of these NFRs a data recipient is defined as a configured application presented in the register meta data. This acknowledges that a single accredited entity may be able to register multiple independent services (or apps) that can obtain authorisations from consumers independently of each other.
+Session: A session is defined as the life span of a unique Access Token. Multiple API requests made with a single, valid, Access Token would be considered part of a single Session.
+Customer Present: Authenticated API requests made in direct response to interactions by the end customer using the digital services of the data recipient will be considered “Customer Present”. Technically a data holder will define an API request as “Customer Present” if, and only if, the x-fapi-customer-ip-address header is populated with a valid IP address of the end customer’s device.
+Customer Not Present: Authenticated API requests that are not deemed to be “Customer Present”
+Unattended: A synonym of “Customer Not Present”
+Authenticated: API requests to API end points that the standards require to be protected by security mechanisms that enforce explicit customer authorisation
+Unauthenticated: API requests to API end points that the standards deem to be publically available. This implies that these end points may be accessed by any client without the client performing any authentication or authorisation actions
+High Traffic Period: Any time in the 18 hour period between 6am and 12am (midnight) is considered to be a high traffic period
+Low Traffic Period: Any time of the day not considered to be included in a high traffic period.
+Session Requirements
+A expiry time of a unique session should be set according to the statements included in the Security Profile.
+
+After a unique session is expired it is expected that the data recipient, for the same customer, may establish a new session as long as the authorisation is still valid.
+
+Availability Requirements
+Service availability requirement for data holders: 99.5% per month
+
+The definition of a period of unavailability is any period of time when any of the API end points defined in the standard is unable to reliably provide a successful response to an appropriately constructed request.
+
+The availability requirement applies to both authenticated and unauthenticated end points.
+
+The availability requirement does not include planned outages. Planned outages should be:
+
+Commensurate in length and frequency to other primary digital channels offered by the data holder,
+Published to data recipients with at least one week lead time (notification method to be defined) for normal outages,
+May occur without notification if the change is to resolve a critical service or security issue.
+Performance Requirements
+API end point performance will be measured in response time of individual API requests from receipt of request to delivery of response.
+
+It is understood that different response times can be measured depending on which technical layer of an API implementation stack is instrumented and that not all of the technical layers between the data recipient and the data holder will be in the control of the data holder. As this is implementation specific it is expected that the data holder will ensure that the measurement of response time occurs as close to the data recipient as practicable.
+
+In light of these considerations, the performance requirement for data holders is:
+
+95% of calls per hour responded to within a nominated threshold
+
+The nominated threshold for each end point will be according to the following table:
+
+Tier	Response Time	Applies To…
+Unauthenticated	1500ms	All unauthenticated end points
+High Priority	1000ms	Customer Present calls to the following end points:
+InfoSec end points
+Health Check (to be included in Admin end points)
+Get Accounts
+Get Customer
+Get Customer Detail
+Low Priority	1500ms	Customer Present calls to the following end points:
+Get Account Detail
+Get Bulk Balances
+Get Balances For Specific Accounts
+Get Transactions For Account
+Get Transaction Detail
+Get Payees
+Get Payee Detail
+Get Direct Debits For Account
+Unattended	4000ms	Unattended calls to High Priority or Low Priority end points.
+Additional Admin end points.
+Large Payload	6000ms	Any call to the following end points:
+Get Bulk Transactions
+Get Transactions For Specific Accounts
+Get Bulk Direct Debits
+Get Direct Debits For Specific Accounts
+Note that calls initiated in excess of a traffic threshold (see next section) may be excluded from the performance requirement.
+
+Traffic Thresholds
+Calls in excess of the following traffic thresholds will be able to be freely throttled or rejected by a data holder without impact to their performance or availability requirements.
+
+Traffic thresholds will be set using the following metrics:
+
+Number of sessions per day – the number of individual sessions initiated in a calendar day.
+Transactions Per Second (TPS) – the number of concurrent transactions each second.
+Number of calls – the number of end point calls initiated for a specified duration.
+For Customer Present and authorisation traffic the following traffic thresholds will apply:
+
+Unlimited sessions per day
+10 TPS per customer
+50 TPS per data recipient
+For Unattended traffic the following traffic thresholds will apply for low traffic periods:
+
+20 sessions per day, per customer, per data recipient
+100 total calls per session
+5TPS per session
+50 TPS per data recipient
+For Unattended traffic during high traffic periods only best effort support is required.
+
+For secure traffic (both Customer Present and Unattended) the following traffic thresholds will apply:
+
+300 TPS total across all consumers
+For Public traffic (i.e. traffic to unauthenticated end points) the following traffic thresholds will apply:
+
+300 TPS total across all consumers (additive to secure traffic)
+Data Recipient Requirements
+Data recipients will be limited by the traffic thresholds documented in the previous section. In addition to this data recipients are expected to design their services according to the following principles:
+
+Services should be designed to minimise traffic with data holders
+Services should be designed to be resilient in the case of the rejection of a call by a data holder due to traffic threshold breaches
+Services should schedule unattended calls to avoid high traffic periods
+Unattended calls should be managed to avoid short term bursts of traffic
+Reporting Requirements
+The mechanism for reporting will be via administration end points that are yet to be defined.
+
+The following information is to be reported:
+
+Availability for current month
+Availability for each of the previous twelve months
+Percentage of calls within performance threshold for current day
+Percentage of calls within performance threshold for each of the previous seven days
+Number of calls within each performance tier for current day
+Number of calls within each performance tier for each of the previous seven days
+Average response time within each performance tier for current day
+Average response time within each performance tier for each of the previous seven days
+Number of sessions for current day
+Number of sessions for each of the previous seven days
+Peak total TPS for current day
+Peak total TPS for each of the previous seven days
+Average TPS for current day
+Average TPS for each of the previous seven days
+Number of calls resulting in error due to server execution for current day
+Number of calls resulting in error due to server execution for each of the previous seven days
+Number of calls rejected due to traffic thresholds for current day
+Number of calls rejected due to traffic thresholds for each of the previous seven days
+Number of customers with active authorisations
+Number of data recipients with active authorisations
+Data Latency
+Within this proposal there is no specific requirement with regard to data latency (ie. how up to date data should be). Instead, the requirement for data latency is that data presented via API end points should be commensurate to data presented via other primary digital channels.
+
+For example, for a Bank that provides a mobile application as their primary digital experience, a balance presented via one of the balance end points should be the same as the balance presented through the mobile application.
+
+Data Quality
+Data holders are required to take reasonable steps to ensure that CDR data, having regard to the purpose for which it is held, is accurate and up to date.
+
+A data holder is required to be able to demonstrate that reasonable steps to maintain data quality are being undertaken.
+
+Exemptions To Protect Service
+In the event of the following extreme circumstances data holders will be able to obtain relief from non-functional requirements:
+
+Periods of time when the digital channels for the data holder are the target for a distributed denial of service or equivalent form of attack.
+A significant increase in traffic from a poorly designed or misbehaving data recipient.
 Known Issues
 There are certain aspects of the standards that are actively under review. These known issues are articulated in the following table.
 
 Issue	Description
 Swagger limitations	Due to the use of Swagger 2 and limitations in swagger related to representation of OIDC flows and explicit formats for common types consideration is being given how best to represent this information
 End point version	End point versions are included in a swagger extension but are not appearing yet in the automatically generated documentation
-Conditional restriction	The conditionally required attribute for fields is included in a swagger extension but is not appearing yet in the automatically generated documentation
 Example data	Addition of example data for each field needs to be added to the swagger to improve the automatically generated sample json snippets
-Product reference payloads	The product reference payloads are under active review and have not yet been substantially changed from the version published on 2nd November 2018. It is expected that changes arising from feedback will be made in the near term
 Specific error codes	Feedback has been provided that additional specific errors would be of value. This is under consideration
-Discoverability	A proposal for end point and version discoverability is under consideration.
-Administration end points	The end points to support administration and reporting are outstanding. The definition of these end points is dependent on clarity of the directory specification.
-InfoSec merge	The informations security standards have been under development under a separate repository. Once this work stabilises it will be merged with these standards into a single site.
 Additional link fields	The inclusion of additional links to aid traversal of the end points has been suggested. This is under consideration.
-Non-functional requirements	Non-functional requirements are being reviewed and a proposal has been provided to the community for feedback. More work is required before this issue can be resolved.
 Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+15/7/2019	0.9.5	Incorporated May 2019 Feedback	This version incorporates the decisions arising from the consultation feedback obtained on the May 2019 draft of the standards (v0.9.3)
+27/6/2019	0.9.4	Documentation and error fixes from May draft	
+Added missing versioning headers x-v/ x-min-v
+Removed Banking API's tag
+Fixed nonBusinessDayTreatment enum default is an array
+Removal of empty x-scope in product reference
+BankingScheduledPaymentRecurrence removed required intervals field
+Added Swagger Contact object
+BankingScheduledPaymentRecurrence removed required intervals field
+Minor updates to static documentation typos/ broken links
+Added cross links to additionalValue descriptions for Product Reference enums
+Minor updates to product reference samples
 29/5/2019	0.9.3	Final updates for May Draft	Addition of Discoverability, InfoSec Profile and minor corrections
 28/5/2019	0.9.2	Admin End Points	Added separate swagger/yaml as well as documentation for admin end points
 28/5/2019	0.9.1	Modified BankingProductRateTier.maximumValue to optional	Rebuild of docs
@@ -7958,4 +8130,3 @@ Corrected for JSON syntax errors
 Standardised Operation IDs and Model names
 Change $type fields to PType (also fixed in doco)
 18/12/2018	0.1.0	Addition of change log	This change log was added to the standards documentation
-shelljavascript
