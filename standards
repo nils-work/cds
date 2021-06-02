@@ -62,13 +62,16 @@ Banking Term Deposit Account Types	Data Holders who support maturity instruction
 Token Introspection Endpoint claims	Mandatory claims were updated in accordance with RFC7662	November 1st 2020
 Amending Consent	Data Holders MAY implement the following standards from July 1st 2021 when a CDR consumer is invited to amend a current authorisation as per rule 4.22A and the ADR has supplied a cdr_arrangement_id	July 1st 2021
 Amending Consent	Data Holders MUST implement the following standards from November 1st 2021 when a CDR consumer is invited to amend a current authorisation as per rule 4.22A and the ADR has supplied a cdr_arrangement_id	November 1st 2021
+Standard Error Codes	Data Recipients and Data Holders MAY implement the standard error codes from July 1st 2021	July 1st 2021
+Standard Error Codes	Data Recipients and Data Holders MUST implement the standard error codes from February 1st 2022	February 1st 2022
+Standard Error Codes	Data Holders MAY retire application-specific error codes in favour of standard error codes from November 1st 2022	November 1st 2022
 Endpoint Version Schedule
 A table-view of all endpoint versioning is available here.
 
 Please note this is currently experimental.
 
 Standards
-These standards represent version 1.9.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.10.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
 
@@ -173,21 +176,31 @@ http://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products
 http://www.energyretailer.com.au/api/cds-au/v1/energy/usage
 
 The URI structure for API end points in the standards MUST be implemented as follows:
-<holder path> / cds-au / <version> / <industry> / <resource>
+uri-string = <holder-path> "/" cds-au "/" <version> "/" <industry> "/" <resource>
+
 
 The components of this URI structure are described as follows:
 
-Holder Path: The holder path is a base path set by the data holder. It can be any URI desired by the holder. While all authenticated end points must be accessible under the same holder path the data holder may stipulate a different holder path for unauthenticated end points.
-“cds-au”: This is a static string representing the end points defined by the Consumer Data Standards for Australia. This static string allows for separation from other APIs available at the same base holder path and also allows for extension if the standards are adopted by another jurisdiction in whole or in part.
-Version: The major version of the high level standards. This is not the version of the endpoint or the payload being requested but the version of the overall standards being applied. This version number will be “v” followed by the major version of the standards as a positive integer (e.g. v1, v12 or v76).
-Industry: A static string used to separate APIs for a specific industry. As standards for new industries are defined the list of industry strings will be extended.
-Resource: The URI for the specific resource requested. This end point URI will be defined as part of the end point definitions for each API group.
-Note that the currently accepted values for the Industry component of the base path are:
+<holder-path>  = string.
+The holder path is a base path set by the data holder. It can be any URI desired by the holder. While all authenticated end points must be accessible under the same holder path the data holder may stipulate a different holder path for unauthenticated end points.
 
-banking – for APIs related to banking and potentially wider financial services data
-energy – for APIs related to the energy distribution industry
-telco – for APIs related to telecommunications
-common – for APIs that potentially span industries
+cds-au         = "cds-au" string.
+This is a static string representing the end points defined by the Consumer Data Standards for Australia. This static string allows for separation from other APIs available at the same base holder path and also allows for extension if the standards are adopted by another jurisdiction in whole or in part.
+
+<version>      = "v1" string.
+The major version of the high level standards. This is not the version of the endpoint or the payload being requested but the version of the overall standards being applied. This version number will be “v” followed by the major version of the standards as a positive integer (e.g. v1, v12 or v76).
+
+<industry>     = banking / energy / telco / common
+A static string used to separate APIs for a specific industry. As standards for new industries are defined the list of industry strings will be extended.
+Note that the currently accepted values for the industry component of the base path are:
+banking = "banking" string. For APIs related to banking and potentially wider financial services data,
+energy  = "energy" string. For APIs related to the energy distribution industry,
+telco   = "telco" string. For APIs related to telecommunications,
+common  = "common" string. For APIs that potentially span industries.
+
+<resource>     = string.
+The URI for the specific resource requested. This end point URI will be defined as part of the end point definitions for each API group.
+
 Resource URIs
 Resources that are collections, and members of collections, will follow the JSONAPI.org recommendation.
 
@@ -234,7 +247,9 @@ Accept: AppliCAtion/JSon;Charset=uTf-8
 
 Header Field	Description	Mandatory?
 Content-Type	Standard HTTP Header. Represents the format of the payload provided in the request. The media type must be set to application/json. Mandatory for PUT and POST calls.	Conditional
-Accept	If specified, the media type must be set to application/json, unless otherwise specified in the resource end point standard. \n\n If set to an unacceptable value the holder must respond with a 406 Not Acceptable. If not specified, or a wildcard (/) is provided, the default media type is application/json.	Optional
+Accept	If specified, the media type must be set to application/json, unless otherwise specified in the resource end point standard.
+
+If set to an unacceptable value the holder must respond with a 406 Not Acceptable. If not specified, or a wildcard (*/*) is provided, the default media type is application/json.	Optional
 x-v	Version of the API end point requested by the client. Must be set to a positive integer. The holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent.
 If all versions requested are not supported then the holder must respond with a 406 Not Acceptable.	Mandatory
 x-min-v	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent.
@@ -254,7 +269,7 @@ Content-Type	Standard HTTP Header. Represents the format of the payload returned
 Must be application/json unless otherwise specified in the resource end point standard.	Mandatory
 Retry-After	Header indicating the time (in seconds) that the client should wait before retrying an operation. The holder should include this header along with responses with the HTTP status code of 429 Too many requests.	Optional
 x-v	The version of the API end point that the holder has responded with.	Mandatory
-x-fapi-interaction-id	An [RFC4122] UUID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding request header or to a new [RFC4122] UUID value if the request header was not provided.	Mandatory
+x-fapi-interaction-id	An [RFC4122] UUID used as a correlation id. The data holder must set the response header x-fapi-interaction-id to the value received from the corresponding request header or to a new [RFC4122] UUID value if the request header was not provided. This header MUST be responded for success and error responses for authenticated APIs.	Mandatory
 Additional Headers
 Generally understood headers used in HTTP transactions to provide caching guidance and the use of the compression are not specified but are considered acceptable. It is at the discretion of the data holder if these headers are used for a specific implementation. Data holders should not require these headers for successful API access, however.
 
@@ -269,6 +284,7 @@ The response is not modified since last call	304 Not Modified	May be returned if
 Request has malformed, missing or non-compliant JSON body or URL parameters	400 Bad Request	The requested operation will not be carried out.	Yes	Yes	Yes
 Authorization header missing or invalid token	401 Unauthorized	The operation was refused access. Re-authenticating may result in an appropriate token that may be used.	Yes	Yes	Yes
 Token has incorrect scope or a security policy was violated.	403 Forbidden	The operation was refused access. Re-authenticating is unlikely to remediate the situation. It is expected that this error will result in an error payload	Yes	Yes	Yes
+The resource matching the request URI is not known or is unable to be processed due to business logic specific to the resource being requested	404 Not Found	No indication is given of whether the condition is temporary or permanent. This response code MUST NOT be used for resources presented in the body of the request.	Yes	Yes	Yes
 The consumer tried to access the resource with a method that is not supported.	405 Method Not Allowed		Yes	Yes	Yes
 The request contained an Accept header other than permitted media types, a character set other than UTF-8 or a version that was not supported	406 Not Acceptable		Yes	Yes	Yes
 The operation was refused because the payload is in a format not supported by this method on the target resource.	415 Unsupported Media Type		Yes	No	No
@@ -345,12 +361,8 @@ The links object will contain links to related API end points. This will include
 
 The links object MUST contain a field named self that will have the fully qualified URI to the current request as a value.
 
-The errors object will be an array of zero or more unnamed objects. The fields in each of these objects will be as follows:
+The errors object is defined in the Error Codes section.
 
-code field MUST be present: holds an end point specific error code
-title field MUST be present: holds a human readable label of the error that is constant per code
-detail field MUST be present: holds a human readable description of this specific error
-meta object MAY be present: holds additional end point specific data relevant to the error
 Field Naming Conventions
 Valid Characters In Field Names
 All field names defined in either a request or response payload MUST be treated as case sensitive by clients and servers, and they MUST meet all of the following conditions:
@@ -398,7 +410,7 @@ Optional fields MAY be present but this is not guaranteed. It is also valid for 
 
 Conditional fields MUST have an associated conditional statement. If the conditional statement is true in a specific request or response the field is considered mandatory. If the conditional statement is false then the field is considered optional.
 
- Note that for optional fields are not considered optionally implementable by a Data Holder. For instance, if a Data Holder holds data in digital form for a Customer that is represented in a payload then it is expected that this data will be shared when authorised by the Customer. For payloads unrelated to Customers, such as product reference data, there is more discretion for the Data Holder but other drivers, such as complementary regulation or the requirement to align to other channels, should be taken into consideration.
+ Note that optional fields are not considered optionally implementable by a Data Holder. For instance, if a Data Holder holds data in digital form for a Customer that is represented in a payload then it is expected that this data will be shared when authorised by the Customer. For payloads unrelated to Customers, such as product reference data, there is more discretion for the Data Holder but other drivers, such as complementary regulation or the requirement to align to other channels, should be taken into consideration.
 Empty/Null Fields
 An empty field (ie. a field that is not present in a payload) will be considered equivalent with a field that is present with a null value.
 
@@ -474,7 +486,7 @@ This applies equally for object arrays. Where a field is defined as an array val
 An empty array is the representation for an array equivalent to an empty string.
 
 Optional fields
-If the field is optional a null value or empty field response is accepted.
+If the field is optional a null value or omission of the field in the response is accepted.
 
 Normative references
 The only exception to this, unless explicitly stated, is normative standards. The requirements for expressing arrays within those normative standards apply per the normative references.
@@ -572,7 +584,7 @@ For each of these fields the page size specified in the request should be assume
 
 Additional Pagination Rules
 Holders are not expected to implement pagination with transaction isolation. The underlying data-set may change between two subsequent requests. This may result in situations where the same transaction is returned on more than one page.
-A maximum page size of 1000 records is assumed for all end points (unless otherwise stipulated in the end point definition). If a page size greater than this maximum is requested then a HTTP status of 422 Unprocessable Entity SHOULD be returned.
+A maximum page size of 1000 records is assumed for all end points (unless otherwise stipulated in the end point definition). If a page size greater than this maximum is requested then an Invalid Page Size error SHOULD be returned.
 Cursor Support
 For performance reasons data holders may wish to support other pagination patterns such as cursors or continuation tokens. While the standard does not explicitly support these additional mechanisms it is considered allowable to implement these patterns and expose them via the pagination links.
 
@@ -590,6 +602,464 @@ IDs SHOULD be unique but that uniqueness may be within a clearly bounded context
 IDs MUST be immutable across sessions and consents but MUST NOT be transferable across data recipients. For example, data recipient A obtaining an account ID would get a different result from data recipient B obtaining the ID for the same account even if the same customer authorised the access. Under this constraint IDs cannot be usefully transferred between client organisations or data holders.
 IDs MUST NOT be transferable between different customers for the same data recipient. For example, a data recipient should obtain a different ID for a joint account if the ID was obtained independently using authorisations from both customers.
 In payloads the field name of “id” should NEVER be used. Each ID field should be meaningfully named so that wherever that ID is used across multiple end points it always refers to the same ID set. For instance, the IDs for accounts would be represented in JSON in a field named “accountId”.
+Error Codes
+These standards define a standard list of error codes that Data Recipients and Data Holders SHOULD or MUST conform to. Further,
+
+Data Recipients and Data Holders SHOULD use the standard error codes as defined
+Where a specific error code MUST be responded, this requirement is stated against the applicable error code or API endpoints
+Where a specific error code MAY be responded, this requirement is stated against the applicable error code or API endpoints
+Data Recipients and Data Holders MAY respond with application-specific error codes and in doing so, MUST respond with the MetaError » urn field populated with the standard CDR error code.
+Error Response Structure
+Non-Normative Example
+
+{
+  "errors": [
+    {
+      "code": "urn:au-cds:error:cds-banking:Authorisation/UnavailableBankingAccount",
+      "title": "Unavailable Banking Account",
+      "description": "808b5b1d-0798-4bdf-a3c8-f9cce2904eb2"
+    }
+  ]
+}
+The errors object will be an array of zero or more unnamed objects. The fields in each of these objects will be as follows:
+
+code field MUST be present: holds an end point specific error code. This MAY be a standard CDR error code or an application-specific error code.
+title field MUST be present: holds a human readable label of the error that is constant per code
+detail field MUST be present: holds a human readable description of this specific error
+meta object MAY be present: holds additional end point specific data relevant to the error
+If a Data Recipient or Data Holder responds with an application-specific error code, the standard CDR URN error code MUST be provided in the MetaError object.
+
+URN Structure
+When responding with a standard CDR error code, the URN structure is defined as follows:
+
+urn-string = "urn:" NID ":" metatype ":" sub-type ":" error-category "/" error-code
+
+NID            = "au-cds" string.
+
+metatype       = "error" string.
+
+sub-type       = cds-all / cds-register / cds-banking / cds-energy
+cds-all      = "cds-all" string. An error code common to all API responses,
+cds-register = "cds-register" string. Reserved for CDR Register issued error codes only,
+cds-banking  = "cds-banking" string. An error code specific to the CDR banking APIs only,
+cds-energy   = "cds-energy" string. An error code specific to the CDR energy APIs only.
+
+error-category = string. The high-level category code for the error defined in the Consumer Data Standards
+
+error-code     = string. The specific error encountered, defined in the Consumer Data Standards
+
+Standard Error Codes
+A list of standard error codes to help categorise an error response. The applicable HTTP response code is also given.
+
+General Errors
+Non-Normative Example
+
+# A request to a Data Holder extension API is made where an application-specific error is returned
+#
+# Request
+POST https://data.acme.com.au/cds-au/v1/banking/ACME-new-loan-application HTTP/1.1
+Host: data.holder.com.au
+Accept: application/json
+x-ACME-v : 7
+
+# Response
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+{
+  "errors": [
+    {
+      "code": "ACME-APPLY-017",
+      "title": "Application Is Missing Product ID",
+      "description": "A new loan application was requested but the product ID was not provided",
+      "meta": {
+         "urn": "urn:au-cds:error:cds-all:GeneralError/Expected"
+      }
+    }
+  ]
+}
+Error Title	Error Code	HTTP Status Category	Description
+Expected Error Encountered	urn:au-cds:error:cds-all:
+GeneralError/Expected	4xx	An error code that can be used, when an expected error occurs that is otherwise not covered by a more specific error.
+
+The error description SHOULD be populated with a meaningful error description, without revealing sensitive information.
+
+An application specific error code MAY be provided. The MetaError » urn MUST be populated with the standard CDR error code.
+Unexpected Error Encountered	urn:au-cds:error:cds-all:
+GeneralError/Unexpected	5xx	An error code that can be used, when an unexpected error occurs.
+
+The error description SHOULD be populated with a meaningful error description, without revealing sensitive information.
+
+An application specific error code MAY be provided. The MetaError » urn MUST be populated with the standard CDR error code.
+Service Unavailable	urn:au-cds:error:cds-all:
+Service/Unavailable	503 (Service Unavailable)	A request is made but the API unavailable as due to an outage.
+
+The error description MAY describe whether the outage is scheduled or unexpected and whether it is fully unavailable or partially unavailable.
+400 Bad Request Errors
+Non-Normative Example
+
+# A request to Get Accounts is made however
+# the value of is-owned is not a Boolean value
+#
+# Request
+GET https://data.holder.com.au/cds-au/v1/banking/accounts?is-owned=2007-05-01 HTTP/1.1
+Host: data.holder.com.au
+Accept: application/json
+
+# Response
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
+{
+  "errors": [
+    {
+      "code": "urn:au-cds:error:cds-all:Field/Invalid",
+      "title": "Invalid Field",
+      "description": "is-owned"
+    }
+  ]
+}
+Error Title	Error Code	Description
+Missing Required Field	urn:au-cds:error:cds-all:
+Field/Missing	The request is missing a mandatory field required for the API. It may be a missing query parameter or missing field in the request payload. This error code can be used, where a more specific validation error is not applicable.
+
+The error description SHOULD be the parameter name of the missing field.
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+Missing Required Header	urn:au-cds:error:cds-all:
+Header/Missing	A required HTTP header has not been provided.
+
+The error description SHOULD be the HTTP header name.
+
+This error code SHOULD be supported for unauthenticated and authenticated APIs.
+Invalid Field	urn:au-cds:error:cds-all:
+Field/Invalid	Applies when the value of the URL parameter or request body parameter is an invalid type or the value violates the field's constraints as defined by the interface contract.
+For example, is-owned is a Boolean but a DateString value is provided.
+
+The error description SHOULD be the parameter name of the invalid field. The error description MAY include further details explaining the valid format.
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+Invalid Header	urn:au-cds:error:cds-all:
+Header/Invalid	Applies when a HTTP Header is provided but the value provided is an invalid type or violates the field type constraints as defined in the Consumer Data Standards.
+
+The error description SHOULD be the HTTP header name. The error description MAY include further details explaining the valid format.
+
+This error code SHOULD be supported for unauthenticated and authenticated APIs.
+Invalid Date	urn:au-cds:error:cds-all:
+Field/InvalidDateTime	An invalid date is provided. For example, a future date value is expected, but a date in past or current date is supplied. Applies to DateTimeString, DateString, and TimeString field types.
+
+The error description SHOULD be the parameter name of the invalid date field. The error description MAY include further details explaining the expected date value.
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+Invalid Page Size	urn:au-cds:error:cds-all:
+Field/InvalidPageSize	The value provided in the page-size pagination field is greater than the maximum allowed by the Consumer Data Standards (page_size > 1000).
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+Invalid Version	urn:au-cds:error:cds-all:
+Header/InvalidVersion	A request is made for a version that is not a PositiveInteger.
+For example:
+x-min-v, x-v or x-<HID>-v are not Integers (e.g. x-min-v=foo, x-v=bar, x-ACME-v=cheese)
+x-min-v, x-v or x-<HID>-v are not positive-value integers (they are an Integer but <= 0)
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+
+If the version header is a PositiveInteger but is not a version supported by the Data Holder, the Unsupported Version code applies.
+403 (Forbidden) Errors
+Error Title	Error Code	Description
+ADR Status Is Not Active	urn:au-cds:error:cds-all:
+Authorisation/AdrStatusNotActive	The ADR or the ADR's software product is not "active".
+
+The error description SHOULD contain the current status of the ADR software product.
+Consent Is Revoked	urn:au-cds:error:cds-all:
+Authorisation/RevokedConsent	The consumer's consent is no longer authorised (for example revoked or expired) and the requested resource will not be provided.
+
+This error code SHOULD be supported for authenticated APIs.
+Consent Is Invalid	urn:au-cds:error:cds-all:
+Authorisation/InvalidConsent	The authorised consumer's consent is not associated to the resource requested, is insufficient to execute the resource or is in a status that prevents the resource being executed.
+
+For example, if consent is awaiting authorisation of a secondary account holder.
+
+The error description SHOULD be a description of the status of consent without revealing sensitive information.
+
+This error code SHOULD be supported for authenticated APIs.
+404 (Not Found) Errors
+Non-Normative Examples
+
+# A request to a resource endpoint that does not exist
+#
+# Request
+GET https://data.holder.com.au/cds-au/v1/banking/payments/294819e6-7ae0-4e20-900a-6a733fd97854/location HTTP/1.1
+Host: data.holder.com.au
+Accept: application/json
+
+# Response
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+{
+  "errors": [
+    {
+      "code": "urn:au-cds:error:cds-all:Resource/NotFound",
+      "title": "Resource Not Found"
+    }
+  ]
+}
+
+# A request to a resource endpoint that exists in the data standards,
+# but is not currently implemented
+#
+# Request
+POST https://data.holder.com.au/cds-au/v1/admin/register/metadata HTTP/1.1
+Host: data.holder.com.au
+Accept: application/json
+
+# Response
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+{
+  "errors": [
+    {
+      "code": "urn:au-cds:error:cds-all:Resource/NotImplemented",
+      "title": "Resource Not Implemented"
+    }
+  ]
+}
+
+#
+# A request to a resource that is temporarily unavailable
+#
+# Request
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/b3f0c9d0/transactions/52e443ae13c5 HTTP/1.1
+Host: data.holder.com.au
+Accept: application/json
+
+# Response
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+{
+  "errors": [
+    {
+      "code": "urn:au-cds:error:cds-all:Resource/Unavailable",
+      "title": "Unavailable Resource",
+      "description": "52e443ae13c5"
+    }
+  ]
+}
+
+#
+# A request to a get a banking account that is invalid
+#
+# Request
+GET https://data.holder.com.au/cds-au/v1/banking/accounts/invalid-id/ HTTP/1.1
+Host: data.holder.com.au
+Accept: application/json
+
+# Response
+HTTP/1.1 404 Not Found
+Content-Type: application/json
+{
+  "errors": [
+    {
+      "code": "urn:au-cds:error:cds-banking:Authorisation/InvalidBankingAccount",
+      "title": "Invalid Banking Account",
+      "description": "invalid-id"
+    }
+  ]
+}
+
+Error Title	Error Code	Description
+Resource Not Implemented	urn:au-cds:error:cds-all:
+Resource/NotImplemented	The requested resource URL is a valid API endpoint defined by the Consumer Data Standards, but it is not implemented or not currently supported.
+
+This error code SHOULD be supported for unimplemented APIs.
+Resource Not Found	urn:au-cds:error:cds-all:
+Resource/NotFound	The requested resource URL is not an API endpoint defined by the Consumer Data Standards and it is not a URL recognised by the Data Holder or Data Recipient.
+Invalid Resource	urn:au-cds:error:cds-all:
+Resource/Invalid	The requested resource identifier is permanently unavailable. No subsequent request for the resource will be successful. Applies when the resource ID is provided in the URI.
+
+The error description is the resource ID of the resource being requested.
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+Unavailable Resource	urn:au-cds:error:cds-all:
+Resource/Unavailable	The requested resource identifier is temporarily unavailable. Subsequent requests for the resource may be successful. Applies when the resource ID is provided in the URI.
+
+The error description is the resource ID of the resource being requested.
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+Invalid Banking Account	urn:au-cds:error:cds-banking:
+Authorisation/InvalidBankingAccount	The requested bank account is permanently unavailable. No subsequent request for the account will be successful. Applies when the account ID is provided in the URI.
+
+The error description is the account ID of the resource being requested.
+
+This error code MUST be supported for authenticated APIs.
+Unavailable Banking Account	urn:au-cds:error:cds-banking:
+Authorisation/UnavailableBankingAccount	The requested bank account is temporarily unavailable. Subsequent requests for the account may be successful. Applies when the account ID is provided in the URI.
+
+The error description is the account ID of the resource being requested.
+
+This error code MUST be supported for authenticated APIs.
+406 (Not Acceptable) Errors
+Error Title	Error Code	Description
+Unsupported Version	urn:au-cds:error:cds-all:
+Header/UnsupportedVersion	A request is made for a version that is lower than the minimum version or greater than maximum version the Data Holder supports for the requested endpoint.
+
+The error description MAY include the minimum and maximum versions the Data Holder supports.
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+422 (Unprocessable Entity) Errors
+Non-Normative Example
+
+#
+# A bulk request to a get a banking account that is unavailable
+#
+# Request
+POST https://data.holder.com.au/cds-au/v1/banking/accounts/balances HTTP/1.1
+Host: data.holder.com.au
+Accept: application/json
+
+{
+  "data": {
+    "accountIds": [
+      "b3f0c9d0-457d-4578-b0cd-52e443ae13c5",
+      "b1bccd84-d29a-4233-8e44-be01c74eb85b"
+    ]
+  },
+  "meta": {}
+}
+
+# Response
+HTTP/1.1 422 Unprocessable Entity
+Content-Type: application/json
+{
+  "errors": [
+    {
+      "code": "urn:au-cds:error:cds-all:Authorisation/UnavailableBankingAccount",
+      "title": "Unavailable Banking Account",
+      "description": "b3f0c9d0-457d-4578-b0cd-52e443ae13c5"
+    }
+  ]
+}
+
+Error Title	Error Code	Description
+Invalid Resource	urn:au-cds:error:cds-all:
+Resource/Invalid	The requested resource identifier is permanently unavailable. No subsequent request for the resource will be successful. Applies when the resource ID is provided in the request body.
+
+The error description is the resource ID of the resource being requested.
+
+This error code MUST be supported for authenticated APIs.
+Unavailable Resource	urn:au-cds:error:cds-all:
+Resource/Unavailable	The requested resource identifier is temporarily unavailable. Subsequent requests for the resource may be successful. Applies when the resource ID is provided in the URI.
+
+The error description is the resource ID of the resource being requested.
+
+This error code MUST be supported for authenticated APIs.
+Invalid Banking Account	urn:au-cds:error:cds-banking:
+Authorisation/InvalidBankingAccount	The requested bank account is permanently unavailable. No subsequent request for the account will be successful. Applies when the account ID is provided in the URI.
+
+The error description is the account ID of the resource being requested.
+
+This error code MUST be supported for authenticated APIs.
+Unavailable Banking Account	urn:au-cds:error:cds-banking:
+Authorisation/UnavailableBankingAccount	The requested bank account is temporarily unavailable. Subsequent requests for the account may be successful. Applies when the account ID is provided in the URI.
+
+The error description is the account ID of the resource being requested.
+
+This error code MUST be supported for authenticated APIs.
+Invalid Consent Arrangement	urn:au-cds:error:cds-all:
+Authorisation/InvalidArrangement	The arrangement being executed has previously been revoked and no further action will be taken.
+
+The error description is the CDR Arrangement ID of the being executed.
+
+This error code MUST be supported for the Data Recipient and Data Holder CDR Arrangement Revocation endpoint.
+Invalid Page	urn:au-cds:error:cds-all:
+Field/InvalidPage	The page being requested it out of of range. For example, the valid pagination range is 5 pages and the client requested page=10).
+
+The error description SHOULD be the maximum number of pages that are available.
+
+This error code MUST be supported for unauthenticated and authenticated APIs.
+CDR Register Errors
+The following error codes apply to responses from the CDR Register. Data Recipient and Data Holder clients requesting data from the CDR Register may expect the following standard CDR error codes to be encountered:
+
+Error Title	Error Code	HTTP Status Category	Description
+Invalid Brand	urn:au-cds:error:cds-register:
+Field/InvalidBrand	404 (Not Found)	The brand provided to get the Data Recipient software statement assertion is invalid. Applies to the dataRecipientBrandId path parameter for CDR Register APIs.
+Invalid Industry	urn:au-cds:error:cds-register:
+Field/InvalidIndustry	404 (Not Found)	The industry requested in the path to get Data Recipient or Data Holder metadata is invalid / does not exist and cannot be found. Applies to the industry path parameter for CDR Register APIs.
+Invalid Software Product	urn:au-cds:error:cds-register:
+Field/InvalidSoftwareProduct	404 (Not Found)	The software product requested to get the Data Recipient software statement assertion is invalid or cannot be found. Applies to the softwareProductId path parameter.
+Processing Errors
+When a server encounters multiple problems for a single request, the most generally applicable HTTP error code SHOULD be used in the response. For instance, 400 Bad Request might be appropriate for multiple 4xx errors or 500 Internal Server Error might be appropriate for multiple 5xx errors.
+
+A server MAY choose to stop processing as soon as a problem is encountered, or it MAY continue processing and encounter multiple problems. For instance, a server might process multiple attributes and then return multiple validation problems in a single response.
+
+Extensibility And Application Specific Errors
+Error handling has been designed with extensibility in mind. Where an application supports error codes specific to that implementation, it is intended that implementations can extend the standard CDR error codes with application-specific error responses whilst maintaining interoperability for clients.
+
+Non-Normative Example
+
+# Application-specific error code extends a standard CDR error code with
+# details specific to the Data Holder
+{
+  "errors": [
+    {
+      "code": "acme-bank:JointAccountElectionRemoved",
+      "title": "Joint Account Consent Election Is Removed",
+      "description": "Description of the specific error encountered",
+      "meta": {
+        "urn": "urn:au-cds:error:cds-banking:Authorisation/UnavailableBankingAccount"
+      }
+    }
+  ]
+}
+To assist clients, the Data Recipient or Data Holder MUST provide the application-specific error code in the ResponseErrorListV2 » code and the standard CDR error code in the ResponseErrorListV2 » MetaError » urn field denoting the standard error code the implementation extends.
+
+Transition arrangements
+Non-Normative Examples
+
+# Application-specific error code before transition
+
+{ "errors": [
+  {
+    "code": "old error code",
+    "title": "error message",
+    "description": "Description of the specific error encountered"
+  }
+] }
+
+# Application-specific error code during transition
+
+{ "errors": [
+  {
+    "code": "old error code",
+    "title": "error message",
+    "description": "Description of the specific error encountered",
+    "meta": {
+      "urn": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion"
+    }
+  }
+] }
+
+# Standardised-error code after retirement of application-specific error code
+
+{ "errors": [
+  {
+    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",    
+    "title": "Unsupported Version",
+    "description": "'x-v' must be greater than or equal to '2'"
+  }
+] }
+If Data Recipients or Data Holders support custom error codes prior to February 1st 2022, the following transition arrangements apply:
+
+Effective as soon as standardised error codes are supported by the Data Recipient or Data Holder:
+
+If the Data Recipient or Data Holder supports application-specific error codes they MUST publish a mapping of those codes to the standard CDR error codes in a developer friendly way that is discoverable and freely available.
+Data Recipients and Data Holders MAY publish this mapping any time prior to February 1st 2022.
+Effective from February 1st 2022: Data Holders and Data Recipients MUST support standardised error codes by this date and continue to support any custom error codes.
+
+Standardised error codes MUST be provided in the ResponseErrorListV2 » MetaError » urn field
+If applicable, application specific error codes MUST be provided in the ResponseErrorListV2 » code
+Data Recipients and Data Holders MAY phase their transition to support standardised error codes such as by endpoint or per error code if preferred prior to this date.
+Effective from November 1st 2022: Data Holders and Data Recipients MAY deprecate any custom error codes
+
+Standardised error codes MAY be provided in the ResponseErrorListV2 » code field if no application-specific error code applies
+Application-specific error codes MAY be provided in the ResponseErrorListV2 » code
 Extensibility
 The Consumer Data Right standards will not cover all possible data sets or APIs that participants may wish to expose. Participants may also wish to innovate on top of the API standards by offering additional data to meet specific market opportunities. It is desirable that the standards not only allow for this to occur but actively encourage it with specific additions to the standards to enable such extension.
 
@@ -1501,7 +1971,7 @@ The following responses are in addition to error responses covered by normative 
 
 Response Code	Situation	Description
 204 No Content	Success	The sharing arrangement has been revoked successfully
-422 Unprocessable Entity	Invalid Arrangement ID	The client submitted an invalid arrangement identifier or the identifier could not be found
+422 Unprocessable Entity	Invalid Arrangement ID	The client submitted an invalid arrangement identifier or the identifier could not be found. The server MUST respond with Invalid Consent Arrangement.
 Data Holders calling Data Recipients
 
 Data Holders may discover that a given Data Recipient supports the CDR Arrangement Revocation End Point by the presence of the Recipient Base URI in the Software Statement Assertion (SSA). If a Data Recipient does not support the CDR Arrangement Revocation End Point, the Data Holder MUST call the Data Recipient Token Revocation End Point.
@@ -1635,7 +2105,6 @@ The Consumer Experience (CX) Standards contain requirements for the creation of 
 The CX Guidelines provide examples and recommendations for how to implement key rules and standards that relate to the consumer experience. They can be found along with additional CX commentary at:
 
 CX Guidelines
-Consumer Experience Standards
 Data Language Standards
 
 Example of data language standards presented in a consumer-facing interaction, where [1] refers to Data cluster language, and [2] refers to Data permission language.
@@ -1671,26 +2140,25 @@ Business consumer
 Data cluster language	Permission language	Authorisation Scopes
 Organisation profile *	Agent name and role;
 Organisation name;
-Organisation numbers (ABN or ACN);
+Organisation numbers (ABN or ACN);†
 Charity status;
 Establishment date;
 Industry;
 Organisation type
 Country of registration;	common:customer.basic:read
 Organisation contact details *	Organisation address;
-Organisation address;
+Mail address;
 Phone number;	common:customer.detail:read
-Organisation profile and contact details *‡	Agent >name and role;
+Organisation profile and contact details *‡	Agent name and role;
 Organisation name;
-Organisation numbers (ABN or ACN);†
+Organisation numbers (ABN or ACN),†
 Charity status;
 Establishment date;
 Industry;
 Organisation type;
 Country of registration;
 Organisation address;
-Mail address
-address;
+Mail address;
 Phone number;
 common:customer.detail:read
 Common
@@ -1903,10 +2371,18 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Bulk Balances
 
@@ -2017,10 +2493,18 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountsBalanceList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Balances For Specific Accounts
 
@@ -2124,12 +2608,20 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountsBalanceList
-422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request. For this API a 422 response must be given if any of the account IDs provided are invalid for the consent context	ResponseErrorList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+422 - Unavailable Banking Account
+422 - Invalid Banking Account
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-422	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Account Balance
 
@@ -2208,10 +2700,18 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountsBalanceById
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+404 - Unavailable Banking Account
+404 - Invalid Banking Account
+406 - Unsupported Version
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.basic:read
 Get Account Detail
 
@@ -2468,10 +2968,18 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingAccountById
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+404 - Unavailable Banking Account
+404 - Invalid Banking Account
+406 - Unsupported Version
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:accounts.detail:read
 Get Transactions For Account
 
@@ -2583,10 +3091,21 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingTransactionList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+400 - Invalid Date
+404 - Unavailable Banking Account
+404 - Invalid Banking Account
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:transactions:read
 Get Transaction Detail
 
@@ -2683,10 +3202,21 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingTransactionById
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+400 - Invalid Date
+404 - Unavailable Banking Account
+404 - Invalid Banking Account
+Unavailable Resource
+Invalid Resource
+406 - Unsupported Version
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:transactions:read
 Get Direct Debits For Account
 
@@ -2776,10 +3306,20 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingDirectDebitAuthorisationList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+404 - Unavailable Banking Account
+404 - Invalid Banking Account
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Bulk Direct Debits
 
@@ -2888,10 +3428,18 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingDirectDebitAuthorisationList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Direct Debits For Specific Accounts
 
@@ -2993,12 +3541,20 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingDirectDebitAuthorisationList
-422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request. For this API a 422 response must be given if any of the account IDs provided are invalid for the consent context	ResponseErrorList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+422 - Unavailable Banking Account
+422 - Invalid Banking Account
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-422	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments for Account
 
@@ -3170,10 +3726,20 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingScheduledPaymentsList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+404 - Unavailable Banking Account
+404 - Invalid Banking Account
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments Bulk
 
@@ -3364,10 +3930,18 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingScheduledPaymentsList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Scheduled Payments For Specific Accounts
 
@@ -3551,12 +4125,20 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingScheduledPaymentsList
-422	Unprocessable Entity	The request was well formed but was unable to be processed due to business logic specific to the request. For this API a 422 response must be given if any of the account IDs provided are invalid for the consent context	ResponseErrorList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+422 - Unavailable Banking Account
+422 - Invalid Banking Account
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-422	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:regular_payments:read
 Get Payees
 
@@ -3647,10 +4229,18 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingPayeeList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:payees:read
 Get Payee Detail
 
@@ -3767,10 +4357,20 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingPayeeById
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Page Size
+400 - Invalid Version
+404 - Unavailable Resource
+404 - Invalid Resource
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: bank:payees:read
 Get Products
 
@@ -3917,6 +4517,14 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingProductList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Date
+400 - Invalid Page Size
+400 - Invalid Version
+406 - Unsupported Version
+422 - Invalid Page
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -4130,6 +4738,13 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseBankingProductById
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+404 - Unavailable Resource
+404 - Invalid Resource
+406 - Unsupported Version
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -4229,10 +4844,16 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseCommonCustomer
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+406 - Unsupported Version
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: common:customer.basic:read
 Get Customer Detail
 
@@ -4426,10 +5047,16 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseCommonCustomerDetail
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+406 - Unsupported Version
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
 200	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+4xx	x-fapi-interaction-id	string		An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  To perform this operation, you must be authenticated and authorised with the following scopes: common:customer.detail:read
 Get Status
 
@@ -4488,6 +5115,11 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseCommonDiscoveryStatus
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+406 - Unsupported Version
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -4552,6 +5184,11 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseDiscoveryOutagesList
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+406 - Unsupported Version
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -7355,8 +7992,8 @@ Properties
 Name	Type	Required	Restrictions	Description
 data	object	mandatory	none	none
 » customerUType	string	mandatory	none	The type of customer object that is present
-» person	CommonPerson	optional	none	none
-» organisation	CommonOrganisation	optional	none	none
+» person	CommonPerson	conditional	none	Mandatory if customerUType is person
+» organisation	CommonOrganisation	conditional	none	Mandatory if customerUType is organisation
 links	Links	mandatory	none	none
 meta	Meta	optional	none	none
 Enumerated Values
@@ -7506,8 +8143,8 @@ Properties
 Name	Type	Required	Restrictions	Description
 data	object	mandatory	none	none
 » customerUType	string	mandatory	none	The type of customer object that is present
-» person	CommonPersonDetail	optional	none	none
-» organisation	CommonOrganisationDetail	optional	none	none
+» person	CommonPersonDetail	conditional	none	Mandatory if customerUType is person
+» organisation	CommonOrganisationDetail	conditional	none	Mandatory if customerUType is organisation
 links	Links	mandatory	none	none
 meta	Meta	optional	none	none
 Enumerated Values
@@ -8022,7 +8659,18 @@ Properties
 Name	Type	Required	Restrictions	Description
 totalRecords	NaturalNumber	mandatory	none	The total number of records in the full set. See pagination.
 totalPages	NaturalNumber	mandatory	none	The total number of pages in the full set. See pagination.
-ResponseErrorList
+MetaError
+
+{
+  "urn": "string"
+}
+
+Additional data for customised error codes
+
+Properties
+Name	Type	Required	Restrictions	Description
+urn	string	conditional	none	The CDR error code URN which the application-specific error code extends. Mandatory if the error code is an application-specific error rather than a standardised error code.
+ResponseErrorListV2
 
 {
   "errors": [
@@ -8030,7 +8678,9 @@ ResponseErrorList
       "code": "string",
       "title": "string",
       "detail": "string",
-      "meta": {}
+      "meta": {
+        "urn": "string"
+      }
     }
   ]
 }
@@ -8038,10 +8688,10 @@ ResponseErrorList
 Properties
 Name	Type	Required	Restrictions	Description
 errors	[object]	mandatory	none	none
-» code	string	mandatory	none	Must be one of the following: 0001 – Account not able to be found
-» title	string	mandatory	none	Must be one of the following: Invalid account
-» detail	string	mandatory	none	ID of the account not found
-» meta	object	optional	none	Optional additional data for specific error types
+» code	string	mandatory	none	The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the meta object. Otherwise, the value is the error code URN.
+» title	string	mandatory	none	A short, human-readable summary of the problem that MUST NOT change from occurrence to occurrence of the problem represented by the error code.
+» detail	string	mandatory	none	A human-readable explanation specific to this occurrence of the problem.
+» meta	MetaError	optional	none	Additional data for customised error codes
 BankingProductCategory
 
 "BUSINESS_LOANS"
@@ -8232,12 +8882,13 @@ Code samples
 POST https://data.holder.com.au/cds-au/v1/admin/register/metadata HTTP/1.1
 Host: data.holder.com.au
 Content-Type: application/json
-
+Accept: application/json
 x-v: string
 x-min-v: string
 
 var headers = {
   'Content-Type':'application/json',
+  'Accept':'application/json',
   'x-v':'string',
   'x-min-v':'string'
 
@@ -8272,9 +8923,17 @@ Name	In	Type	Required	Description
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
 body	body	RequestMetaDataUpdate	mandatory	none
+Example responses
+
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	None
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+406 - Unsupported Version
+None
+Response Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -8461,6 +9120,12 @@ Example responses
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseMetricsListV2
+4xx	Client Error	The following error codes MUST be supported:
+400 - Invalid Field
+400 - Invalid Version
+406 - Unsupported Version
+None
+Response Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -9076,6 +9741,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+01/06/2021	1.10.0	Changes arising from Enhanced Error Handling decision proposals	See release notes and Decision 154 for details
 29/04/2021	1.9.0	Changes arising from the sixth Data Standards Maintenance Iteration	See release notes and Decision 161 for details
 16/04/2021	1.8.0	CX Standards for Amending Consent	See release notes and Decision 144 for details
 10/03/2021	1.7.0	Changes arising from the fifth Banking Maintenance Iteration	See release notes and Decision 159 for details
@@ -9168,6 +9834,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+29/04/2021	1.9.0	Changes arising from the sixth Data Standards Maintenance Iteration related to Decision 161
 16/04/2021	1.8.0	CX Standards for Amending Consent related to Decision 144
 10/03/2021	1.7.0	Banking Maintenance Iteration 5 and related changes arising from Decision 159
 23/12/2020	1.6.0	Update to audience claim for client authentication arising from Decision Proposal 325
