@@ -23,6 +23,7 @@ CDR Register
 Swagger (JSON)
 Swagger (YAML)
 Draft Energy Standards
+ This is an archived version of the Consumer Data Right Standards and is retained for reference only.
 Introduction
 These standards have been developed as part of the Australian Government's introduction of the Consumer Data Right legislation to give Australians greater control over their data.
 
@@ -66,7 +67,7 @@ A table-view of all endpoint versioning is available here.
 Please note this is currently experimental.
 
 Standards
-These standards represent version 1.11.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.11.1 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Note that, in this proposal, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
 
@@ -156,8 +157,8 @@ major: Major version of the standards. Reserved for increment only when a set of
 minor: Significant changes to the standards. This would include changes that require approval by the Chair of the Data Standards Body such as new end points and new versions of existing end points.
 bug fix: Minor documentation changes that clarify or correct the standards but do not meaningfully alter the standards.
 Uniform Resource Identifier (URI) Versioning
-The base URI structure containing the version for this standard is:
-http://<holder path>/cds-au/v<major version>
+The base path structure containing the "version" for this standard is:
+https://<holder-path>/cds-au/v<major version>/<industry>
 
 The high level standard will be versioned as described above. The major component of this version will be embedded in the URI Structure for the APIs. This allows for a data holder to support multiple major versions of the standards in production even if the significant breaking changes occur between major versions.
 
@@ -166,18 +167,41 @@ Each end point will have multiple versions independent of other end points. A sp
 
 URI Structure
 Some example URIs that meet this standard are:
-http://www.bank.com.au/api/cds-au/v1/banking/accounts
-http://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products
-http://www.energyretailer.com.au/api/cds-au/v1/energy/usage
 
+1. https://www.bank.com.au/api/cds-au/v1/banking/accounts
+2. https://www.bank.com.au/api/cds-au/v1/banking/accounts/abc123/transactions/?x=y#bar
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products?page=2
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy/usage
+5. https://www.energyretailer.com.au/api/cds-au/v1/ACME/apply
+The holder path for each example is:
+
+1. www.bank.com.au/api
+2. www.bank.com.au/api
+3. www.bank.com.au/complex/uri/taxonomy
+4. www.energyretailer.com.au/api
+5. www.energyretailer.com.au/api
+The base path for each example is:
+
+1. https://www.bank.com.au/api/cds-au/v1/banking
+2. https://www.bank.com.au/api/cds-au/v1/banking
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy
+5. https://www.energyretailer.com.au/api/cds-au/v1/ACME
+The resource path for each example is:
+
+1. https://www.bank.com.au/api/cds-au/v1/banking/accounts
+2. https://www.bank.com.au/api/cds-au/v1/banking/accounts/abc123/transactions
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy/usage
+5. https://www.energyretailer.com.au/api/cds-au/v1/ACME/apply
 The URI structure for API end points in the standards MUST be implemented as follows:
-uri-string = <holder-path> "/" cds-au "/" <version> "/" <industry> "/" <resource>
+uri-string =  "https://" <holder-path> "/" cds-au "/" <version> "/" ( <industry> | <HID> ) "/" <resource>
 
 
 The components of this URI structure are described as follows:
 
 <holder-path>  = string.
-The holder path is a base path set by the data holder. It can be any URI desired by the holder. While all authenticated end points must be accessible under the same holder path the data holder may stipulate a different holder path for unauthenticated end points.
+The holder path is a path set by the data holder. It can be any URI desired by the holder. While all authenticated end points must be accessible under the same holder path the data holder may stipulate a different holder path for unauthenticated end points.
 
 cds-au         = "cds-au" string.
 This is a static string representing the end points defined by the Consumer Data Standards for Australia. This static string allows for separation from other APIs available at the same base holder path and also allows for extension if the standards are adopted by another jurisdiction in whole or in part.
@@ -193,8 +217,19 @@ energy  = "energy" string. For APIs related to the energy distribution industry,
 telco   = "telco" string. For APIs related to telecommunications,
 common  = "common" string. For APIs that potentially span industries.
 
+<HID>          = string.
+The Holder Identifier used to denote extension API categories for a specific holder.
+
 <resource>     = string.
 The URI for the specific resource requested. This end point URI will be defined as part of the end point definitions for each API group.
+
+Base Path
+Base path is intended to be the portion of the URL up to but not including the endpoint resource. In other words, the base path is the portion of the URL up to and including the <industry> or <HID> component. The base path string is defined as follows:
+
+https:// <holder-path> / cds-au / <version> / ( <industry> | <HID> )
+
+Resource Path
+The resource path is intended to be the portion of the URL including the base path and resource location. The resource path string is defined as: <base-path> / <resource>.
 
 Resource URIs
 Resources that are collections, and members of collections, will follow the JSONAPI.org recommendation.
@@ -1035,7 +1070,7 @@ Non-Normative Examples
 
 { "errors": [
   {
-    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",    
+    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",
     "title": "Unsupported Version",
     "detail": "'x-v' **MUST** be greater than or equal to '2'"
   }
@@ -1076,16 +1111,16 @@ ANZ – ANZ Banking Group
 NAB – National Australia Bank
 Data holders seeking to extend the standards MUST nominate a prefix to identify all extensions. Extended fields and end points and would use this prefix consistently. This prefix would be, by preference, the ASX symbol for the holder. Care should be taken not to use a prefix already adopted by another holder in the regime.
 
-In these standards, where a holder Identifier would be included, the term <HID> will be used.
+In these standards, where a Holder Identifier would be included, the term <HID> will be used.
 
 New API Categories
 When extending by adding new API categories a holder MUST add these to the overall URI structure by substituting the industry element with the Holder (Provider) ID.
 
 For instance, the standard URI base path is structured as:
-<holder path> / cds-au / <version> / <industry> / <resource>
+https:// <holder-path> / cds-au / <version> / <industry> / <resource>
 
 For the extension API categories for a specific holder they would be structured as:
-<holder path> / cds-au / <version> / <HID> / <resource>
+https:// <holder-path> / cds-au / <version> / <HID> / <resource>
 
 The end points defined under this structure, including the payloads of these end points do not need to be prefixed in any way. The fact that they are underneath the holder section implies that they are additional to the standard.
 
@@ -1097,10 +1132,10 @@ New End Points In Existing API Categories
 When creating new end points that are in parallel to existing API categories in the standard the Holder Identifier MUST be used to prefix the highest URI element where divergence occurs.
 
 For example, assume an existing balance end point is defined as follows:
-<base path>/accounts/{account ID}/transactions
+<base-path>/accounts/{account ID}/transactions
 
 and the holder wishes to add an end point that summarises balance movement for a specific time period then they may define the end point as:
-<base path>/account/{account ID}/<HID>-balance-movement
+<base-path>/account/{account ID}/<HID>-balance-movement
 
 Note that:
 
@@ -1332,7 +1367,7 @@ The JWT MUST contain the following REQUIRED Claim Values and MAY contain the fol
 
 iss - REQUIRED. Issuer Identifier for the Issuer of the response. The client ID of the bearer.
 sub - REQUIRED. Subject Identifier. The client ID of the bearer.
-aud - REQUIRED. Audience(s) that the JWT is intended for. The Data Holder or Data Recipient MUST verify that it is an intended audience for the token. Contents MUST be the base URI for the end point being accessed.
+aud - REQUIRED. Audience(s) that the JWT is intended for. The Data Holder or Data Recipient MUST verify that it is an intended audience for the token. Contents MUST be the "resource path" for the end point being accessed.
 jti - REQUIRED. JWT ID. A unique identifier for the token, which can be used to prevent reuse of the token. These tokens MUST only be used once.
 exp - REQUIRED. Expiration time on or after which the ID Token MUST NOT be accepted for processing. Value is a JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC expiry time.
 iat - OPTIONAL. Time at which the JWT was issued. Value is a JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC issued at time.
@@ -1358,7 +1393,7 @@ Self-signed JWT authentication
 If the Data Holder supports the Self-signed JWT Client Authentication method for authenticating the CDR Register, the client ID MUST be set to a value of ‘cdr-register’.
 
 Data Holders calling Data Recipients
-Non-Normative Example - Data Holder calls the Data Recipient's revocation end point (note that the “aud” claim is the fully qualified path to the revocation end point because the full path is also the Base URI).
+Non-Normative Example - Data Holder calls the Data Recipient's revocation end point (note that the "aud" claim is "resource path" to the revocation end point).
 
 POST https://data.recipient.com.au/revocation HTTP/1.1
 Host: data.recipient.com.au
@@ -1709,15 +1744,7 @@ The Data Recipient is able to obtain the expiration of sharing via the sharing_e
 Specifying an existing arrangement
 Provided a Data Holder supports PAR, they MUST also support the cdr_arrangement_id claim provided in the Request Object sent to the PAR End Point. The Data Recipient MAY provide the cdr_arrangement_id claim in the Request Object sent to the PAR End Point.
 
-The cdr_arrangement_id claim MUST be handled as follows:
-
-Until November 2020 data holders are not required to take any action if cdr_arrangement_id is supplied but MUST NOT respond with an error.
-
-Until November 2020 data recipients MUST NOT implement scenarios that support concurrent consent. Only single, extant consent scenarios should be implemented until this date.
-
-If a data recipient provides the cdr_arrangement_id claim in the request object to the data holder's PAR End Point, the data holder MUST revoke any existing tokens related to the arrangement once the new consent is successfully established and a new set of tokens has been provided to the data recipient.
-
-For data recipients seeking to replace consent where the Data Holder does not support PAR, data recipients MUST actively revoke previously supplied refresh tokens, immediately after receiving the tokens for a newly established consent, using the appropriate revocation end point.
+If a Data Recipient provides the cdr_arrangement_id claim in the request object to the Data Holder's PAR End Point, the Data Holder MUST revoke any existing tokens related to the arrangement once the new consent is successfully established and a new set of tokens has been provided to the data recipient.
 
 End Points
  NOTE: This section does not include any end points that will be defined by the design of the CDR Register. End points related to Data Recipient registration, certificate revocation, Data Recipient discovery or Data Holder discovery are documented in the CDR Register technical documentation.
@@ -1889,10 +1916,10 @@ A Token Introspection End Point Response MAY include claims defined in Section 2
 
 Token Revocation End Point
 Description	Value
-Hosted By	Data Holder and Data Recipient
-Transport Security	MTLS for Data Holders, TLS for Data Recipients
-Client Authentication Required	Yes (for verifying Data Recipients)
-Bearer Token Required	Yes (for verifying Data Holders)
+Hosted By	Data Holder
+Transport Security	MTLS
+Client Authentication Required	Yes
+Bearer Token Required	No
 Requirements for Data Holder implementations
 
 Data Holders MUST implement a Token Revocation End Point as described in section 2 of [RFC7009].
@@ -1900,22 +1927,6 @@ Data Holders MUST implement a Token Revocation End Point as described in section
 The Revocation End Point serves as a revocation mechanism that allows a Data Recipient to invalidate its tokens as required to allow for token clean up.
 
 Revocation of Refresh Tokens and Access Tokens MUST be supported.
-
-Requirements for Data Recipient implementations
-
-The Token Revocation End Point, when implemented by the Data Recipient allows a Data Holder to notify the Data Recipient of the revocation of a sharing arrangement by the Customer in totality as required by the ACCC CDR Rules. This revocation will have been actioned by the Customer via the Data Holder’s consent dashboard as described in the ACCC CDR Rules.
-
-Revocation of Access Tokens MUST not be supported.
-
-Revocation of Refresh Tokens MUST be supported and will be used to notify the Data Recipient of sharing revocation.
-
-If consent is withdrawn by a Customer in writing or by using the Data Recipient’s dashboard the Data Recipient MUST revoke consent using Data Holder’s implementation.
-
-Revoking consent
-
-If the Data Holder does not support a CDR Arrangement Revocation End Point, Data Recipients MUST use the Data Holder's Token Revocation End Point with the current Refresh Token to notify the Data Holder.
-
-If the Data Holder does support the CDR Arrangement Revocation End Point, Data Recipients MUST use the Data Holder's CDR Arrangement Revocation End Point with a valid cdr_arrangement_id to notify the Data Holder.
 
 CDR Arrangement Revocation End Point
 Non-Normative Example
@@ -1937,19 +1948,22 @@ Transport Security	MTLS for Data Holders, TLS for Data Recipients
 Client Authentication Required	Yes (for Data Holders verifying Data Recipients)
 Bearer Token Required	Yes (for Data Recipients verifying Data Holders)
 HTTP Method: POST
+
 Data Holder Path: The cdr_arrangement_revocation_endpoint defined using OIDC Discovery
+
 Data Recipient Path: <RecipientBaseUri>/arrangements/revoke where <RecipientBaseUri> is registered with the CDR Register.
 
 Data Holders and Data Recipients MUST implement a CDR Arrangement Revocation End Point that can be used to revoke an existing sharing arrangement.
 
 The request MUST include the following parameters using the application/x-www-form-urlencoded format in the HTTP request entity-body:
+
 cdr_arrangement_id: The ID of the arrangement that the client wants to revoke.
 
 This end point will be implemented according to the following:
 
 Data Recipients and Data Holders MUST revoke consent by calling the CDR Arrangement Revocation End Point with a valid CDR Arrangement ID
 Data Holders MUST publish their CDR Arrangement Revocation End Point using their OpenID Provider Metadata Discovery End Point
-Data Recipients MUST expose their CDR Arrangement Revocation End Point under their Recipient Base URI published in their Software Statement Assertion
+Data Recipients MUST expose their CDR Arrangement Revocation End Point under their recipient_base_uri published in their Software Statement Assertion
 Consent revocation MUST also revoke associated refresh and/or access tokens
 For Data Recipients, Data Holder must be authenticated when they call this end point according to the guidance in the Client Authentication section.
 If the cdr_arrangement_id is not related to the client making the call it MUST be rejected
@@ -1960,23 +1974,19 @@ The following responses are in addition to error responses covered by normative 
 Response Code	Situation	Description
 204 No Content	Success	The sharing arrangement has been revoked successfully
 422 Unprocessable Entity	Invalid Arrangement ID	The client submitted an invalid arrangement identifier or the identifier could not be found. The server MUST respond with Invalid Consent Arrangement.
+Revoking consent
+
+Data Recipients MUST use the Data Holder's CDR Arrangement Revocation End Point with a valid cdr_arrangement_id to notify the Data Holder when consent is revoked by the consumer via the Data Recipient.
+
+Data Holder's MUST use the Data Recipient's CDR Arrangement Revocation End Point with a valid cdr_arrangement_id to notify the Data Recipient when consent is revoked by the consumer via the Data Holder.
+
 Data Holders calling Data Recipients
 
-Data Holders may discover that a given Data Recipient supports the CDR Arrangement Revocation End Point by the presence of the Recipient Base URI in the Software Statement Assertion (SSA). If a Data Recipient does not support the CDR Arrangement Revocation End Point, the Data Holder MUST call the Data Recipient Token Revocation End Point.
-
-Data Recipients SHOULD update their client registration with each Data Holder as soon as is practical once they support the CDR Arrangement Revocation End Point.
-
-Updating Register Meta Data and Client Registration
-
-When a Data Recipient supports the CDR Arrangement Revocation End Point, they MUST: 1. Update their meta data with the CDR Register to include their recipient_base_uri. 2. Update their client registration with each Data Holder.
-
-If the Data Recipient does not support the CDR Arrangement Revocation End Point, the Data Holder MUST instead revoke consent using the Data Recipient Token Revocation End Point.
+The location of the Data Recipient CDR Arrangement Revocation End Point is determined by the RecipientBaseURI provided by the Data Recipient in the client Software Statement Assertion (SSA).
 
 Data Recipients calling Data Holders
 
-Data Recipients may discover that a given Data Holder supports the CDR Arrangement Revocation End Point by the presence of the cdr_arrangement_revocation_endpoint in the Data Holder's OpenID Provider metadata.
-
-If a Data Recipient does not support the CDR Arrangement Revocation End Point, Data Holders must notify Data Recipients when consent is withdrawn by calling the Data Recipient Revocation End Point.
+The location of the Data Holder CDR Arrangement Revocation End Point is determined by the cdr_arrangement_revocation_endpoint in the Data Holder's OpenID Provider metadata.
 
 Pushed Authorisation End Point
 Non-Normative Example
@@ -2058,8 +2068,8 @@ If the cdr_arrangement_id is not related to the consumer being authenticated it 
 If the cdr_arrangement_id is not recognised by to the Data Holder it MUST be rejected
 Normative References
 Reference	Description	Version
-[FAPI-R]	Financial-grade API - Part 1: Read Only API Security Profile: https://openid.net/specs/openid-financial-api-part-1.html	Draft-06
-[FAPI-RW]	Financial-grade API - Part 2: Read and Write API Security Profile: https://openid.net/specs/openid-financial-api-part-2.html	Draft-06
+[FAPI-R]	Financial-grade API - Part 1: Read Only API Security Profile: https://openid.net/specs/openid-financial-api-part-1-ID2.html	Draft-06
+[FAPI-RW]	Financial-grade API - Part 2: Read and Write API Security Profile: https://openid.net/specs/openid-financial-api-part-2-ID2.html	Draft-06
 [JSON]	The JavaScript Object Notation (JSON) Data Interchange Format: https://tools.ietf.org/html/rfc8259	Dec 2017
 [JWA]	JSON Web Algorithms (JWA): https://tools.ietf.org/html/rfc7518	May 2015
 [JWK]	JSON Web Key (JWK): https://tools.ietf.org/html/rfc7517	May 2015
@@ -2195,7 +2205,7 @@ At a minimum, all CDR participants MUST seek to comply with the following access
 These standards SHOULD be assessed, tested, and refined further by accessibility consultants directly involved in implementation.
 
 Accessibility
-Content distinction	Data Recipients and Data Holders MUST seek to have all aspects of the Consent Model comply with WCAG 1.4. This will make it easier to see and hear content, including separate foreground information from the background. This will make it easier to see and hear content, including separate foreground information from the background.
+Content distinction	Data Recipients and Data Holders MUST seek to have all aspects of the Consent Model comply with WCAG 1.4. This will make it easier to see and hear content, including separate foreground information from the background.
 Accessibility
 Keyboard functionality	Data Recipients and Data Holders MUST seek to have all aspects of the Consent Model comply with WCAG 2.1. This will make all functionality available from a keyboard.
 Accessibility
@@ -3066,7 +3076,7 @@ Obtain transactions for a specific account.
 Some general notes that apply to all end points that retrieve transactions:
 
 Where multiple transactions are returned, transactions should be ordered according to effective date in descending order
-As the date and time for a transaction can alter depending on status and transaction type two separate date/times are included in the payload. There are still some scenarios where neither of these time stamps is available. For the purpose of filtering and ordering it is expected that the data holder will use the “effective” date/time which will be defined as:
+As the date and time for a transaction can alter depending on status and transaction type two separate date/times are included in the payload. There are still some scenarios where neither of these time stamps is available. For the purpose of filtering and ordering it is expected that the data holder will use the "effective" date/time which will be defined as:
 Posted date/time if available, then
 Execution date/time if available, then
 A reasonable date/time nominated by the data holder using internal data structures
@@ -4827,6 +4837,18 @@ $.ajax({
 GET /common/customer
 
 Obtain basic information on the customer that has authorised the current session
+
+Conventions
+In the customer payloads relevant conventions are explained here, in one place.
+
+Given Names
+firstName represents the first of a person's given names.
+
+middleNames represents a collection of given names if the person has more than one given name.
+
+Where a data holder holds a person's given names as a single string in source systems, it may not possible in some situations to reliably split these given names into their component first and middle names. In these situations, data holders MAY use the firstName field to return the single string of given names and an empty middleNames array.
+
+For example, a person whose given names are "John Paul Winston" but the data holder cannot determine what is the first name, can return "firstName": "John Paul Winston".
 
 Endpoint Version
 Version	1
@@ -8208,7 +8230,7 @@ CommonPerson
 Properties
 Name	Type	Required	Restrictions	Description
 lastUpdateTime	DateTimeString	optional	none	The date and time that this record was last updated by the customer. If no update has occurred then this date should reflect the initial creation date for the data
-firstName	string	optional	none	For people with single names this field need not be present. The single name should be in the lastName field
+firstName	string	optional	none	For people with single names this field need not be present. The single name should be in the lastName field. Where a data holder cannot determine first and middle names from a collection of given names, a single string representing all given names MAY be provided.
 lastName	string	mandatory	none	For people with single names the single name should be in this field
 middleNames	[string]	mandatory	none	Field is mandatory but array may be empty
 prefix	string	optional	none	Also known as title or salutation. The prefix to the name (e.g. Mr, Mrs, Ms, Miss, Sir, etc)
@@ -8774,7 +8796,7 @@ MARGIN_LOANS	This grouping of products includes all types of margin loans which 
 OVERDRAFTS	This grouping of products includes all types of lending which allows for the loan amount to be withdrawn, repaid, and redrawn again in any manner and any number of times, until the arrangement expires. These loans may be secured or unsecured, and generally don’t have set / minimum repayment requirements.
 PERS_LOANS	This grouping of products includes all lending for personal purposes that is not a residential mortgage, credit card or margin lending. These loans may be unsecured loans and term loans for purchase assets used as security such as motor vehicles. These may be called various names including Personal Loans and Car Loans.
 RESIDENTIAL_MORTGAGES	This grouping of products includes all lending products that are available for the primary purpose of borrowing for the purpose of purchasing or renovating residential property, where a residential property will be used as security. This group will include both fixed, variable & secured overdraft types of product and may include both owner-occupied and investment purpose borrowing.
-TRADE FINANCE	This grouping of products includes specialised lending products specifically designed to facilitate domestic & international trade. This includes the issuance of letters of credit, factoring, export credit.
+TRADE_FINANCE	This grouping of products includes specialised lending products specifically designed to facilitate domestic & international trade. This includes the issuance of letters of credit, factoring, export credit.
 Product & Account Components
 
 Product Feature Types
@@ -9587,7 +9609,7 @@ Scope Name	Scope ID	Description
 Basic Bank Account Data	bank:accounts.basic:read	This scope would allow for the third party to access basic information of the customer’s accounts.
 
 Includes simple account information including balance.
-Does not include account identifiers, product information or transaction data.
+Does not include detailed account information such as account numbers, product information or transaction data.
 Detailed Bank Account Data	bank:accounts.detail:read	This scope would allow for the third party to access detailed information of the customer’s accounts. This scope is effectively additional authorisation to the Basic Bank Account Data scope. Granting this authorisation only makes sense if the Bank Account Data scope is also authorised.
 
 Includes basic account information plus account identifiers and product information.
@@ -9780,7 +9802,8 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
-30/06/2021	1.11.0	Changes arising from Decision Proposals 160, 187 and maintenance iteration 7 DP 178	See release notes, Decision 160, Decision 187 and Decision 178 for details
+05/10/2021	1.11.1	Minor errata and documentation fixes	See release notes for details
+30/06/2021	1.11.0	Changes arising from Decision Proposals 160, 187 and maintenance iteration 7 Decision Proposal 178	See release notes, Decision 160, Decision 187 and Decision 178 for details
 01/06/2021	1.10.0	Changes arising from Enhanced Error Handling decision proposals	See release notes and Decision 154 for details
 29/04/2021	1.9.0	Changes arising from the sixth Data Standards Maintenance Iteration	See release notes and Decision 161 for details
 16/04/2021	1.8.0	CX Standards for Amending Consent	See release notes and Decision 144 for details
@@ -9874,6 +9897,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+30/06/2021	1.11.0	Changes arising from Decision Proposals 160, 187 and maintenance iteration 7 Decision Proposal 178. See Decision 160, Decision 187 and Decision 178 for details
 01/06/2021	1.10.0	Changes arising from Enhanced Error Handling decision proposals. See Decision 154 for details
 29/04/2021	1.9.0	Changes arising from the sixth Data Standards Maintenance Iteration related to Decision 161
 16/04/2021	1.8.0	CX Standards for Amending Consent related to Decision 144
