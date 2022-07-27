@@ -4,6 +4,7 @@ Introduction
 Version
 Interpretation
 Future Dated Obligations
+Register Dependency Schedule
 Endpoint Version Schedule
 Normative References
 Informative References
@@ -39,7 +40,7 @@ The standards are required to be published. The obligations on CDR participants 
 where the rules require compliance with the standards, non-compliance with the standards may constitute a breach of the rules.
 where the standards are specified as binding standards as required by the Consumer Data Right rules for the purposes of s56FA of the legislation, they apply as under contract between a data holder and an accredited data recipient. The legal effect of binding standards as between data holders and accredited data recipients is fully set out in s56FD and s56FE of the legislation.
 Version
-These standards represent version 1.16.1 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.17.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Interpretation
 Note that, in these standards, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in [RFC2119].
@@ -89,12 +90,6 @@ Get Payees V2	Version 2 of this end point must be made available by affected dat
 Self-Signed JWT Client Authentication	Until July 31st 2022, Data Recipients MUST accept the Resource Path for the endpoint and the <RecipientBaseURI> as a valid audience value. From July 31st 2022, Data Holders MUST use an audience value matching the Resource Path for the endpoint and the Data Recipient MUST verify the audience matches the Resource Path for the endpoint.	July 31st 2022
 Get Payees V1	Data holders may obsolete version 1 of this end point from August 31st 2022. Data recipients must upgrade their implementations to use version 2 by this time	August 31st 2022
 Get Payee Detail V1	Data holders may obsolete version 1 of this end point from August 31st 2022. Data recipients must upgrade their implementations to use version 2 by this time	August 31st 2022
-Get Data Holder Brands V2‡	CDR Register must introduce version 2 of this end point by August 30th 2022†. Data recipients may upgrade their implementations to use this version from this time	August 30th 2022†
-Get Software Statement Assertion (SSA) V3	CDR Register must introduce version 3 of this end point by August 30th 2022†. Data recipients may upgrade their implementations to use this version from this time	August 30th 2022†
-Get Software Products Statuses V2	CDR Register must introduce version 2 of this end point by August 30th 2022†. Data holders may upgrade their implementations to use this version from this time	August 30th 2022†
-Get Data Recipient Statuses V2	CDR Register must introduce version 2 of this end point by August 30th 2022†. Data holders may upgrade their implementations to use this version from this time	August 30th 2022†
-Get Data Recipients V3	CDR Register must introduce version 3 of this end point by August 30th 2022†. Data holders may upgrade their implementations to use this version from this time	August 30th 2022†
-Get Data Holder Statuses V1	CDR Register must introduce version 3 of this end point by August 30th 2022†	August 30th 2022†
 Information Security profile	FAPI 1.0 adoption is introduced across three phases.
 Phase 2: FAPI 1.0 Final (Baseline & Advanced) includes, amongst other changes:
 Enforces additional requirements for authorisation code, token and request object use
@@ -105,6 +100,7 @@ Data Holders SHOULD support of Authorization Code Flow in conjunction with Hybri
 September 16th 2022
 Get Metrics V3	Version 3 of this end point must be made available by affected data holders by October 1st 2022	October 1st 2022
 Standard Error Codes	Data Holders MAY retire application-specific error codes in favour of standard error codes from November 1st 2022	November 1st 2022
+Registration Validation	Data Holders MUST ignore unsupported authorisation scopes presented in the SSA for the creation and update of client registrations from November 15th 2022	November 15th 2022
 Get Account Detail V2	Version 2 of this end point must be made available by affected data holders by November 30th 2022	November 30th 2022
 Get Customer Detail V2	Version 2 of this end point must be made available by affected data holders by November 30th 2022	November 30th 2022
 Get Product Detail V4	Version 4 of this end point must be made available by affected data holders by November 30th 2022	November 30th 2022
@@ -117,9 +113,20 @@ Phase 3: Retire Hybrid Flow includes, amongst other changes:
 Data Holders MUST support Authorization Code Flow
 Data Holders MAY retire Hybrid Flow
 April 7th 2023
-†NOTE: Further consultation required with the ACCC to confirm this obligation date
+Register Dependency Schedule
+The Register APIs dependency schedule specifies the latest dates the CDR Register can release API versions. Delivery past these dates may impact the ability for data holders and data recipients to meet their future dated obligations.
 
-‡NOTE: Get Data Holder Brands V2 definition is still subject to change
+The table below highlights these dependency dates.
+
+Section	Description	Dependency Date
+Get Data Holder Brands V2	CDR Register must introduce version 2 of this end point by November 15th 2022	November 15th 2022
+Get Software Statement Assertion (SSA) V3	CDR Register must introduce version 3 of this end point by November 15th 2022	November 15th 2022
+Get Software Products Statuses V2	CDR Register must introduce version 2 of this end point by November 15th 2022	November 15th 2022
+Get Data Recipient Statuses V2	CDR Register must introduce version 2 of this end point by November 15th 2022	November 15th 2022
+Get Data Recipients V3	CDR Register must introduce version 3 of this end point by November 15th 2022	November 15th 2022
+Get Data Holder Statuses V1	CDR Register must introduce version 1 of this end point by November 15th 2022	November 15th 2022
+Get Data Holder Brands Summary V1	CDR Register must introduce version 1 of this end point by October 1st 2022	October 1st 2022
+The actual release dates for the Register APIs are expected to occur prior to these dates and are not defined by the Standards.
 
 Endpoint Version Schedule
 A table-view of all endpoint versioning is available here.
@@ -271,24 +278,24 @@ A table-view of all endpoint versioning is available here.
 URI Structure
 Some example URIs that meet this standard are:
 
-1. https://www.bank.com.au/api/cds-au/v1/banking/accounts
-2. https://www.bank.com.au/api/cds-au/v1/banking/accounts/abc123/transactions/?x=y#bar
-3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products?page=2
-4. https://www.energyretailer.com.au/api/cds-au/v1/energy/usage
-5. https://www.energyretailer.com.au/api/cds-au/v1/ACME/apply
+1. https://www.bank.com.au/api/cds-au/v1/banking/accounts  
+2. https://www.bank.com.au/api/cds-au/v1/banking/accounts/abc123/transactions/?x=y#bar  
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products?page=2  
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy/usage  
+5. https://www.energyretailer.com.au/api/cds-au/v1/ACME/apply  
 The holder path for each example is:
 
-1. www.bank.com.au/api
-2. www.bank.com.au/api
-3. www.bank.com.au/complex/uri/taxonomy
-4. www.energyretailer.com.au/api
+1. www.bank.com.au/api  
+2. www.bank.com.au/api   
+3. www.bank.com.au/complex/uri/taxonomy  
+4. www.energyretailer.com.au/api  
 5. www.energyretailer.com.au/api
 The Base Path for each example is:
 
-1. https://www.bank.com.au/api/cds-au/v1/banking
-2. https://www.bank.com.au/api/cds-au/v1/banking
-3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking
-4. https://www.energyretailer.com.au/api/cds-au/v1/energy
+1. https://www.bank.com.au/api/cds-au/v1/banking  
+2. https://www.bank.com.au/api/cds-au/v1/banking   
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking  
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy  
 5. https://www.energyretailer.com.au/api/cds-au/v1/ACME
 The Resource Path for each example is:
 
@@ -665,7 +672,7 @@ TimeString	Time string as per [RFC3339] (labelled full-time in the RFC). As spec
 CurrencyString	Standard 3 character currency codes as per ISO-4217	“AUD”
 “USD”
 “GBP”
-RateString	A string representing an interest rate. A rate of 100% would be represented by the value 1.0 and a rate of -100% by -1.0
+RateString	A string representing a percentage (e.g. an interest rate). A rate of 100% would be represented by the value 1.0 and a rate of -100% by -1.0
 - At least 1 and up to a total of 16 significant digits before decimal point
 - Up to 16 digits following the decimal point
 - No formatting, eg thousand separating commas	“0.05”
@@ -1221,7 +1228,7 @@ Non-Normative Examples
 
 { "errors": [
   {
-    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",
+    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",    
     "title": "Unsupported Version",
     "detail": "'x-v' **MUST** be greater than or equal to '2'"
   }
@@ -1351,25 +1358,29 @@ Example: A Data Recipient presents the Detailed data cluster in a data request t
 
 
 
-Profile Scope
+Profile Scope and Standard Claims
 In accordance with [OIDC] section 5.4 and section 5.5, this language refers to the [OIDC] profile scope and request of individual claims for the authenticated End-User.
 
 Data cluster language	
 Permission language
-Authorisation Scopes
-Name	Full name and title(s)	OIDC Profile scope and/or one or more of these claims:
+Authorisation Scopes	Required
+Name	Full name and title(s)	OIDC Profile scope or one or more of these standard [OIDC] claims*:
 name
 given_name
 family_name
 updated_at
+
+*See 5.4. Requesting Claims using Scope Values on the OIDC website for more information.	Required
 Contact Details	Phone number;
 Email address;
-Mail address;	OIDC Profile scope and/or one or more of these claims:
+Mail address;	One or more of these standard [OIDC] claims*:
 email
 email_verified
 phone_number
 phone_number_verified
 address
+
+*See 5.4. Requesting Claims using Scope Values on the OIDC website for more information.	Optional
 Note: For non-individual consumers, claims available via the profile scope will only return the details of the authenticated End-User and not the organisation or non-individual consumer.
 
 
@@ -2064,7 +2075,7 @@ Authorization: Bearer eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey
 
 ## Decoded Bearer token JWT
 {
-   "alg":"HS256",
+   "alg":"PS256",
    "typ":"JWT",
    "kid":"12456"
 }
@@ -2425,6 +2436,8 @@ The registration request JWT MUST be verified against the associated JWK publish
 
 Data Holders MUST NOT allow multiple active registrations for the same software_id.
 
+Data Holders MUST ignore unsupported authorisation scopes presented in the SSA for the creation and update of client registrations.
+
 Data Holders MUST adhere to the NFR performance requirements when validating and responding to registration requests. Additional validation processes (such as outbound white-listing of data recipient endpoints) MUST NOT prevent specified response times being met.
 
 Registration Response
@@ -2614,7 +2627,7 @@ The status of a Data Recipient Brand does not impact Data Holder responsibilitie
 When a Data Recipient status is Suspended, Revoked or Surrendered the Software Product status cannot be Active
 Invalidation of consents and cleanup of registrations are bulk operations. It is reasonable to execute these as batch tasks performed overnight
 The CDR Register MUST NOT provide an undefined status for Data Recipient or Data Recipient Software Product Statuses
-If Data Holders do not receive a status for a Data Recipient or Data Recipient Software Product, or receives a status that is not recognised, Data Holders SHOULD ignore the value and use the previous status value retrieved from the CDR Register
+If Data Holders do not receive a status for a Data Recipient or Data Recipient Software Product, or receives a status that is not recognised, Data Holders SHOULD ignore the value and use the previous status value retrieved from the CDR Register. Data Holders SHOULD continue to use the previous status value until a valid value is returned by the CDR Register or the ACCC informs the Data Holder using an alternative mechanism. There is no upper bound for how long previous status values should remain trusted.
 Metadata Cache Management
 Data Holders MUST react to Data Recipient and associated Software Statuses changes within 5 minutes of the change occurring on the CDR Register.
 
@@ -3301,13 +3314,19 @@ Data Recipient Software Product Path: <RecipientBaseUri>/arrangements/revoke whe
 Data Holders and Data Recipient Software Products MUST implement a CDR Arrangement Revocation End Point that can be used to revoke an existing sharing arrangement.
 
 
+
 CDR Arrangement Form Parameter method
 
 The request MUST include the following parameters using the application/x-www-form-urlencoded format in the HTTP request entity-body:
 
-cdr_arrangement_jwt: A signed JWT that includes the cdr_arrangement_id.
-The cdr_arrangement_jwt MUST be a newly signed JWT with the following parameters in accordance with [JWT]:
+cdr_arrangement_id: The ID of the arrangement that the client wants to revoke.
+CDR Arrangement JWT method
 
+The request MUST include the following parameters using the application/x-www-form-urlencoded format in the HTTP request entity-body:
+
+cdr_arrangement_jwt: A signed JWT that includes the cdr_arrangement_id.
+cdr_arrangement_jwt: A newly signed JWT with the following parameters in accordance with [JWT]:
+All parameters in accordance with Data Holders calling Data Recipients using Self-Signed JWT Client Authentication.
 cdr_arrangement_id: The ID of the arrangement that the client wants to revoke.
 Data Holder hosted endpoint
 
@@ -3348,7 +3367,7 @@ Authorization: Bearer eyJhbGciOiJQUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjEyNDU2In0.ey
 ## Decoded cdr_arrangement_jwt JWT
 {
   "typ": "JWT",
-  "alg": "HS256",
+  "alg": "PS256",
   "kid":"12456"
 }
 {
@@ -3637,7 +3656,7 @@ Version	Versioning is not supported for this endpoint
 Parameters
 Name	In	Type	Required	Description
 ClientId	path	string	mandatory	The client ID issued by the target Data Holder
-Authorization	header	string	mandatory	An Authorisation Token as per RFC6750
+Authorization	header	string	mandatory	An Authorisation Token as per [RFC6750]
 Example responses
 
 200 Response
@@ -3688,7 +3707,7 @@ Status	Meaning	Description	Schema
 403	Forbidden	The client does not have permission to read, update or delete the Client	None
 Response Headers
 Status	Header	Type	Format	Description
-401	WWW-Authenticate	string		The Response Header Field as per RFC6750
+401	WWW-Authenticate	string		The Response Header Field as per [RFC6750]
  To perform this operation, you must be authenticated and authorised with the following scopes: cdr:registration
 Update Data Recipient Registration
 
@@ -3728,7 +3747,7 @@ Version	Versioning is not supported for this endpoint
 Parameters
 Name	In	Type	Required	Description
 ClientId	path	string	mandatory	The client ID issued by the target Data Holder
-Authorization	header	string	mandatory	An Authorisation Token as per RFC6750
+Authorization	header	string	mandatory	An Authorisation Token as per [RFC6750]
 body	body	ClientRegistrationRequest	mandatory	The registration request JWT to be used to register with a Data Holder.
 Example responses
 
@@ -3781,7 +3800,7 @@ Status	Meaning	Description	Schema
 403	Forbidden	The client does not have permission to read, update or delete the Client	None
 Response Headers
 Status	Header	Type	Format	Description
-401	WWW-Authenticate	string		The Response Header Field as per RFC6750
+401	WWW-Authenticate	string		The Response Header Field as per [RFC6750]
  To perform this operation, you must be authenticated and authorised with the following scopes: cdr:registration
 Delete Data Recipient oAuth Client Registration
 
@@ -3816,7 +3835,7 @@ Version	Versioning is not supported for this endpoint
 Parameters
 Name	In	Type	Required	Description
 ClientId	path	string	mandatory	The client ID issued by the target Data Holder
-Authorization	header	string	mandatory	An Authorisation Token as per RFC6750
+Authorization	header	string	mandatory	An Authorisation Token as per [RFC6750]
 Responses
 Status	Meaning	Description	Schema
 204	No Content	Client deleted	None
@@ -3825,7 +3844,7 @@ Status	Meaning	Description	Schema
 405	Method Not Allowed	Method Not Allowed. The requested method is unsupported	None
 Response Headers
 Status	Header	Type	Format	Description
-401	WWW-Authenticate	string		The Response Header Field as per RFC6750
+401	WWW-Authenticate	string		The Response Header Field as per [RFC6750]
  To perform this operation, you must be authenticated and authorised with the following scopes: cdr:registration
 Schemas
 
@@ -3921,6 +3940,10 @@ Property	Value
 token_endpoint_auth_method	private_key_jwt
 token_endpoint_auth_signing_alg	PS256
 token_endpoint_auth_signing_alg	ES256
+grant_types	client_credentials
+grant_types	authorization_code
+grant_types	refresh_token
+response_types	code id_token
 application_type	web
 id_token_signed_response_alg	PS256
 id_token_signed_response_alg	ES256
@@ -4019,6 +4042,7 @@ API	Caller	Description	MTLS	TLS	Bearer Token
 Get Register OpenId Provider Config	Data Recipient Brand or Software Product	Discovery of CDR Register OpenID Configuration			
 Get Register JWKS	Data Holder	Validate SSA and CDR Register authentication JWT signatures			
 Get Data Holder Brands	Data Recipient Brand or Software Product	Discovery of Data Holder Brands and their associated endpoints			
+Get Data Holder Brands Summary	Public Client	Discovery of Data Holder Brands and their associated public details			
 Get Software Statement Assertion	Data Recipient Brand or Software Product	Get SSA for a Software Product to be used in Dynamic Client Registration			
 Get Data Holder Statuses	Data Recipient	Data Holder Statuses to check validity of Data Holder			
 Get Software Products Status	Data Holder Brand	Software Product Statuses to check validity of ADR requests			
@@ -4188,8 +4212,8 @@ Version	2
 Parameters
 Name	In	Type	Required	Description
 industry	path	string	mandatory	The industry the participant is retrieving data for (Banking, etc)
-Authorization	header	string	mandatory	An Authorisation Token as per RFC6750.
-x-v	header	string	mandatory	The version of the API end point requested by the client. Must be set to a positive integer.
+Authorization	header	string	mandatory	An Authorisation Token as per [RFC6750].
+x-v	header	string	optional	The version of the API end point requested by the client. Must be set to a positive integer.
 x-min-v	header	string	optional	The minimum version of the API end point requested by the client. Must be set to a positive integer if provided.
 updated-since	query	string(date-time)	optional	query filter returns results updated since the specified date-time
 page	query	integer(int32)	optional	the page number to return
@@ -4257,8 +4281,6 @@ Example responses
     "totalRecords": 0
   }
 }
-400 Response
-
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseRegisterDataHolderBrandList
@@ -4268,7 +4290,93 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the CDR Register has responded with.
- To perform this operation, you must be authenticated and authorised with the following scopes: cdr-register:bank:read, cdr-register:read
+ To perform this operation, you must be authenticated and authorised with the following scopes: cdr-register:read
+Get Data Holder Brands Summary
+
+Code samples
+
+GET https://<register-base-url>/cdr-register/v1/{industry}/data-holders/brands/summary HTTP/1.1
+
+Accept: application/json
+x-v: string
+x-min-v: string
+If-None-Match: string
+
+var headers = {
+  'Accept':'application/json',
+  'x-v':'string',
+  'x-min-v':'string',
+  'If-None-Match':'string'
+
+};
+
+$.ajax({
+  url: 'https://<register-base-url>/cdr-register/v1/{industry}/data-holders/brands/summary',
+  method: 'get',
+
+  headers: headers,
+  success: function(data) {
+    console.log(JSON.stringify(data));
+  }
+})
+
+GET /cdr-register/v1/{industry}/data-holders/brands/summary
+
+Endpoint used by participants to discover public details of Data Holder Brands from the CDR Register
+
+Endpoint Version
+Version	1
+Parameters
+Name	In	Type	Required	Description
+industry	path	string	mandatory	The industry the participant is retrieving data for (Banking, etc)
+x-v	header	string	mandatory	The version of the API end point requested by the client. Must be set to a positive integer.
+x-min-v	header	string	optional	The minimum version of the API end point requested by the client. Must be set to a positive integer if provided.
+If-None-Match	header	string	optional	Makes the request method conditional on a recipient cache or origin server not having any current representation of the target resource with an entity-tag that does not match any of those listed in the field-value.
+Enumerated Values
+Parameter	Value
+industry	banking
+industry	energy
+industry	telco
+industry	all
+Example responses
+
+200 Response
+
+{
+  "data": [
+    {
+      "dataHolderBrandId": "string",
+      "interimId": "string",
+      "brandName": "string",
+      "publicBaseUri": "string",
+      "logoUri": "string",
+      "industries": [
+        "banking"
+      ],
+      "lastUpdated": "2019-08-24T14:15:22Z",
+      "abn": "string",
+      "acn": "string",
+      "arbn": "string"
+    }
+  ],
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
+}
+Responses
+Status	Meaning	Description	Schema
+200	OK	Success	ResponseDataHoldersBrandSummaryList
+304	Not Modified	Not Modified - The current representation of the target resource matches with the entity-tag provided in the If-None-Match request header	None
+400	Bad Request	Missing Required Header / Invalid Version / Invalid Path Parameter	ResponseErrorListV2
+404	Not Found	Industry Not Found	ResponseErrorListV2
+406	Not Acceptable	Unsupported Version	ResponseErrorListV2
+Response Headers
+Status	Header	Type	Format	Description
+200	x-v	string		The version of the API end point that the CDR Register has responded with.
+200	Etag	string		Entity tag that uniquely represents the requested resource.
+304	Etag	string		Entity tag that uniquely represents the requested resource.
+ This operation does not require authentication
 Get Software Statement Assertion (SSA)
 
 Code samples
@@ -4309,11 +4417,11 @@ Version	3
 Parameters
 Name	In	Type	Required	Description
 industry	path	string	mandatory	The industry the participant is retrieving data for (Banking, etc)
-x-v	header	string	mandatory	The version of the API end point requested by the client. Must be set to a positive integer.
+x-v	header	string	optional	The version of the API end point requested by the client. Must be set to a positive integer.
 x-min-v	header	string	optional	The minimum version of the API end point requested by the client. Must be set to a positive integer if provided.
 dataRecipientBrandId	path	string	mandatory	Unique id for the Accredited Data Recipient Brand that the Software Product is associated with in the CDR Register
 softwareProductId	path	string	mandatory	Unique id for the Accredited Data Recipient Software Product in the CDR Register
-Authorization	header	string	mandatory	An Authorisation Token as per RFC6750.
+Authorization	header	string	mandatory	An Authorisation Token as per [RFC6750].
 Enumerated Values
 Parameter	Value
 industry	banking
@@ -4325,8 +4433,6 @@ Example responses
 200 Response
 
 "string"
-400 Response
-
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	string
@@ -4339,7 +4445,7 @@ Status	Meaning	Description	Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the CDR Register has responded with.
- To perform this operation, you must be authenticated and authorised with the following scopes: cdr-register:bank:read, cdr-register:read
+ To perform this operation, you must be authenticated and authorised with the following scopes: cdr-register:read
 Get Data Holder Statuses
 
 Code samples
@@ -4378,7 +4484,7 @@ Version	1
 Parameters
 Name	In	Type	Required	Description
 industry	path	string	mandatory	The industry the participant is retrieving data for (Banking, etc)
-x-v	header	string	mandatory	The version of the API end point requested by the client. Must be set to a positive integer.
+x-v	header	string	optional	The version of the API end point requested by the client. Must be set to a positive integer.
 x-min-v	header	string	optional	The minimum version of the API end point requested by the client. Must be set to a positive integer if provided.
 If-None-Match	header	string	optional	Makes the request method conditional on a recipient cache or origin server not having any current representation of the target resource with an entity-tag that does not match any of those listed in the field-value.
 Enumerated Values
@@ -4403,8 +4509,6 @@ Example responses
   },
   "meta": {}
 }
-400 Response
-
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	DataHoldersStatusList
@@ -4457,7 +4561,7 @@ Version	2
 Parameters
 Name	In	Type	Required	Description
 industry	path	string	mandatory	The industry the participant is retrieving data for (Banking, etc)
-x-v	header	string	mandatory	The version of the API end point requested by the client. Must be set to a positive integer.
+x-v	header	string	optional	The version of the API end point requested by the client. Must be set to a positive integer.
 x-min-v	header	string	optional	The minimum version of the API end point requested by the client. Must be set to a positive integer if provided.
 If-None-Match	header	string	optional	Makes the request method conditional on a recipient cache or origin server not having any current representation of the target resource with an entity-tag that does not match any of those listed in the field-value.
 Enumerated Values
@@ -4482,8 +4586,6 @@ Example responses
   },
   "meta": {}
 }
-400 Response
-
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	SoftwareProductsStatusList
@@ -4536,7 +4638,7 @@ Version	2
 Parameters
 Name	In	Type	Required	Description
 industry	path	string	mandatory	The industry the participant is retrieving data for (Banking, etc)
-x-v	header	string	mandatory	The version of the API end point requested by the client. Must be set to a positive integer.
+x-v	header	string	optional	The version of the API end point requested by the client. Must be set to a positive integer.
 x-min-v	header	string	optional	The minimum version of the API end point requested by the client. Must be set to a positive integer if provided.
 If-None-Match	header	string	optional	Makes the request method conditional on a recipient cache or origin server not having any current representation of the target resource with an entity-tag that does not match any of those listed in the field-value.
 Enumerated Values
@@ -4561,8 +4663,6 @@ Example responses
   },
   "meta": {}
 }
-400 Response
-
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	DataRecipientsStatusList
@@ -4615,7 +4715,7 @@ Version	3
 Parameters
 Name	In	Type	Required	Description
 industry	path	string	mandatory	The industry the participant is retrieving data for (Banking, etc)
-x-v	header	string	mandatory	The version of the API end point requested by the client. Must be set to a positive integer.
+x-v	header	string	optional	The version of the API end point requested by the client. Must be set to a positive integer.
 x-min-v	header	string	optional	The minimum version of the API end point requested by the client. Must be set to a positive integer if provided.
 If-None-Match	header	string	optional	Makes the request method conditional on a recipient cache or origin server not having any current representation of the target resource with an entity-tag that does not match any of those listed in the field-value.
 Enumerated Values
@@ -4662,8 +4762,6 @@ Example responses
   },
   "meta": {}
 }
-400 Response
-
 Responses
 Status	Meaning	Description	Schema
 200	OK	Success	ResponseRegisterDataRecipientList
@@ -4893,9 +4991,76 @@ authDetails	[RegisterDataHolderAuth]	mandatory	[Defines the mechanism used and a
 lastUpdated	DateTimeString	mandatory	The date/time that the Data Holder Brand data was last updated in the Register
 Enumerated Values
 Property	Value
+industries	banking
+industries	energy
+industries	telco
 status	ACTIVE
 status	INACTIVE
 status	REMOVED
+ResponseDataHoldersBrandSummaryList
+
+{
+  "data": [
+    {
+      "dataHolderBrandId": "string",
+      "interimId": "string",
+      "brandName": "string",
+      "publicBaseUri": "string",
+      "logoUri": "string",
+      "industries": [
+        "banking"
+      ],
+      "lastUpdated": "2019-08-24T14:15:22Z",
+      "abn": "string",
+      "acn": "string",
+      "arbn": "string"
+    }
+  ],
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
+}
+
+Properties
+Name	Type	Required	Description
+data	[DataHolderBrandSummary]	mandatory	Response data for the query
+links	Links	mandatory	none
+meta	Meta	mandatory	none
+DataHolderBrandSummary
+
+{
+  "dataHolderBrandId": "string",
+  "interimId": "string",
+  "brandName": "string",
+  "publicBaseUri": "string",
+  "logoUri": "string",
+  "industries": [
+    "banking"
+  ],
+  "lastUpdated": "2019-08-24T14:15:22Z",
+  "abn": "string",
+  "acn": "string",
+  "arbn": "string"
+}
+
+Properties
+Name	Type	Required	Description
+dataHolderBrandId	string	optional	Unique id of the Data Holder Brand issued by the CDR Register
+interimId	string	optional	Interim id of the Data Holder Brand issued by the CDR Register. This is to be used to uniquely identify the record when dataHolderBrandId is not populated and is not to be reused
+brandName	string	mandatory	The name of Data Holder Brand
+publicBaseUri	URIString	mandatory	Base URI for the Data Holder's Consumer Data Standard public endpoints
+logoUri	URIString	mandatory	Brand logo URI
+industries	[string]	mandatory	The industries the Data Holder Brand belongs to. Please note that the CDR Register entity model is constrained to one industry per brand which is planned to be relaxed in the future.
+lastUpdated	DateTimeString	mandatory	The date/time that the Data Holder Brand data was last updated in the Register
+abn	string	optional	Australian Business Number for the organisation
+acn	string	optional	Australian Company Number for the organisation
+arbn	string	optional	Australian Registered Body Number. ARBNs are issued to registrable Australian bodies and foreign companies
+Enumerated Values
+Property	Value
+industries	banking
+industries	energy
+industries	telco
 DataHoldersStatusList
 
 {
@@ -5181,7 +5346,7 @@ registeredCountry	string	optional	Country of registeration (if the company is re
 abn	string	optional	Australian Business Number for the organisation
 acn	string	optional	Australian Company Number for the organisation
 arbn	string	optional	Australian Registered Body Number. ARBNs are issued to registrable Australian bodies and foreign companies
-anzsicDivision	string	optional	ANZSIC division of the organisation. ANZSIC (2006)
+anzsicDivision	string	optional	ANZSIC division of the organisation. [ANZSIC-2006]
 organisationType	string	optional	Legal organisation type
 status	string	mandatory	none
 Enumerated Values
@@ -5398,7 +5563,14 @@ Admin Metadata Update Data	admin:metadata:update	Update notification accessible 
 
 Includes permission to notify Data Holders of changes to Data Recipient metadata held by the CDR Register.
 Bank Participant Data	cdr-register:bank:read	This scope would allow Data Recipients and Data Holders access to participant metadata in the banking sector, held by the CDR Register.
+This scope is valid for the following endpoint versions:
+GetDataHolderBrands V1
+GetSoftwareStatementAssertion V2
+This scope is replaced by cdr-register:read for newer versions of these endpoints.
 Participant Data	cdr-register:read	This scope would allow Data Recipients and Data Holders access to participant metadata held by the CDR Register.
+Replaces cdr-register:bank:read for the following endpoint versions:
+GetDataHolderBrands V2
+GetSoftwareStatementAssertion V3
 Register Client	cdr:registration	This scope would allow a Data Recipient to register or manage a software product client with a Data Holder.
 Non-functional Requirements
 The non-functional requirements (NFRs) for the Consumer Data Right regime cover a number of considerations:
@@ -11906,6 +12078,7 @@ Example responses
           "startDate": "string",
           "endDate": "string",
           "dailySupplyCharges": "string",
+          "timeZone": "LOCAL",
           "rateBlockUType": "singleRate",
           "singleRate": {
             "displayName": "string",
@@ -12095,6 +12268,7 @@ Example responses
           "startDate": "string",
           "endDate": "string",
           "dailySupplyCharges": "string",
+          "timeZone": "LOCAL",
           "rateBlockUType": "singleRate",
           "singleRate": {
             "displayName": "string",
@@ -12378,7 +12552,7 @@ Example responses
       }
     ],
     "location": {
-      "addressUType": "simple",
+      "addressUType": "paf",
       "simple": {
         "mailingName": "string",
         "addressLine1": "string",
@@ -12414,29 +12588,33 @@ Example responses
         "state": "string"
       }
     },
-    "meters": {
-      "meterId": "string",
-      "specifications": {
-        "status": "CURRENT",
-        "installationType": "BASIC",
-        "manufacturer": "string",
-        "model": "string",
-        "readType": "string",
-        "nextScheduledReadDate": "string"
-      },
-      "registers": {
-        "registerId": "string",
-        "registerSuffix": "string",
-        "averagedDailyLoad": 0,
-        "registerConsumptionType": "INTERVAL",
-        "networkTariffCode": "string",
-        "unitOfMeasure": "string",
-        "timeOfDay": "ALLDAY",
-        "multiplier": 0,
-        "controlledLoad": true,
-        "consumptionType": "ACTUAL"
+    "meters": [
+      {
+        "meterId": "string",
+        "specifications": {
+          "status": "CURRENT",
+          "installationType": "BASIC",
+          "manufacturer": "string",
+          "model": "string",
+          "readType": "string",
+          "nextScheduledReadDate": "string"
+        },
+        "registers": [
+          {
+            "registerId": "string",
+            "registerSuffix": "string",
+            "averagedDailyLoad": 0,
+            "registerConsumptionType": "INTERVAL",
+            "networkTariffCode": "string",
+            "unitOfMeasure": "string",
+            "timeOfDay": "ALLDAY",
+            "multiplier": 0,
+            "controlledLoad": true,
+            "consumptionType": "ACTUAL"
+          }
+        ]
       }
-    }
+    ]
   },
   "links": {
     "self": "string"
@@ -12509,7 +12687,7 @@ Version	1
 Parameters
 Name	In	Type	Required	Description
 servicePointId	path	string	mandatory	ID of the specific service point requested. This is a tokenised ID previous obtained from the Service Point List Data end point. Note that it is not a nationalMeteringId.
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
+oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
@@ -12635,7 +12813,7 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
+oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
@@ -12768,7 +12946,7 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
+oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
@@ -13602,6 +13780,7 @@ Example responses
                 "startDate": "string",
                 "endDate": "string",
                 "dailySupplyCharges": "string",
+                "timeZone": "LOCAL",
                 "rateBlockUType": "singleRate",
                 "singleRate": {
                   "displayName": "string",
@@ -13752,6 +13931,7 @@ Example responses
                 "startDate": "string",
                 "endDate": "string",
                 "dailySupplyCharges": "string",
+                "timeZone": "LOCAL",
                 "rateBlockUType": "singleRate",
                 "singleRate": {
                   "displayName": "string",
@@ -13990,15 +14170,18 @@ Example responses
   "data": {
     "concessions": [
       {
+        "type": "FIXED_AMOUNT",
         "displayName": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string",
         "startDate": "string",
         "endDate": "string",
-        "dailyDiscount": "string",
-        "monthlyDiscount": "string",
-        "yearlyDiscount": "string",
-        "percentageDiscount": "string"
+        "discountFrequency": "string",
+        "amount": "string",
+        "percentage": "string",
+        "appliedTo": [
+          "INVOICE"
+        ]
       }
     ]
   },
@@ -14373,7 +14556,7 @@ Parameters
 Name	In	Type	Required	Description
 accountId	path	string	mandatory	ID of a specific account to obtain data for. This is a tokenised ID previous obtained from the Account List end point.
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
+oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
@@ -14529,7 +14712,7 @@ Version	1
 Parameters
 Name	In	Type	Required	Description
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
+oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
@@ -14692,7 +14875,7 @@ Version	1
 Parameters
 Name	In	Type	Required	Description
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
+oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
@@ -14931,7 +15114,19 @@ Example responses
           "endDate": "string",
           "type": "ENVIRONMENTAL",
           "amount": "string",
-          "description": "string"
+          "description": "string",
+          "calculationFactors": [
+            {
+              "value": 0,
+              "type": "DLF"
+            }
+          ],
+          "adjustments": [
+            {
+              "amount": "string",
+              "description": "string"
+            }
+          ]
         },
         "payment": {
           "amount": "string",
@@ -15104,7 +15299,19 @@ Example responses
           "endDate": "string",
           "type": "ENVIRONMENTAL",
           "amount": "string",
-          "description": "string"
+          "description": "string",
+          "calculationFactors": [
+            {
+              "value": 0,
+              "type": "DLF"
+            }
+          ],
+          "adjustments": [
+            {
+              "amount": "string",
+              "description": "string"
+            }
+          ]
         },
         "payment": {
           "amount": "string",
@@ -15288,7 +15495,19 @@ Example responses
           "endDate": "string",
           "type": "ENVIRONMENTAL",
           "amount": "string",
-          "description": "string"
+          "description": "string",
+          "calculationFactors": [
+            {
+              "value": 0,
+              "type": "DLF"
+            }
+          ],
+          "adjustments": [
+            {
+              "amount": "string",
+              "description": "string"
+            }
+          ]
         },
         "payment": {
           "amount": "string",
@@ -15550,6 +15769,7 @@ EnergyPlanResponse
           "startDate": "string",
           "endDate": "string",
           "dailySupplyCharges": "string",
+          "timeZone": "LOCAL",
           "rateBlockUType": "singleRate",
           "singleRate": {
             "displayName": "string",
@@ -15739,6 +15959,7 @@ EnergyPlanResponse
           "startDate": "string",
           "endDate": "string",
           "dailySupplyCharges": "string",
+          "timeZone": "LOCAL",
           "rateBlockUType": "singleRate",
           "singleRate": {
             "displayName": "string",
@@ -15888,7 +16109,7 @@ EnergyServicePointDetailResponse
       }
     ],
     "location": {
-      "addressUType": "simple",
+      "addressUType": "paf",
       "simple": {
         "mailingName": "string",
         "addressLine1": "string",
@@ -15924,29 +16145,33 @@ EnergyServicePointDetailResponse
         "state": "string"
       }
     },
-    "meters": {
-      "meterId": "string",
-      "specifications": {
-        "status": "CURRENT",
-        "installationType": "BASIC",
-        "manufacturer": "string",
-        "model": "string",
-        "readType": "string",
-        "nextScheduledReadDate": "string"
-      },
-      "registers": {
-        "registerId": "string",
-        "registerSuffix": "string",
-        "averagedDailyLoad": 0,
-        "registerConsumptionType": "INTERVAL",
-        "networkTariffCode": "string",
-        "unitOfMeasure": "string",
-        "timeOfDay": "ALLDAY",
-        "multiplier": 0,
-        "controlledLoad": true,
-        "consumptionType": "ACTUAL"
+    "meters": [
+      {
+        "meterId": "string",
+        "specifications": {
+          "status": "CURRENT",
+          "installationType": "BASIC",
+          "manufacturer": "string",
+          "model": "string",
+          "readType": "string",
+          "nextScheduledReadDate": "string"
+        },
+        "registers": [
+          {
+            "registerId": "string",
+            "registerSuffix": "string",
+            "averagedDailyLoad": 0,
+            "registerConsumptionType": "INTERVAL",
+            "networkTariffCode": "string",
+            "unitOfMeasure": "string",
+            "timeOfDay": "ALLDAY",
+            "multiplier": 0,
+            "controlledLoad": true,
+            "consumptionType": "ACTUAL"
+          }
+        ]
       }
-    }
+    ]
   },
   "links": {
     "self": "string"
@@ -16341,6 +16566,7 @@ EnergyAccountDetailResponse
                 "startDate": "string",
                 "endDate": "string",
                 "dailySupplyCharges": "string",
+                "timeZone": "LOCAL",
                 "rateBlockUType": "singleRate",
                 "singleRate": {
                   "displayName": "string",
@@ -16491,6 +16717,7 @@ EnergyAccountDetailResponse
                 "startDate": "string",
                 "endDate": "string",
                 "dailySupplyCharges": "string",
+                "timeZone": "LOCAL",
                 "rateBlockUType": "singleRate",
                 "singleRate": {
                   "displayName": "string",
@@ -16593,15 +16820,18 @@ EnergyConcessionsResponse
   "data": {
     "concessions": [
       {
+        "type": "FIXED_AMOUNT",
         "displayName": "string",
         "additionalInfo": "string",
         "additionalInfoUri": "string",
         "startDate": "string",
         "endDate": "string",
-        "dailyDiscount": "string",
-        "monthlyDiscount": "string",
-        "yearlyDiscount": "string",
-        "percentageDiscount": "string"
+        "discountFrequency": "string",
+        "amount": "string",
+        "percentage": "string",
+        "appliedTo": [
+          "INVOICE"
+        ]
       }
     ]
   },
@@ -16818,7 +17048,19 @@ EnergyBillingListResponse
           "endDate": "string",
           "type": "ENVIRONMENTAL",
           "amount": "string",
-          "description": "string"
+          "description": "string",
+          "calculationFactors": [
+            {
+              "value": 0,
+              "type": "DLF"
+            }
+          ],
+          "adjustments": [
+            {
+              "amount": "string",
+              "description": "string"
+            }
+          ]
         },
         "payment": {
           "amount": "string",
@@ -17093,6 +17335,7 @@ EnergyPlanDetail
         "startDate": "string",
         "endDate": "string",
         "dailySupplyCharges": "string",
+        "timeZone": "LOCAL",
         "rateBlockUType": "singleRate",
         "singleRate": {
           "displayName": "string",
@@ -17282,6 +17525,7 @@ EnergyPlanDetail
         "startDate": "string",
         "endDate": "string",
         "dailySupplyCharges": "string",
+        "timeZone": "LOCAL",
         "rateBlockUType": "singleRate",
         "singleRate": {
           "displayName": "string",
@@ -17492,6 +17736,7 @@ EnergyPlanContract
       "startDate": "string",
       "endDate": "string",
       "dailySupplyCharges": "string",
+      "timeZone": "LOCAL",
       "rateBlockUType": "singleRate",
       "singleRate": {
         "displayName": "string",
@@ -17563,7 +17808,7 @@ TIME_OF_USE_CONT_LOAD - as above, but with an additional, separate unit rate cha
 FLEXIBLE - energy usage is charged at unit rates that vary based on external factors
 FLEXIBLE_CONT_LOAD - as above, but with an additional, separate unit rate charged for all energy usage from a controlled load i.e. separately metered appliance like hot water service, pool pump etc.
 QUOTA - all energy usage is charged at a single fixed rate, up to a specified usage quota/allowance. All excess usage beyond the allowance is then charged at a single unit rate (may not be the best way to explain it but it is essentially a ‘subscription’ or telco style product i.e. $50/month for up to 150kWh included usage
-timeZone	string	conditional	Required if pricingModel is set to TIME_OF_USE. Defines the time zone to use for calculation of the time of use thresholds
+timeZone	string	conditional	Required if pricingModel is set to TIME_OF_USE. Defines the time zone to use for calculation of the time of use thresholds. Defaults to AEST if absent
 isFixed	boolean	mandatory	Flag indicating whether prices are fixed or variable
 variation	string	conditional	Free text description of price variation policy and conditions for the contract. Mandatory if isFixed is true
 onExpiryDescription	string	optional	Free text field that describes what will occur on or prior to expiry of the fixed contract term or benefit period
@@ -17716,6 +17961,7 @@ EnergyPlanContractFull
       "startDate": "string",
       "endDate": "string",
       "dailySupplyCharges": "string",
+      "timeZone": "LOCAL",
       "rateBlockUType": "singleRate",
       "singleRate": {
         "displayName": "string",
@@ -17896,13 +18142,13 @@ type	string	mandatory	The type of the discount
 category	string	optional	The type of the discount. Mandatory if the discount type is CONDITIONAL
 endDate	DateString	optional	Optional end date for the discount after which the discount is no longer available
 methodUType	string	mandatory	The method of calculation of the discount
-percentOfBill	object	optional	Required if methodUType is percentOfBill
+percentOfBill	object	conditional	Required if methodUType is percentOfBill
 » rate	RateString	mandatory	The rate of the discount applied to the bill amount
-percentOfUse	object	optional	Required if methodUType is percentOfUse
+percentOfUse	object	conditional	Required if methodUType is percentOfUse
 » rate	RateString	mandatory	The rate of the discount applied to the usageamount
-fixedAmount	object	optional	Required if methodUType is fixedAmount
+fixedAmount	object	conditional	Required if methodUType is fixedAmount
 » amount	AmountString	mandatory	The amount of the discount
-percentOverThreshold	object	optional	Required if methodUType is percentOverThreshold
+percentOverThreshold	object	conditional	Required if methodUType is percentOverThreshold
 » rate	RateString	mandatory	The rate of the discount over the usage amount
 » usageAmount	AmountString	mandatory	The usage amount threshold above which the discount applies
 Enumerated Values
@@ -18095,7 +18341,7 @@ timeVaryingTariffs	object	conditional	Represents a tariff based on time. Mandato
 » type	string	optional	The type of the charging time period. If absent applies to all periods
 » amount	AmountString	mandatory	The tariff amount
 » timeVariations	[object]	mandatory	Array of time periods for which this tariff is applicable
-»» days	object	optional	none
+»» days	object	mandatory	none
 »»» weekdays	boolean	mandatory	Indicates whether the tariff is applicable Monday to Friday
 »»» weekend	boolean	mandatory	Indicates whether the tariff is applicable Saturday and Sunday
 »» startTime	TimeString	optional	The beginning of the time period per day for which the tariff applies. If absent assumes start of day (ie. midnight)
@@ -18120,6 +18366,7 @@ EnergyPlanTariffPeriod
     "startDate": "string",
     "endDate": "string",
     "dailySupplyCharges": "string",
+    "timeZone": "LOCAL",
     "rateBlockUType": "singleRate",
     "singleRate": {
       "displayName": "string",
@@ -18188,6 +18435,7 @@ displayName	string	mandatory	The name of the tariff period
 startDate	string	mandatory	The start date of the tariff period in a calendar year. Formatted in mm-dd format
 endDate	string	mandatory	The end date of the tariff period in a calendar year. Formatted in mm-dd format
 dailySupplyCharges	AmountString	optional	The amount of access charge for the tariff period, in dollars per day exclusive of GST.
+timeZone	string	optional	Specifies the charge specific time zone for calculation of the time of use thresholds. If absent, timezone value in EnergyPlanContract is assumed.
 rateBlockUType	string	mandatory	Specifies the type of rate applicable to this tariff period
 singleRate	object	conditional	Object representing a single rate. Required if rateBlockUType is singleRate
 » displayName	string	mandatory	Display name of the rate
@@ -18234,6 +18482,8 @@ type	METERING
 type	RETAIL_SERVICE
 type	RCTI
 type	OTHER
+timeZone	LOCAL
+timeZone	AEST
 rateBlockUType	singleRate
 rateBlockUType	timeOfUseRates
 rateBlockUType	demandCharges
@@ -18382,7 +18632,7 @@ EnergyServicePointDetail
     }
   ],
   "location": {
-    "addressUType": "simple",
+    "addressUType": "paf",
     "simple": {
       "mailingName": "string",
       "addressLine1": "string",
@@ -18418,29 +18668,33 @@ EnergyServicePointDetail
       "state": "string"
     }
   },
-  "meters": {
-    "meterId": "string",
-    "specifications": {
-      "status": "CURRENT",
-      "installationType": "BASIC",
-      "manufacturer": "string",
-      "model": "string",
-      "readType": "string",
-      "nextScheduledReadDate": "string"
-    },
-    "registers": {
-      "registerId": "string",
-      "registerSuffix": "string",
-      "averagedDailyLoad": 0,
-      "registerConsumptionType": "INTERVAL",
-      "networkTariffCode": "string",
-      "unitOfMeasure": "string",
-      "timeOfDay": "ALLDAY",
-      "multiplier": 0,
-      "controlledLoad": true,
-      "consumptionType": "ACTUAL"
+  "meters": [
+    {
+      "meterId": "string",
+      "specifications": {
+        "status": "CURRENT",
+        "installationType": "BASIC",
+        "manufacturer": "string",
+        "model": "string",
+        "readType": "string",
+        "nextScheduledReadDate": "string"
+      },
+      "registers": [
+        {
+          "registerId": "string",
+          "registerSuffix": "string",
+          "averagedDailyLoad": 0,
+          "registerConsumptionType": "INTERVAL",
+          "networkTariffCode": "string",
+          "unitOfMeasure": "string",
+          "timeOfDay": "ALLDAY",
+          "multiplier": 0,
+          "controlledLoad": true,
+          "consumptionType": "ACTUAL"
+        }
+      ]
     }
-  }
+  ]
 }
 
 Properties
@@ -18483,47 +18737,14 @@ relatedParticipants	[object]	mandatory	none
 FRMP - Financially Responsible Market Participant
 LNSP - Local Network Service Provider or Embedded Network Manager for child connection points
 DRSP - wholesale Demand Response and/or market ancillary Service Provider and note that where it is not relevant for a NMI it will not be included
-location	object	mandatory	none
-» addressUType	string	mandatory	The type of address object present
-» simple	object	conditional	The address of the service point. Mandatory if addressUType is set to simple
-»» mailingName	string	optional	Name of the individual or business formatted for inclusion in an address used for physical mail
-»» addressLine1	string	mandatory	First line of the standard address object
-»» addressLine2	string	optional	Second line of the standard address object
-»» addressLine3	string	optional	Third line of the standard address object
-»» postcode	string	conditional	Mandatory for Australian addresses
-»» city	string	mandatory	Name of the city or locality
-»» state	string	mandatory	Free text if the country is not Australia. If country is Australia then must be one of the values defined by the State Type Abbreviation in the PAF file format. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
-»» country	ExternalRef	optional	A valid ISO 3166 Alpha-3 country code. Australia (AUS) is assumed if country is not present.
-» paf	object	conditional	The address of the service point. Mandatory if addressUType is set to paf. Formatted according to the file format defined by the PAF file format
-»» dpid	string	optional	Unique identifier for an address as defined by Australia Post. Also known as Delivery Point Identifier
-»» thoroughfareNumber1	PositiveInteger	optional	Thoroughfare number for a property (first number in a property ranged address)
-»» thoroughfareNumber1Suffix	string	optional	Suffix for the thoroughfare number. Only relevant is thoroughfareNumber1 is populated
-»» thoroughfareNumber2	PositiveInteger	optional	Second thoroughfare number (only used if the property has a ranged address eg 23-25)
-»» thoroughfareNumber2Suffix	string	optional	Suffix for the second thoroughfare number. Only relevant is thoroughfareNumber2 is populated
-»» flatUnitType	string	optional	Type of flat or unit for the address
-»» flatUnitNumber	string	optional	Unit number (including suffix, if applicable)
-»» floorLevelType	string	optional	Type of floor or level for the address
-»» floorLevelNumber	string	optional	Floor or level number (including alpha characters)
-»» lotNumber	string	optional	Allotment number for the address
-»» buildingName1	string	optional	Building/Property name 1
-»» buildingName2	string	optional	Building/Property name 2
-»» streetName	string	optional	The name of the street
-»» streetType	string	optional	The street type. Valid enumeration defined by Australia Post PAF code file
-»» streetSuffix	string	optional	The street type suffix. Valid enumeration defined by Australia Post PAF code file
-»» postalDeliveryType	string	optional	Postal delivery type. (eg. PO BOX). Valid enumeration defined by Australia Post PAF code file
-»» postalDeliveryNumber	PositiveInteger	optional	Postal delivery number if the address is a postal delivery type
-»» postalDeliveryNumberPrefix	string	optional	Postal delivery number prefix related to the postal delivery number
-»» postalDeliveryNumberSuffix	string	optional	Postal delivery number suffix related to the postal delivery number
-»» localityName	string	mandatory	Full name of locality
-»» postcode	string	mandatory	Postcode for the locality
-»» state	string	mandatory	State in which the address belongs. Valid enumeration defined by Australia Post PAF code file State Type Abbreviation. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
-» meters	object	mandatory	none
-»» meterId	string	mandatory	The meter ID uniquely identifies a meter for a given service point. It is unique in the context of the service point. It is not globally unique
-»» specifications	object	mandatory	Technical characteristics of the meter
-»»» status	string	mandatory	A code to denote the status of the meter. Note the details of enumeration values below:
+location	CommonPhysicalAddress	mandatory	Location of the servicepoint
+meters	[object]	optional	The meters associated with the service point. This may be empty where there are no meters physically installed at the service point
+» meterId	string	mandatory	The meter ID uniquely identifies a meter for a given service point. It is unique in the context of the service point. It is not globally unique
+» specifications	object	mandatory	Technical characteristics of the meter
+»» status	string	mandatory	A code to denote the status of the meter. Note the details of enumeration values below:
 CURRENT -Applies when a meter is current and not disconnected
 DISCONNECTED - Applies when a meter is present but has been remotely disconnected
-»»» installationType	string	mandatory	The metering Installation type code indicates whether the metering installation has to be manually read. Note the details of enumeration values below:
+»» installationType	string	mandatory	The metering Installation type code indicates whether the metering installation has to be manually read. Note the details of enumeration values below:
 BASIC - Accumulation Meter – Type 6
 COMMS1 - Interval Meter with communications – Type 1
 COMMS2 - Interval Meter with communications – Type 2
@@ -18536,9 +18757,9 @@ MRIM - Manually Read Interval Meter – Type 5
 UMCP - Unmetered Supply – Type 7
 VICAMI - A relevant metering installation as defined in clause 9.9C of the NER
 NCONUML - Non-contestable unmeter load - Introduced as part of Global Settlement
-»»» manufacturer	string	optional	Free text field to identify the manufacturer of the installed meter
-»»» model	string	optional	Free text field to identify the meter manufacturer’s designation for the meter model
-»»» readType	string	optional	Code to denote the method and frequency of Meter Reading. The value is formatted as follows:
+»» manufacturer	string	optional	Free text field to identify the manufacturer of the installed meter
+»» model	string	optional	Free text field to identify the meter manufacturer’s designation for the meter model
+»» readType	string	optional	Code to denote the method and frequency of Meter Reading. The value is formatted as follows:
 First Character = Remote (R) or Manual (M)
 Second Character = Mode: T = telephone W = wireless P = powerline I = infra-red G = galvanic V = visual
 Third Character = Frequency of Scheduled Meter Readings: 1 = Twelve times per year 2 = Six times per year 3 = Four times per year D = Daily or weekly
@@ -18547,18 +18768,18 @@ For example,
 MV3 = Manual, Visual, Quarterly
 MV3M = Manual, Visual, Quarterly, Manually Read Accumulation Meter
 RWDC = Remote, Wireless, Daily, 30 minutes interval
-»»» nextScheduledReadDate	DateString	optional	This date is the next scheduled meter read date (NSRD) if a manual Meter Reading is required
-»» registers	object	mandatory	Usage data registers available from the meter
-»»» registerId	string	mandatory	Unique identifier of the register within this service point. Is not globally unique
-»»» registerSuffix	string	mandatory	Register suffix of the meter register where the meter reads are obtained
-»»» averagedDailyLoad	number	optional	The energy delivered through a connection point or metering point over an extended period normalised to a 'per day' basis (kWh). This value is calculated annually.
-»»» registerConsumptionType	string	mandatory	Indicates the consumption type of register
-»»» networkTariffCode	string	optional	The Network Tariff Code is a free text field containing a code supplied and published by the local network service provider
-»»» unitOfMeasure	string	optional	The unit of measure for data held in this register
-»»» timeOfDay	string	optional	Code to identify the time validity of register contents
-»»» multiplier	number	optional	Multiplier required to take a register value and turn it into a value representing billable energy
-»»» controlledLoad	boolean	optional	Indicates whether the energy recorded by this register is created under a Controlled Load regime
-»»» consumptionType	string	optional	Actual/Subtractive Indicator. Note the details of enumeration values below:
+»» nextScheduledReadDate	DateString	optional	This date is the next scheduled meter read date (NSRD) if a manual Meter Reading is required
+» registers	[object]	optional	Usage data registers available from the meter. This may be empty where there are no meters physically installed at the service point
+»» registerId	string	mandatory	Unique identifier of the register within this service point. Is not globally unique
+»» registerSuffix	string	optional	Register suffix of the meter register where the meter reads are obtained
+»» averagedDailyLoad	number	optional	The energy delivered through a connection point or metering point over an extended period normalised to a 'per day' basis (kWh). This value is calculated annually.
+»» registerConsumptionType	string	mandatory	Indicates the consumption type of register
+»» networkTariffCode	string	optional	The Network Tariff Code is a free text field containing a code supplied and published by the local network service provider
+»» unitOfMeasure	string	optional	The unit of measure for data held in this register
+»» timeOfDay	string	optional	Code to identify the time validity of register contents
+»» multiplier	number	optional	Multiplier required to take a register value and turn it into a value representing billable energy
+»» controlledLoad	boolean	optional	Indicates whether the energy recorded by this register is created under a Controlled Load regime
+»» consumptionType	string	optional	Actual/Subtractive Indicator. Note the details of enumeration values below:
 ACTUAL implies volume of energy actually metered between two dates
 CUMULATIVE indicates a meter reading for a specific date. A second Meter Reading is required to determine the consumption between those two Meter Reading dates
 Enumerated Values
@@ -18592,8 +18813,6 @@ threshold	HIGH
 role	FRMP
 role	LNSP
 role	DRSP
-addressUType	simple
-addressUType	paf
 status	CURRENT
 status	DISCONNECTED
 installationType	BASIC
@@ -19002,6 +19221,7 @@ EnergyAccountDetail
               "startDate": "string",
               "endDate": "string",
               "dailySupplyCharges": "string",
+              "timeZone": "LOCAL",
               "rateBlockUType": "singleRate",
               "singleRate": {
                 "displayName": "string",
@@ -19168,6 +19388,7 @@ EnergyAccountDetail
               "startDate": "string",
               "endDate": "string",
               "dailySupplyCharges": "string",
+              "timeZone": "LOCAL",
               "rateBlockUType": "singleRate",
               "singleRate": {
                 "displayName": "string",
@@ -19335,28 +19556,41 @@ calculationType	CALCULATED
 EnergyConcession
 
 {
+  "type": "FIXED_AMOUNT",
   "displayName": "string",
   "additionalInfo": "string",
   "additionalInfoUri": "string",
   "startDate": "string",
   "endDate": "string",
-  "dailyDiscount": "string",
-  "monthlyDiscount": "string",
-  "yearlyDiscount": "string",
-  "percentageDiscount": "string"
+  "discountFrequency": "string",
+  "amount": "string",
+  "percentage": "string",
+  "appliedTo": [
+    "INVOICE"
+  ]
 }
 
 Properties
 Name	Type	Required	Description
+type	string	mandatory	Indicator of the method of concession calculation
 displayName	string	mandatory	The display name of the concession
-additionalInfo	string	optional	Display text providing more information on the concession
+additionalInfo	string	conditional	Display text providing more information on the concession. Mandatory if type is VARIABLE
 additionalInfoUri	URIString	optional	Optional link to additional information regarding the concession
 startDate	DateString	optional	Optional start date for the application of the concession
 endDate	DateString	optional	Optional end date for the application of the concession
-dailyDiscount	AmountString	conditional	Daily discount value due to the concession. At least one dailyDiscount, monthlyDiscount, yearlyDiscount and percentageDiscount must be provided
-monthlyDiscount	AmountString	conditional	Monthly discount value due to the concession. At least one dailyDiscount, monthlyDiscount, yearlyDiscount and percentageDiscount must be provided
-yearlyDiscount	AmountString	conditional	Annual discount value due to the concession. At least one dailyDiscount, monthlyDiscount, yearlyDiscount and percentageDiscount must be provided
-percentageDiscount	RateString	conditional	Percentage of each invoice to be discounted due to the concession. At least one dailyDiscount, monthlyDiscount, yearlyDiscount and percentageDiscount must be provided
+discountFrequency	ExternalRef	conditional	Conditional attribute for frequency at which a concession is applied. Required if type is FIXED_AMOUNT or FIXED_PERCENTAGE. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
+amount	AmountString	conditional	Conditional attribute for the amount of discount for the concession- required if type is FIXED_AMOUNT
+percentage	RateString	conditional	Conditional attribute for the percentage of discount of concession - required if type is FIXED_PERCENTAGE
+appliedTo	[string]	optional	Array of ENUM's to specify what the concession applies to. Multiple ENUM values can be provided. If absent, USAGE is assumed
+Enumerated Values
+Property	Value
+type	FIXED_AMOUNT
+type	FIXED_PERCENTAGE
+type	VARIABLE
+appliedTo	INVOICE
+appliedTo	USAGE
+appliedTo	SERVICE_CHARGE
+appliedTo	CONTROLLED_LOAD
 EnergyInvoice
 
 {
@@ -19597,15 +19831,25 @@ EnergyBillingTransaction
     "endDate": "string",
     "type": "ENVIRONMENTAL",
     "amount": "string",
-    "description": "string"
+    "description": "string",
+    "calculationFactors": [
+      {
+        "value": 0,
+        "type": "DLF"
+      }
+    ],
+    "adjustments": [
+      {
+        "amount": "string",
+        "description": "string"
+      }
+    ]
   },
   "payment": {
     "amount": "string",
     "method": "DIRECT_DEBIT"
   }
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -19651,8 +19895,6 @@ EnergyBillingUsageTransaction
     }
   ]
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -19719,8 +19961,6 @@ EnergyBillingDemandTransaction
   ]
 }
 
-
-
 Properties
 Name	Type	Required	Description
 servicePointId	string	optional	The ID of the service point to which this transaction applies if any
@@ -19760,8 +20000,6 @@ EnergyBillingOnceOffTransaction
   "description": "string"
 }
 
-
-
 Properties
 Name	Type	Required	Description
 servicePointId	string	optional	The ID of the service point to which this transaction applies if any
@@ -19777,10 +20015,20 @@ EnergyBillingOtherTransaction
   "endDate": "string",
   "type": "ENVIRONMENTAL",
   "amount": "string",
-  "description": "string"
+  "description": "string",
+  "calculationFactors": [
+    {
+      "value": 0,
+      "type": "DLF"
+    }
+  ],
+  "adjustments": [
+    {
+      "amount": "string",
+      "description": "string"
+    }
+  ]
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -19791,6 +20039,12 @@ endDate	DateString	optional	Optional end date for the application of the charge
 type	string	optional	Type of charge. Assumed to be other if absent
 amount	AmountString	mandatory	The amount of the charge
 description	string	mandatory	A free text description of the item
+calculationFactors	[object]	optional	Additional calculation factors that inform the transaction
+» value	number	mandatory	The value of the calculation factor
+» type	string	mandatory	The type of the calculation factor
+adjustments	[object]	optional	Optional array of adjustments arising for this transaction
+» amount	AmountString	mandatory	The amount of the adjustment
+» description	string	mandatory	A free text description of the adjustment
 Enumerated Values
 Property	Value
 type	ENVIRONMENTAL
@@ -19800,14 +20054,14 @@ type	METERING
 type	RETAIL_SERVICE
 type	RCTI
 type	OTHER
+type	DLF
+type	MLF
 EnergyBillingPaymentTransaction
 
 {
   "amount": "string",
   "method": "DIRECT_DEBIT"
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -19822,6 +20076,133 @@ method	BPAY
 method	CASH
 method	CHEQUE
 method	OTHER
+CommonPhysicalAddress
+
+{
+  "addressUType": "paf",
+  "simple": {
+    "mailingName": "string",
+    "addressLine1": "string",
+    "addressLine2": "string",
+    "addressLine3": "string",
+    "postcode": "string",
+    "city": "string",
+    "state": "string",
+    "country": "AUS"
+  },
+  "paf": {
+    "dpid": "string",
+    "thoroughfareNumber1": 0,
+    "thoroughfareNumber1Suffix": "string",
+    "thoroughfareNumber2": 0,
+    "thoroughfareNumber2Suffix": "string",
+    "flatUnitType": "string",
+    "flatUnitNumber": "string",
+    "floorLevelType": "string",
+    "floorLevelNumber": "string",
+    "lotNumber": "string",
+    "buildingName1": "string",
+    "buildingName2": "string",
+    "streetName": "string",
+    "streetType": "string",
+    "streetSuffix": "string",
+    "postalDeliveryType": "string",
+    "postalDeliveryNumber": 0,
+    "postalDeliveryNumberPrefix": "string",
+    "postalDeliveryNumberSuffix": "string",
+    "localityName": "string",
+    "postcode": "string",
+    "state": "string"
+  }
+}
+
+Properties
+Name	Type	Required	Description
+addressUType	string	mandatory	The type of address object present
+simple	CommonSimpleAddress	conditional	Required if addressUType is set to simple
+paf	CommonPAFAddress	conditional	Australian address formatted according to the file format defined by the PAF file format. Required if addressUType is set to paf
+Enumerated Values
+Property	Value
+addressUType	paf
+addressUType	simple
+CommonSimpleAddress
+
+{
+  "mailingName": "string",
+  "addressLine1": "string",
+  "addressLine2": "string",
+  "addressLine3": "string",
+  "postcode": "string",
+  "city": "string",
+  "state": "string",
+  "country": "AUS"
+}
+
+Required if addressUType is set to simple
+
+Properties
+Name	Type	Required	Description
+mailingName	string	optional	Name of the individual or business formatted for inclusion in an address used for physical mail
+addressLine1	string	mandatory	First line of the standard address object
+addressLine2	string	optional	Second line of the standard address object
+addressLine3	string	optional	Third line of the standard address object
+postcode	string	conditional	Mandatory for Australian addresses
+city	string	mandatory	Name of the city or locality
+state	string	mandatory	Free text if the country is not Australia. If country is Australia then must be one of the values defined by the State Type Abbreviation in the PAF file format. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
+country	ExternalRef	optional	A valid ISO 3166 Alpha-3 country code. Australia (AUS) is assumed if country is not present.
+CommonPAFAddress
+
+{
+  "dpid": "string",
+  "thoroughfareNumber1": 0,
+  "thoroughfareNumber1Suffix": "string",
+  "thoroughfareNumber2": 0,
+  "thoroughfareNumber2Suffix": "string",
+  "flatUnitType": "string",
+  "flatUnitNumber": "string",
+  "floorLevelType": "string",
+  "floorLevelNumber": "string",
+  "lotNumber": "string",
+  "buildingName1": "string",
+  "buildingName2": "string",
+  "streetName": "string",
+  "streetType": "string",
+  "streetSuffix": "string",
+  "postalDeliveryType": "string",
+  "postalDeliveryNumber": 0,
+  "postalDeliveryNumberPrefix": "string",
+  "postalDeliveryNumberSuffix": "string",
+  "localityName": "string",
+  "postcode": "string",
+  "state": "string"
+}
+
+Australian address formatted according to the file format defined by the PAF file format. Required if addressUType is set to paf
+
+Properties
+Name	Type	Required	Description
+dpid	string	optional	Unique identifier for an address as defined by Australia Post. Also known as Delivery Point Identifier
+thoroughfareNumber1	PositiveInteger	optional	Thoroughfare number for a property (first number in a property ranged address)
+thoroughfareNumber1Suffix	string	optional	Suffix for the thoroughfare number. Only relevant is thoroughfareNumber1 is populated
+thoroughfareNumber2	PositiveInteger	optional	Second thoroughfare number (only used if the property has a ranged address eg 23-25)
+thoroughfareNumber2Suffix	string	optional	Suffix for the second thoroughfare number. Only relevant is thoroughfareNumber2 is populated
+flatUnitType	string	optional	Type of flat or unit for the address
+flatUnitNumber	string	optional	Unit number (including suffix, if applicable)
+floorLevelType	string	optional	Type of floor or level for the address
+floorLevelNumber	string	optional	Floor or level number (including alpha characters)
+lotNumber	string	optional	Allotment number for the address
+buildingName1	string	optional	Building/Property name 1
+buildingName2	string	optional	Building/Property name 2
+streetName	string	optional	The name of the street
+streetType	string	optional	The street type. Valid enumeration defined by Australia Post PAF code file
+streetSuffix	string	optional	The street type suffix. Valid enumeration defined by Australia Post PAF code file
+postalDeliveryType	string	optional	Postal delivery type. (eg. PO BOX). Valid enumeration defined by Australia Post PAF code file
+postalDeliveryNumber	PositiveInteger	optional	Postal delivery number if the address is a postal delivery type
+postalDeliveryNumberPrefix	string	optional	Postal delivery number prefix related to the postal delivery number
+postalDeliveryNumberSuffix	string	optional	Postal delivery number suffix related to the postal delivery number
+localityName	string	mandatory	Full name of locality
+postcode	string	mandatory	Postcode for the locality
+state	string	mandatory	State in which the address belongs. Valid enumeration defined by Australia Post PAF code file State Type Abbreviation. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
 Links
 
 {
@@ -22096,7 +22477,7 @@ The x-fapi-auth-date header MUST NOT be passed to AEMO and AEMO MUST NOT require
 The x-fapi-customer-ip-address header MUST NOT be passed to AEMO and AEMO MUST NOT require this header
 The x-cds-client-headers header MUST NOT be passed to AEMO and AEMO MUST NOT require this header
 A new header named x-cds-arrangement must be passed to AEMO for every invocation. This header should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field MUST be populated but AEMO MUST NOT seek to validate the consent associated with the arrangement
-All occurrences of the servicePointId field, whether in a request, a response, or as a query parameter should be populated with the equivalent NationalMeteringId in plain text
+All occurrences of the servicePointId field, whether in a request, a response, or as an input parameter (such as path parameter or query parameter) should be populated with the equivalent NationalMeteringId in plain text
 Fields in the links object for all responses MUST be translated by the Data Holder into values that are valid for a Data Recipient to be able to call back to the Data Holder
 The Get Service Points end point MUST be changed from a GET to a POST and will have the same request payload as the Get Usage For Specific Service Points endpoint
 Additional Requirements
@@ -22116,10 +22497,6 @@ This specification defines the APIs for Data Holders exposing Energy Secondary D
 
 Energy Secondary Data Holder OpenAPI Specification (JSON)
 Energy Secondary Data Holder OpenAPI Specification (YAML)
-Note that in the documentation of the Secondary Data Holder endpoints below it is indicated the no authentication is required.
-
-This should be understood to mean that there is no authentication documented in these standards. The actual security requirements for invocation of the AEMO hosted endpoints will be defined by AEMO as staged in the Energy Shared Responsibility section.
-
 Get Service Points (SR)
 
 Code samples
@@ -22175,7 +22552,7 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	mandatory	The x-fapi-interaction-id header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder MUST create a unique [RFC4122] UUID value for the x-fapi-interaction-id header.
 x-cds-arrangement	header	string	mandatory	A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier MUST be unique per customer according to the definition of customer in the CDR Federation section of this profile. The x-cds-arrangement should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field MUST be populated but AEMO MUST NOT seek to validate the consent associated with the arrangement
 body	body	servicePointIdList	mandatory	Request payload containing list of specific Service Points to obtain data for
 » data	body	object	mandatory	none
@@ -22280,7 +22657,7 @@ Name	In	Type	Required	Description
 servicePointId	path	string	mandatory	The independent ID of the service point, known in the industry as the NMI. The servicePointId will be replaced with NMI for all interactions between Data Holder and AEMO.
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	mandatory	The x-fapi-interaction-id header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder MUST create a unique [RFC4122] UUID value for the x-fapi-interaction-id header.
 x-cds-arrangement	header	string	mandatory	A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier MUST be unique per customer according to the definition of customer in the CDR Federation section of this profile. The x-cds-arrangement should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field MUST be populated but AEMO MUST NOT seek to validate the consent associated with the arrangement
 Example responses
 
@@ -22312,7 +22689,7 @@ Example responses
       }
     ],
     "location": {
-      "addressUType": "simple",
+      "addressUType": "paf",
       "simple": {
         "mailingName": "string",
         "addressLine1": "string",
@@ -22348,29 +22725,33 @@ Example responses
         "state": "string"
       }
     },
-    "meters": {
-      "meterId": "string",
-      "specifications": {
-        "status": "CURRENT",
-        "installationType": "BASIC",
-        "manufacturer": "string",
-        "model": "string",
-        "readType": "string",
-        "nextScheduledReadDate": "string"
-      },
-      "registers": {
-        "registerId": "string",
-        "registerSuffix": "string",
-        "averagedDailyLoad": 0,
-        "registerConsumptionType": "INTERVAL",
-        "networkTariffCode": "string",
-        "unitOfMeasure": "string",
-        "timeOfDay": "ALLDAY",
-        "multiplier": 0,
-        "controlledLoad": true,
-        "consumptionType": "ACTUAL"
+    "meters": [
+      {
+        "meterId": "string",
+        "specifications": {
+          "status": "CURRENT",
+          "installationType": "BASIC",
+          "manufacturer": "string",
+          "model": "string",
+          "readType": "string",
+          "nextScheduledReadDate": "string"
+        },
+        "registers": [
+          {
+            "registerId": "string",
+            "registerSuffix": "string",
+            "averagedDailyLoad": 0,
+            "registerConsumptionType": "INTERVAL",
+            "networkTariffCode": "string",
+            "unitOfMeasure": "string",
+            "timeOfDay": "ALLDAY",
+            "multiplier": 0,
+            "controlledLoad": true,
+            "consumptionType": "ACTUAL"
+          }
+        ]
       }
-    }
+    ]
   },
   "links": {
     "self": "string"
@@ -22439,13 +22820,13 @@ Version	1
 Parameters
 Name	In	Type	Required	Description
 servicePointId	path	string	mandatory	The independent ID of the service point, known in the industry as the NMI. The servicePointId will be replaced with NMI for all interactions between Data Holder and AEMO.
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
+oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	mandatory	The x-fapi-interaction-id header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder MUST create a unique [RFC4122] UUID value for the x-fapi-interaction-id header.
 x-cds-arrangement	header	string	mandatory	A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier MUST be unique per customer according to the definition of customer in the CDR Federation section of this profile. The x-cds-arrangement should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field MUST be populated but AEMO MUST NOT seek to validate the consent associated with the arrangement
 Example responses
 
@@ -22571,13 +22952,13 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
+oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	mandatory	The x-fapi-interaction-id header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder MUST create a unique [RFC4122] UUID value for the x-fapi-interaction-id header.
 x-cds-arrangement	header	string	mandatory	A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier MUST be unique per customer according to the definition of customer in the CDR Federation section of this profile. The x-cds-arrangement should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field MUST be populated but AEMO MUST NOT seek to validate the consent associated with the arrangement
 body	body	servicePointIdList	mandatory	Request payload containing list of specific Service Points to obtain data for
 » data	body	object	mandatory	none
@@ -22695,7 +23076,7 @@ Name	In	Type	Required	Description
 servicePointId	path	string	mandatory	The independent ID of the service point, known in the industry as the NMI. The servicePointId will be replaced with NMI for all interactions between Data Holder and AEMO.
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	mandatory	The x-fapi-interaction-id header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder MUST create a unique [RFC4122] UUID value for the x-fapi-interaction-id header.
 x-cds-arrangement	header	string	mandatory	A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier MUST be unique per customer according to the definition of customer in the CDR Federation section of this profile. The x-cds-arrangement should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field MUST be populated but AEMO MUST NOT seek to validate the consent associated with the arrangement
 Example responses
 
@@ -22835,7 +23216,7 @@ page	query	PositiveInteger	optional	Page of results to request (standard paginat
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
-x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+x-fapi-interaction-id	header	string	mandatory	The x-fapi-interaction-id header value provided by the Data Recipient. If not supplied by the Data Recipient, the primary Data Holder MUST create a unique [RFC4122] UUID value for the x-fapi-interaction-id header.
 x-cds-arrangement	header	string	mandatory	A unique string representing a consent arrangement between a Data Recipient Software Product and Data Holder for a given consumer. The identifier MUST be unique per customer according to the definition of customer in the CDR Federation section of this profile. The x-cds-arrangement should contain the arrangement ID for the consent that the request is being made under and will be used for tracing and audit purposes. This field MUST be populated but AEMO MUST NOT seek to validate the consent associated with the arrangement
 body	body	servicePointIdList	mandatory	Request payload containing list of specific Service Points to obtain data for
 » data	body	object	mandatory	none
@@ -22973,8 +23354,6 @@ EnergyServicePointListResponse
   }
 }
 
-
-
 Properties
 Name	Type	Required	Description
 data	object	mandatory	none
@@ -23009,7 +23388,7 @@ EnergyServicePointDetailResponse
       }
     ],
     "location": {
-      "addressUType": "simple",
+      "addressUType": "paf",
       "simple": {
         "mailingName": "string",
         "addressLine1": "string",
@@ -23045,37 +23424,39 @@ EnergyServicePointDetailResponse
         "state": "string"
       }
     },
-    "meters": {
-      "meterId": "string",
-      "specifications": {
-        "status": "CURRENT",
-        "installationType": "BASIC",
-        "manufacturer": "string",
-        "model": "string",
-        "readType": "string",
-        "nextScheduledReadDate": "string"
-      },
-      "registers": {
-        "registerId": "string",
-        "registerSuffix": "string",
-        "averagedDailyLoad": 0,
-        "registerConsumptionType": "INTERVAL",
-        "networkTariffCode": "string",
-        "unitOfMeasure": "string",
-        "timeOfDay": "ALLDAY",
-        "multiplier": 0,
-        "controlledLoad": true,
-        "consumptionType": "ACTUAL"
+    "meters": [
+      {
+        "meterId": "string",
+        "specifications": {
+          "status": "CURRENT",
+          "installationType": "BASIC",
+          "manufacturer": "string",
+          "model": "string",
+          "readType": "string",
+          "nextScheduledReadDate": "string"
+        },
+        "registers": [
+          {
+            "registerId": "string",
+            "registerSuffix": "string",
+            "averagedDailyLoad": 0,
+            "registerConsumptionType": "INTERVAL",
+            "networkTariffCode": "string",
+            "unitOfMeasure": "string",
+            "timeOfDay": "ALLDAY",
+            "multiplier": 0,
+            "controlledLoad": true,
+            "consumptionType": "ACTUAL"
+          }
+        ]
       }
-    }
+    ]
   },
   "links": {
     "self": "string"
   },
   "meta": {}
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -23126,8 +23507,6 @@ EnergyUsageListResponse
     "totalPages": 0
   }
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -23206,8 +23585,6 @@ EnergyDerListResponse
   }
 }
 
-
-
 Properties
 Name	Type	Required	Description
 data	object	mandatory	none
@@ -23274,8 +23651,6 @@ EnergyDerDetailResponse
   "meta": {}
 }
 
-
-
 Properties
 Name	Type	Required	Description
 data	EnergyDerRecord	mandatory	none
@@ -23295,8 +23670,6 @@ ErrorListResponse
     }
   ]
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -23322,8 +23695,6 @@ EnergyServicePoint
     "threshold": "LOW"
   }
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -23410,7 +23781,7 @@ EnergyServicePointDetail
     }
   ],
   "location": {
-    "addressUType": "simple",
+    "addressUType": "paf",
     "simple": {
       "mailingName": "string",
       "addressLine1": "string",
@@ -23446,32 +23817,34 @@ EnergyServicePointDetail
       "state": "string"
     }
   },
-  "meters": {
-    "meterId": "string",
-    "specifications": {
-      "status": "CURRENT",
-      "installationType": "BASIC",
-      "manufacturer": "string",
-      "model": "string",
-      "readType": "string",
-      "nextScheduledReadDate": "string"
-    },
-    "registers": {
-      "registerId": "string",
-      "registerSuffix": "string",
-      "averagedDailyLoad": 0,
-      "registerConsumptionType": "INTERVAL",
-      "networkTariffCode": "string",
-      "unitOfMeasure": "string",
-      "timeOfDay": "ALLDAY",
-      "multiplier": 0,
-      "controlledLoad": true,
-      "consumptionType": "ACTUAL"
+  "meters": [
+    {
+      "meterId": "string",
+      "specifications": {
+        "status": "CURRENT",
+        "installationType": "BASIC",
+        "manufacturer": "string",
+        "model": "string",
+        "readType": "string",
+        "nextScheduledReadDate": "string"
+      },
+      "registers": [
+        {
+          "registerId": "string",
+          "registerSuffix": "string",
+          "averagedDailyLoad": 0,
+          "registerConsumptionType": "INTERVAL",
+          "networkTariffCode": "string",
+          "unitOfMeasure": "string",
+          "timeOfDay": "ALLDAY",
+          "multiplier": 0,
+          "controlledLoad": true,
+          "consumptionType": "ACTUAL"
+        }
+      ]
     }
-  }
+  ]
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -23513,47 +23886,14 @@ relatedParticipants	[object]	mandatory	none
 FRMP - Financially Responsible Market Participant
 LNSP - Local Network Service Provider or Embedded Network Manager for child connection points
 DRSP - wholesale Demand Response and/or market ancillary Service Provider and note that where it is not relevant for a NMI it will not be included
-location	object	mandatory	none
-» addressUType	string	mandatory	The type of address object present
-» simple	object	conditional	The address of the service point. Mandatory if addressUType is set to simple
-»» mailingName	string	optional	Name of the individual or business formatted for inclusion in an address used for physical mail
-»» addressLine1	string	mandatory	First line of the standard address object
-»» addressLine2	string	optional	Second line of the standard address object
-»» addressLine3	string	optional	Third line of the standard address object
-»» postcode	string	conditional	Mandatory for Australian addresses
-»» city	string	mandatory	Name of the city or locality
-»» state	string	mandatory	Free text if the country is not Australia. If country is Australia then must be one of the values defined by the State Type Abbreviation in the PAF file format. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
-»» country	ExternalRef	optional	A valid ISO 3166 Alpha-3 country code. Australia (AUS) is assumed if country is not present.
-» paf	object	conditional	The address of the service point. Mandatory if addressUType is set to paf. Formatted according to the file format defined by the PAF file format
-»» dpid	string	optional	Unique identifier for an address as defined by Australia Post. Also known as Delivery Point Identifier
-»» thoroughfareNumber1	PositiveInteger	optional	Thoroughfare number for a property (first number in a property ranged address)
-»» thoroughfareNumber1Suffix	string	optional	Suffix for the thoroughfare number. Only relevant is thoroughfareNumber1 is populated
-»» thoroughfareNumber2	PositiveInteger	optional	Second thoroughfare number (only used if the property has a ranged address eg 23-25)
-»» thoroughfareNumber2Suffix	string	optional	Suffix for the second thoroughfare number. Only relevant is thoroughfareNumber2 is populated
-»» flatUnitType	string	optional	Type of flat or unit for the address
-»» flatUnitNumber	string	optional	Unit number (including suffix, if applicable)
-»» floorLevelType	string	optional	Type of floor or level for the address
-»» floorLevelNumber	string	optional	Floor or level number (including alpha characters)
-»» lotNumber	string	optional	Allotment number for the address
-»» buildingName1	string	optional	Building/Property name 1
-»» buildingName2	string	optional	Building/Property name 2
-»» streetName	string	optional	The name of the street
-»» streetType	string	optional	The street type. Valid enumeration defined by Australia Post PAF code file
-»» streetSuffix	string	optional	The street type suffix. Valid enumeration defined by Australia Post PAF code file
-»» postalDeliveryType	string	optional	Postal delivery type. (eg. PO BOX). Valid enumeration defined by Australia Post PAF code file
-»» postalDeliveryNumber	PositiveInteger	optional	Postal delivery number if the address is a postal delivery type
-»» postalDeliveryNumberPrefix	string	optional	Postal delivery number prefix related to the postal delivery number
-»» postalDeliveryNumberSuffix	string	optional	Postal delivery number suffix related to the postal delivery number
-»» localityName	string	mandatory	Full name of locality
-»» postcode	string	mandatory	Postcode for the locality
-»» state	string	mandatory	State in which the address belongs. Valid enumeration defined by Australia Post PAF code file State Type Abbreviation. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
-» meters	object	mandatory	none
-»» meterId	string	mandatory	The meter ID uniquely identifies a meter for a given service point. It is unique in the context of the service point. It is not globally unique
-»» specifications	object	mandatory	Technical characteristics of the meter
-»»» status	string	mandatory	A code to denote the status of the meter. Note the details of enumeration values below:
+location	CommonPhysicalAddress	mandatory	Location of the servicepoint
+meters	[object]	optional	The meters associated with the service point. This may be empty where there are no meters physically installed at the service point
+» meterId	string	mandatory	The meter ID uniquely identifies a meter for a given service point. It is unique in the context of the service point. It is not globally unique
+» specifications	object	mandatory	Technical characteristics of the meter
+»» status	string	mandatory	A code to denote the status of the meter. Note the details of enumeration values below:
 CURRENT -Applies when a meter is current and not disconnected
 DISCONNECTED - Applies when a meter is present but has been remotely disconnected
-»»» installationType	string	mandatory	The metering Installation type code indicates whether the metering installation has to be manually read. Note the details of enumeration values below:
+»» installationType	string	mandatory	The metering Installation type code indicates whether the metering installation has to be manually read. Note the details of enumeration values below:
 BASIC - Accumulation Meter – Type 6
 COMMS1 - Interval Meter with communications – Type 1
 COMMS2 - Interval Meter with communications – Type 2
@@ -23566,9 +23906,9 @@ MRIM - Manually Read Interval Meter – Type 5
 UMCP - Unmetered Supply – Type 7
 VICAMI - A relevant metering installation as defined in clause 9.9C of the NER
 NCONUML - Non-contestable unmeter load - Introduced as part of Global Settlement
-»»» manufacturer	string	optional	Free text field to identify the manufacturer of the installed meter
-»»» model	string	optional	Free text field to identify the meter manufacturer’s designation for the meter model
-»»» readType	string	optional	Code to denote the method and frequency of Meter Reading. The value is formatted as follows:
+»» manufacturer	string	optional	Free text field to identify the manufacturer of the installed meter
+»» model	string	optional	Free text field to identify the meter manufacturer’s designation for the meter model
+»» readType	string	optional	Code to denote the method and frequency of Meter Reading. The value is formatted as follows:
 First Character = Remote (R) or Manual (M)
 Second Character = Mode: T = telephone W = wireless P = powerline I = infra-red G = galvanic V = visual
 Third Character = Frequency of Scheduled Meter Readings: 1 = Twelve times per year 2 = Six times per year 3 = Four times per year D = Daily or weekly
@@ -23577,18 +23917,18 @@ For example,
 MV3 = Manual, Visual, Quarterly
 MV3M = Manual, Visual, Quarterly, Manually Read Accumulation Meter
 RWDC = Remote, Wireless, Daily, 30 minutes interval
-»»» nextScheduledReadDate	DateString	optional	This date is the next scheduled meter read date (NSRD) if a manual Meter Reading is required
-»» registers	object	mandatory	Usage data registers available from the meter
-»»» registerId	string	mandatory	Unique identifier of the register within this service point. Is not globally unique
-»»» registerSuffix	string	mandatory	Register suffix of the meter register where the meter reads are obtained
-»»» averagedDailyLoad	number	optional	The energy delivered through a connection point or metering point over an extended period normalised to a 'per day' basis (kWh). This value is calculated annually.
-»»» registerConsumptionType	string	mandatory	Indicates the consumption type of register
-»»» networkTariffCode	string	optional	The Network Tariff Code is a free text field containing a code supplied and published by the local network service provider
-»»» unitOfMeasure	string	optional	The unit of measure for data held in this register
-»»» timeOfDay	string	optional	Code to identify the time validity of register contents
-»»» multiplier	number	optional	Multiplier required to take a register value and turn it into a value representing billable energy
-»»» controlledLoad	boolean	optional	Indicates whether the energy recorded by this register is created under a Controlled Load regime
-»»» consumptionType	string	optional	Actual/Subtractive Indicator. Note the details of enumeration values below:
+»» nextScheduledReadDate	DateString	optional	This date is the next scheduled meter read date (NSRD) if a manual Meter Reading is required
+» registers	[object]	optional	Usage data registers available from the meter. This may be empty where there are no meters physically installed at the service point
+»» registerId	string	mandatory	Unique identifier of the register within this service point. Is not globally unique
+»» registerSuffix	string	optional	Register suffix of the meter register where the meter reads are obtained
+»» averagedDailyLoad	number	optional	The energy delivered through a connection point or metering point over an extended period normalised to a 'per day' basis (kWh). This value is calculated annually.
+»» registerConsumptionType	string	mandatory	Indicates the consumption type of register
+»» networkTariffCode	string	optional	The Network Tariff Code is a free text field containing a code supplied and published by the local network service provider
+»» unitOfMeasure	string	optional	The unit of measure for data held in this register
+»» timeOfDay	string	optional	Code to identify the time validity of register contents
+»» multiplier	number	optional	Multiplier required to take a register value and turn it into a value representing billable energy
+»» controlledLoad	boolean	optional	Indicates whether the energy recorded by this register is created under a Controlled Load regime
+»» consumptionType	string	optional	Actual/Subtractive Indicator. Note the details of enumeration values below:
 ACTUAL implies volume of energy actually metered between two dates
 CUMULATIVE indicates a meter reading for a specific date. A second Meter Reading is required to determine the consumption between those two Meter Reading dates
 Enumerated Values
@@ -23622,8 +23962,6 @@ threshold	HIGH
 role	FRMP
 role	LNSP
 role	DRSP
-addressUType	simple
-addressUType	paf
 status	CURRENT
 status	DISCONNECTED
 installationType	BASIC
@@ -23685,8 +24023,6 @@ EnergyUsageRead
     ]
   }
 }
-
-
 
 Properties
 Name	Type	Required	Description
@@ -23772,8 +24108,6 @@ EnergyDerRecord
   ]
 }
 
-
-
 Properties
 Name	Type	Required	Description
 servicePointId	string	mandatory	The independent ID of the service point, known in the industry as the National Meter Identifier (NMI). Note that the servicePointId will be replaced with NMI for all interactions between Data Holder and AEMO.
@@ -23836,6 +24170,133 @@ type	RENEWABLE
 type	GEOTHERMAL
 type	STORAGE
 type	OTHER
+CommonPhysicalAddress
+
+{
+  "addressUType": "paf",
+  "simple": {
+    "mailingName": "string",
+    "addressLine1": "string",
+    "addressLine2": "string",
+    "addressLine3": "string",
+    "postcode": "string",
+    "city": "string",
+    "state": "string",
+    "country": "AUS"
+  },
+  "paf": {
+    "dpid": "string",
+    "thoroughfareNumber1": 0,
+    "thoroughfareNumber1Suffix": "string",
+    "thoroughfareNumber2": 0,
+    "thoroughfareNumber2Suffix": "string",
+    "flatUnitType": "string",
+    "flatUnitNumber": "string",
+    "floorLevelType": "string",
+    "floorLevelNumber": "string",
+    "lotNumber": "string",
+    "buildingName1": "string",
+    "buildingName2": "string",
+    "streetName": "string",
+    "streetType": "string",
+    "streetSuffix": "string",
+    "postalDeliveryType": "string",
+    "postalDeliveryNumber": 0,
+    "postalDeliveryNumberPrefix": "string",
+    "postalDeliveryNumberSuffix": "string",
+    "localityName": "string",
+    "postcode": "string",
+    "state": "string"
+  }
+}
+
+Properties
+Name	Type	Required	Description
+addressUType	string	mandatory	The type of address object present
+simple	CommonSimpleAddress	conditional	Required if addressUType is set to simple
+paf	CommonPAFAddress	conditional	Australian address formatted according to the file format defined by the PAF file format. Required if addressUType is set to paf
+Enumerated Values
+Property	Value
+addressUType	paf
+addressUType	simple
+CommonSimpleAddress
+
+{
+  "mailingName": "string",
+  "addressLine1": "string",
+  "addressLine2": "string",
+  "addressLine3": "string",
+  "postcode": "string",
+  "city": "string",
+  "state": "string",
+  "country": "AUS"
+}
+
+Required if addressUType is set to simple
+
+Properties
+Name	Type	Required	Description
+mailingName	string	optional	Name of the individual or business formatted for inclusion in an address used for physical mail
+addressLine1	string	mandatory	First line of the standard address object
+addressLine2	string	optional	Second line of the standard address object
+addressLine3	string	optional	Third line of the standard address object
+postcode	string	conditional	Mandatory for Australian addresses
+city	string	mandatory	Name of the city or locality
+state	string	mandatory	Free text if the country is not Australia. If country is Australia then must be one of the values defined by the State Type Abbreviation in the PAF file format. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
+country	ExternalRef	optional	A valid ISO 3166 Alpha-3 country code. Australia (AUS) is assumed if country is not present.
+CommonPAFAddress
+
+{
+  "dpid": "string",
+  "thoroughfareNumber1": 0,
+  "thoroughfareNumber1Suffix": "string",
+  "thoroughfareNumber2": 0,
+  "thoroughfareNumber2Suffix": "string",
+  "flatUnitType": "string",
+  "flatUnitNumber": "string",
+  "floorLevelType": "string",
+  "floorLevelNumber": "string",
+  "lotNumber": "string",
+  "buildingName1": "string",
+  "buildingName2": "string",
+  "streetName": "string",
+  "streetType": "string",
+  "streetSuffix": "string",
+  "postalDeliveryType": "string",
+  "postalDeliveryNumber": 0,
+  "postalDeliveryNumberPrefix": "string",
+  "postalDeliveryNumberSuffix": "string",
+  "localityName": "string",
+  "postcode": "string",
+  "state": "string"
+}
+
+Australian address formatted according to the file format defined by the PAF file format. Required if addressUType is set to paf
+
+Properties
+Name	Type	Required	Description
+dpid	string	optional	Unique identifier for an address as defined by Australia Post. Also known as Delivery Point Identifier
+thoroughfareNumber1	PositiveInteger	optional	Thoroughfare number for a property (first number in a property ranged address)
+thoroughfareNumber1Suffix	string	optional	Suffix for the thoroughfare number. Only relevant is thoroughfareNumber1 is populated
+thoroughfareNumber2	PositiveInteger	optional	Second thoroughfare number (only used if the property has a ranged address eg 23-25)
+thoroughfareNumber2Suffix	string	optional	Suffix for the second thoroughfare number. Only relevant is thoroughfareNumber2 is populated
+flatUnitType	string	optional	Type of flat or unit for the address
+flatUnitNumber	string	optional	Unit number (including suffix, if applicable)
+floorLevelType	string	optional	Type of floor or level for the address
+floorLevelNumber	string	optional	Floor or level number (including alpha characters)
+lotNumber	string	optional	Allotment number for the address
+buildingName1	string	optional	Building/Property name 1
+buildingName2	string	optional	Building/Property name 2
+streetName	string	optional	The name of the street
+streetType	string	optional	The street type. Valid enumeration defined by Australia Post PAF code file
+streetSuffix	string	optional	The street type suffix. Valid enumeration defined by Australia Post PAF code file
+postalDeliveryType	string	optional	Postal delivery type. (eg. PO BOX). Valid enumeration defined by Australia Post PAF code file
+postalDeliveryNumber	PositiveInteger	optional	Postal delivery number if the address is a postal delivery type
+postalDeliveryNumberPrefix	string	optional	Postal delivery number prefix related to the postal delivery number
+postalDeliveryNumberSuffix	string	optional	Postal delivery number suffix related to the postal delivery number
+localityName	string	mandatory	Full name of locality
+postcode	string	mandatory	Postcode for the locality
+state	string	mandatory	State in which the address belongs. Valid enumeration defined by Australia Post PAF code file State Type Abbreviation. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
 Links
 
 {
@@ -23900,6 +24361,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+23/05/2022	1.17.0	Changes arising from Decision 237 (Maintenance Iteration 10)	See release notes and Decision 237 for details
 22/03/2022	1.16.1	Minor errata and documentation fixes. Update of swagger files to OAS3	See release notes for details
 04/02/2022	1.16.0	Changes arising from Decision 222 (Insights and Trusted Adviser Disclosure Consents CX Standards)	See release notes, Decision 222 for details
 23/12/2021	1.15.0	Changes arising from Decision 199 (Binding Energy Standards), Decision 162 (Joint Account CX standards), Decision 209 (FAPI 1.0 migration), Decision 216 (OIDC Profile Scope) and Decision 212 (Maintenance Iteration 9 change requests)	See release notes, Decision 199, Decision 162, Decision 209, Decision 212, and Decision 216 for details
@@ -24001,6 +24463,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+22/03/2022	1.16.1	Minor errata and documentation fixes. Update of swagger files to OAS3
 04/02/2022	1.16.0	Changes arising from Decision 222 (Insights and Trusted Adviser Disclosure Consents CX Standards)
 23/12/2021	1.15.0	Changes arising from Decision 199, 162, 209, 216 and 212
 See Decision 199 (Binding Energy Standards), Decision 162 (Joint Account CX standards), Decision 209 (FAPI 1.0 migration), Decision 216 (OIDC Profile Scope) and Decision 212 (Maintenance Iteration 9 change requests) for details
@@ -24027,4 +24490,4 @@ See Decision 199 (Binding Energy Standards), Decision 162 (Joint Account CX stan
 18/12/2018	0.1.0	Christmas 2018 Working Draft - InfoSec Profile
 18/12/2018	0.2.0	Christmas 2018 Working Draft - Standards
 2/11/2018	0.1.0	November 2018 Working Draft
-Non-normative ExamplesVersion Delta
+Non-normative ExamplesVersion Delta‹ ›
