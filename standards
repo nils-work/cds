@@ -36,7 +36,7 @@ The standards are required to be published. The obligations on CDR participants 
 where the rules require compliance with the standards, non-compliance with the standards may constitute a breach of the rules.
 where the standards are specified as binding standards as required by the Consumer Data Right rules for the purposes of s56FA of the legislation, they apply as under contract between a data holder and an accredited data recipient. The legal effect of binding standards as between data holders and accredited data recipients is fully set out in s56FD and s56FE of the legislation.
 Version
-These standards represent version 1.15.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.16.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Interpretation
 Note that, in these standards, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in RFC2119.
@@ -1531,6 +1531,8 @@ Accessibility
 Input assistance	Data Recipients and Data Holders MUST seek to have all aspects of the Consent Model comply with WCAG 3.3. This will help users avoid and correct mistakes.
 Consent Standards
 Area	CX Standard
+Consent:
+Redirection	Data recipients MUST notify consumers of redirection prior to authentication.
 Disclosure consent:
 Collection source	In the course of seeking a consumer’s consent to disclose data as part of a disclosure consent:
 Data Recipients MUST specify which CDR Participant(s) they collected the associated CDR data from
@@ -1543,8 +1545,57 @@ Disclosure Consent: Descriptions of Data to be Collected and Disclosed	If:
 An accredited person is seeking a collection consent to collect CDR data from a particular accredited data recipient; or
 An accredited data recipient is seeking a disclosure consent from a consumer to disclose CDR data;
 and the data subject to the disclosure or collection is not within the data language standards as it does not relate to a relevant data cluster, then that data MUST be described in language that is as easy to understand as practicable.
-Consent:
-Redirection	Data recipients MUST notify consumers of redirection prior to authentication.
+
+Disclosure Consent: Insight Descriptions
+
+The standards in this section outline insight description requirements that apply where an insight disclosure consent is being sought and may also feature in CDR Receipts and Dashboards. These standards do not alter any existing rules obligations for CDR receipts or dashboards.
+
+Note: The use of the term ‘data recipients’ to refer to accredited data recipients is consistent with the data standards nomenclature. Where these standards refer to ‘data recipient’, this should not be taken to mean a non-accredited person or trusted adviser.
+
+Area	CX Standard
+Insight disclosure:
+Insight comprehension	Data recipients MUST use plain and concise language to describe what an insight would reveal or describe.
+
+Where possible and practical, the actual insight SHOULD be displayed to the consumer prior to the insight being disclosed.
+
+Where it is not possible to display the actual insight, accredited data recipients SHOULD include an example of the insight that demonstrates what the insight may reveal or describe. Accredited data recipients SHOULD make clear that any such examples are hypothetical.
+Insight disclosure:
+Insight timing	Data recipients MUST specify the period the insight will refer to and MAY note when the insight will be or is expected to be generated.
+Insight disclosure:
+Purpose of insight	Data recipients SHOULD explain the purpose of generating the insight.
+Insight disclosure:
+Insight generation	Data recipients MAY explain how the insight will be generated using plain and concise language, which MAY include:
+what method(s) would be used to generate the insight(s);
+who would be involved in generating the insight(s), such as the specific actor(s); and
+what information sources would be used to generate the insight, such as the specific dataset(s)
+
+Disclosure Consent: Non-Accredited Person Disclosure Notification
+
+The standards in this section outline requirements that apply when a disclosure consent is being sought to disclose data to a non-accredited person, which includes insight disclosure consents and trusted adviser disclosure consents.
+
+These standards will feature where such a disclosure consent is being sought and may, as stated in any accompanying notes, also feature in CDR Receipts and Dashboards.
+
+Note: The use of the term ‘data recipients’ to refer to accredited data recipients is consistent with the data standards nomenclature. Where these standards refer to ‘data recipient’, this should not be taken to mean a non-accredited person or trusted adviser.
+
+Area	CX Standard
+Disclosure consent:
+CDR protections	Data recipients MUST state that data disclosed to a non-accredited person will not be regulated as part of the Consumer Data Right.
+
+Data recipients MAY include a plain and concise explanation of what this means, which MAY include information on the Consumer Data Right, and MAY include a link to the Office of the Australian Information Commissioner guidance on the Consumer Data Right.
+Disclosure consent:
+Review	Data recipients MUST advise the consumer to review how the non-accredited person will handle their data.
+Disclosure consent:
+Data handling	If available, data recipients MAY include a link to any relevant data handling policies of the non-accredited person, such as their Privacy Policy.
+Disclosure consent:
+Complaints	Data recipients MUST provide plain and concise information on dispute resolution and making a complaint. This SHOULD reflect the process and information contained in the data recipient’s CDR policy related to complaints. This MAY also include a link to the accredited data recipient’s CDR policy.
+Disclosure consent:
+Insight records	When seeking an insight disclosure consent, data recipients MUST provide instructions for how the consumer can access further records, including the actual insights (as per Rules 1.14 and 9.5).
+Disclosure consent:
+Notification record	Data recipients MUST provide the information contained in the disclosure notification otherwise than in the consent flow. This SHOULD be contained in the consumer’s CDR Receipt. This SHOULD also be accessible in the consumer dashboard as part of the data sharing arrangement details.
+
+Note 1: The information to be included is limited to the following standards: CDR Protections; Review; Data Handling; Complaints; and Insight Records. The scope of information to include will depend on the accredited person’s specific implementation.
+
+Note 2: This standard does not alter any existing rules obligations for CDR receipts or dashboards.
 Authentication Standards
 Area	CX Standard
 Authentication:
@@ -1849,7 +1900,7 @@ Data Recipient Software Products MAY send requests with a "x-fapi-customer-ip-ad
 From September 16th 2022, the following requirements apply in addition to the FAPI 1.0 Migration Phase 1 requirements:
 
 Data Recipient Software Products MUST support FAPI 1.0 Advanced Profile ([FAPI-1.0-Advanced]).
-Data Recipient Software Products MUST use [RFC9126] (PAR) with [PKCE] (RFC7636) and, if supported, MUST use S256 as the code challenge method.
+Data Recipient Software Products MUST use [RFC9126] (PAR) with [PKCE] (RFC7636) and MUST use S256 as the code challenge method.
 Data Recipient Software Products SHOULD use OIDC Authorization Code Flow.
 
 OIDC Hybrid Flow
@@ -2041,9 +2092,6 @@ cdr_arrangement_jwt=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiIsImtpZCI6IjEyNDU2In0.ey .
    "exp":1516239322,
    "jti":"dba86502-7cf5-4719-9638-c5339a0ddb06"
 }
-If the Data Holder supports the Self-signed JWT Client Authentication method for authenticating the CDR Register, the client ID MUST be set to a value of ‘cdr-register’.
-
-Data Holders calling Data Recipients
 Non-Normative Example - Data Recipient Software Product calls Data Holder's token end point.
 
 POST /token HTTP/1.1
@@ -3443,7 +3491,7 @@ Reference	Description	Version
 [RFC7009]	OAuth 2.0 Token Revocation: https://tools.ietf.org/html/rfc7009	Aug 2013
 [RFC7523]	JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants: https://tools.ietf.org/html/rfc7523	May 2015
 [RFC7662]	OAuth 2.0 Token Introspection: https://tools.ietf.org/html/rfc7662	Oct 2015
-[RFC9126]	OAuth 2.0 Pushed Authorization Requests:	Sep 2021
+[RFC9126]	OAuth 2.0 Pushed Authorization Requests: https://tools.ietf.org/html/rfc9126	Sep 2021
 Informative References
 Reference	Description
 [BCP195]	Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS): https://tools.ietf.org/html/bcp195
@@ -4030,7 +4078,7 @@ Example responses
     "string"
   ],
   "tls_client_certificate_bound_access_tokens": true,
-  "request_object_signing_alg_values_supported": [
+  "token_endpoint_auth_signing_alg_values_supported": [
     "string"
   ]
 }
@@ -4650,7 +4698,7 @@ ResponseOpenIDProviderConfigMetadata
     "string"
   ],
   "tls_client_certificate_bound_access_tokens": true,
-  "request_object_signing_alg_values_supported": [
+  "token_endpoint_auth_signing_alg_values_supported": [
     "string"
   ]
 }
@@ -4671,7 +4719,7 @@ response_types_supported	[string]	mandatory	JSON array containing a list of the 
 grant_types_supported	[string]	mandatory	JSON array containing a list of the OAuth 2.0 Grant Type values that the CDR Register supports
 token_endpoint_auth_methods_supported	[string]	mandatory	JSON array containing a list of Client Authentication methods supported by this Token Endpoint
 tls_client_certificate_bound_access_tokens	boolean	mandatory	Boolean value indicating server support for mutual TLS client certificate bound access tokens
-request_object_signing_alg_values_supported	[string]	mandatory	JSON array containing a list of the JWS signing algorithms (alg values) supported by the CDR Register for Request Objects.
+token_endpoint_auth_signing_alg_values_supported	[string]	mandatory	JSON array containing a list of the JWS signing algorithms (alg values) supported by the token endpoint for the signature on the JWT [JWT] used to authenticate the client at the token endpoint for the \"private_key_jwt\" authentication method
 ResponseJWKS
 
 {
@@ -4830,7 +4878,7 @@ logoUri	URIString	mandatory	Brand logo URI
 legalEntity	LegalEntityDetail	mandatory	The data that is common to all organisations, regardless of the type (e.g. company, trust, partnership, government)
 status	string	mandatory	none
 endpointDetail	RegisterDataHolderBrandServiceEndpoint	mandatory	Endpoints related to Data Holder Brand services
-authDetails	[RegisterDataHolderAuth]	mandatory	[Provides details of authorisation endpoints for Data Holders]
+authDetails	[RegisterDataHolderAuth]	mandatory	[Defines the mechanism used and associated endpoints for Data Holder to Data Recipient authentication]
 lastUpdated	DateTimeString	mandatory	The date/time that the Data Holder Brand data was last updated in the Register
 Enumerated Values
 Property	Value
@@ -5163,12 +5211,12 @@ RegisterDataHolderAuth
   "jwksEndpoint": "string"
 }
 
-Provides details of authorisation endpoints for Data Holders
+Defines the mechanism used and associated endpoints for Data Holder to Data Recipient authentication
 
 Properties
 Name	Type	Required	Description
 registerUType	string	mandatory	The type of authentication and authorisation mechanism in use
-jwksEndpoint	URIString	mandatory	JWKS endpoint for private_key_jwt client authentication with Data Recipient
+jwksEndpoint	URIString	mandatory	JWKS endpoint used for authentication by the Data Holder with the Data Recipient
 Enumerated Values
 Property	Value
 registerUType	SIGNED-JWT
@@ -7769,23 +7817,84 @@ product-category	TRANS_AND_SAVINGS_ACCOUNTS
 product-category	TRAVEL_CARDS
 Example responses
 
-4xx Response
+200 Response
 
 {
-  "errors": [
-    {
-      "code": "string",
-      "title": "string",
-      "detail": "string",
-      "meta": {
-        "urn": "string"
+  "data": {
+    "products": [
+      {
+        "productId": "string",
+        "effectiveFrom": "string",
+        "effectiveTo": "string",
+        "lastUpdated": "string",
+        "productCategory": "BUSINESS_LOANS",
+        "name": "string",
+        "description": "string",
+        "brand": "string",
+        "brandName": "string",
+        "applicationUri": "string",
+        "isTailored": true,
+        "additionalInformation": {
+          "overviewUri": "string",
+          "termsUri": "string",
+          "eligibilityUri": "string",
+          "feesAndPricingUri": "string",
+          "bundleUri": "string",
+          "additionalOverviewUris": [
+            {
+              "description": "string",
+              "additionalInfoUri": "string"
+            }
+          ],
+          "additionalTermsUris": [
+            {
+              "description": "string",
+              "additionalInfoUri": "string"
+            }
+          ],
+          "additionalEligibilityUris": [
+            {
+              "description": "string",
+              "additionalInfoUri": "string"
+            }
+          ],
+          "additionalFeesAndPricingUris": [
+            {
+              "description": "string",
+              "additionalInfoUri": "string"
+            }
+          ],
+          "additionalBundleUris": [
+            {
+              "description": "string",
+              "additionalInfoUri": "string"
+            }
+          ]
+        },
+        "cardArt": [
+          {
+            "title": "string",
+            "imageUri": "string"
+          }
+        ]
       }
-    }
-  ]
+    ]
+  },
+  "links": {
+    "self": "string",
+    "first": "string",
+    "prev": "string",
+    "next": "string",
+    "last": "string"
+  },
+  "meta": {
+    "totalRecords": 0,
+    "totalPages": 0
+  }
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Success	None
+200	OK	Success	ResponseBankingProductListV2
 4xx	Client Error	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Date
@@ -7794,7 +7903,6 @@ Status	Meaning	Description	Schema
 406 - Unsupported Version
 422 - Invalid Page
 ResponseErrorListV2
-Response Schema
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -11391,8 +11499,8 @@ fuelType	query	string	optional	Used to filter results on the fuelType field. Any
 effective	query	string	optional	Allows for the filtering of plans based on whether the current time is within the period of time defined as effective by the effectiveFrom and effectiveTo fields. Valid values are ‘CURRENT’, ‘FUTURE’ and ‘ALL’. If absent defaults to 'CURRENT'
 updated-since	query	DateTimeString	optional	Only include plans that have been updated after the specified date and time. If absent defaults to include all plans
 brand	query	string	optional	Used to filter results on the brand field. If absent defaults to include all plans
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -12000,8 +12108,8 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -12266,8 +12374,8 @@ Name	In	Type	Required	Description
 servicePointId	path	string	mandatory	ID of the specific service point requested. This is a tokenised ID previous obtained from the Service Point List Data end point. Note that it is not a nationalMeteringId.
 oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -12383,8 +12491,8 @@ Parameters
 Name	In	Type	Required	Description
 oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -12510,8 +12618,8 @@ Parameters
 Name	In	Type	Required	Description
 oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -12756,8 +12864,8 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -12907,8 +13015,8 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -13052,8 +13160,8 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -13843,8 +13951,8 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -13947,8 +14055,8 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -14048,8 +14156,8 @@ Name	In	Type	Required	Description
 accountId	path	string	mandatory	ID of a specific account to obtain data for. This is a tokenised ID previous obtained from the Account List end point.
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -14195,8 +14303,8 @@ Parameters
 Name	In	Type	Required	Description
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -14352,8 +14460,8 @@ Parameters
 Name	In	Type	Required	Description
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months days. Format is aligned to DateString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -14504,8 +14612,8 @@ Name	In	Type	Required	Description
 accountId	path	string	mandatory	ID of a specific account to obtain data for. This is a tokenised ID previous obtained from the Account List end point.
 newest-time	query	DateTimeString	optional	Constrain the request to records with effective time at or before this date/time. If absent defaults to current date/time. Format is aligned to DateTimeString common type
 oldest-time	query	DateTimeString	optional	Constrain the request to records with effective time at or after this date/time. If absent defaults to newest-time minus 12 months. Format is aligned to DateTimeString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -14668,8 +14776,8 @@ Parameters
 Name	In	Type	Required	Description
 newest-time	query	DateTimeString	optional	Constrain the request to records with effective time at or before this date/time. If absent defaults to current date/time. Format is aligned to DateTimeString common type
 oldest-time	query	DateTimeString	optional	Constrain the request to records with effective time at or after this date/time. If absent defaults to newest-time minus 12 months. Format is aligned to DateTimeString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -14842,8 +14950,8 @@ Parameters
 Name	In	Type	Required	Description
 newest-time	query	DateTimeString	optional	Constrain the request to records with effective time at or before this date/time. If absent defaults to current date/time. Format is aligned to DateTimeString common type
 oldest-time	query	DateTimeString	optional	Constrain the request to records with effective time at or after this date/time. If absent defaults to newest-time minus 12 months. Format is aligned to DateTimeString common type
-page	query	number	optional	Page of results to request (standard pagination)
-page-size	query	number	optional	Page size to request. Default is 25 (standard pagination)
+page	query	PositiveInteger	optional	Page of results to request (standard pagination)
+page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An RFC4122 UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -21696,6 +21804,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+04/02/2022	1.16.0	Changes arising from Decision 222 (Insights and Trusted Adviser Disclosure Consents CX Standards)	See release notes, Decision 222 for details
 23/12/2021	1.15.0	Changes arising from Decision 199 (Binding Energy Standards), Decision 162 (Joint Account CX standards), Decision 209 (FAPI 1.0 migration), Decision 216 (OIDC Profile Scope) and Decision 212 (Maintenance Iteration 9 change requests)	See release notes, Decision 199, Decision 162, Decision 209, Decision 212, and Decision 216 for details
 29/10/2021	1.14.0	Inclusion of full candidate level standards for the energy sector	See release notes for details
 22/10/2021	1.13.0	Changes arising from Decisions 206 (Register Standards), 191 and 192	See release notes, Decision 206, Decision 191 and Decision 192 for details
@@ -21795,6 +21904,8 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+23/12/2021	1.15.0	Changes arising from Decision 199, 162, 209, 216 and 212
+See Decision 199 (Binding Energy Standards), Decision 162 (Joint Account CX standards), Decision 209 (FAPI 1.0 migration), Decision 216 (OIDC Profile Scope) and Decision 212 (Maintenance Iteration 9 change requests) for details
 29/10/2021	1.14.0	Inclusion of full candidate level standards for the energy sector
 22/10/2021	1.13.0	Changes arising from Decisions 206 (Register Standards), 191 and 192
 22/10/2021	1.12.0	Inclusion of a series of decisions related to energy and non-functional requirements
