@@ -1,6 +1,7 @@
 Logo
 Endpoint Version Schedule
 Data Holders
+CDR Register APIs
 Data Recipients
 Consumer Data Standards
 Endpoint Version Schedule
@@ -17,40 +18,274 @@ Date Deprecated indicates the release of the standards, including release date, 
 Data Holders
 The following versioning schedule is reflective of the endpoints hosted by Data Holders. Data Holders should take into account their phasing obligations in accordance with the CDR Rules as well as any exemptions granted, when determining which API versions are considered applicable.
 
+Banking APIs
 Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
-Banking APIs	Get Products	/banking/products	GET	V1	2020-02-01	2020-09-29	2019-09-30, V1.0.0	2020-01-31, V1.2.0
-Banking APIs	Get Products	/banking/products	GET	V2	2020-07-31	2021-05-31	2020-01-31, V1.2.0	2021-04-29, V1.9.0
-Banking APIs	Get Products	/banking/products	GET	V3	2021-02-28	N/A	2020-04-17, V1.3.0	N/A
-Banking APIs	Get Product Detail	/banking/product/{productId}	GET	V1	2020-02-01	2020-09-29	2019-09-30, V1.0.0	2020-01-31, V1.2.0
-Banking APIs	Get Product Detail	/banking/product/{productId}	GET	V2	2020-07-31	2021-05-31	2020-01-31, V1.2.0	2021-04-29, V1.9.0
-Banking APIs	Get Product Detail	/banking/product/{productId}	GET	V3	2021-02-28	N/A	2020-04-17, V1.3.0	N/A
-Banking APIs	Get Accounts	/banking/accounts/	GET	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Account Balances	/banking/accounts/balances	GET	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Balances For Specific Accounts	/banking/accounts/balances	POST	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Account Balance	/banking/accounts/{accountId}/balance	GET	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Account Detail	/banking/accounts/{accountId}/	GET	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Transactions For Account	/banking/accounts/{accountId}/transactions	GET	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Transaction Detail	/banking/accounts/{accountId}/transactions/{transactionId}	GET	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Direct Debits For Account	/banking/accounts/{accountId}/direct-debits	GET	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Bulk Direct Debits	/banking/accounts/direct-debits	GET	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Direct Debits For Specific Accounts	/banking/accounts/direct-debits	POST	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Scheduled Payments For Account	/banking/accounts/{accountId}/payments/scheduled	GET	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Scheduled Payments Bulk	/banking/payments/scheduled	GET	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Scheduled Payments For Specific Accounts	/banking/payments/scheduled	POST	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Payees	/banking/payees	GET	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Banking APIs	Get Payee Detail	/banking/payees/{payeeId}	GET	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Common APIs	Get Customer	/common/customer	GET	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Common APIs	Get Customer Detail	/common/customer/detail	GET	V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
-Common APIs	Get Status	/discovery/status	GET	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Common APIs	Get Outages	/discovery/outages	GET	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Admin APIs	Metadata Update	/admin/register/metadata	POST	V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
-Admin APIs	Get Metrics	/admin/metrics	GET	V1	2020-07-01	2021-10-31	2019-09-30, V1.0.0	2021-04-29, V1.9.0
-Admin APIs	Get Metrics	/admin/metrics	GET	V2	2021-07-31	2022-12-05	2020-09-16, V1.5.0	2021-10-06, V1.12.0
-Admin APIs	Get Metrics	/admin/metrics	GET	V3	2022-10-01	N/A	2021-10-06, V1.12.0	N/A
-InfoSec Profile	Endpoints	CDR Arrangement Revocation Endpoint	POST	1.5.0	2020-11-01	N/A	2020-04-17, V1.2.0	N/A
+Banking APIs	Get Products	/banking/products	
+GET
+V1	2020-02-01	2020-09-29	2019-09-30, V1.0.0	2020-01-31, V1.2.0
+Banking APIs	GetProducts	/banking/products	
+GET
+V2	2020-07-31	2021-05-31	2020-01-31, V1.2.0	2021-04-29, V1.9.0
+Banking APIs	GetProducts	/banking/products	
+GET
+V3	2021-02-28	N/A	2020-04-17, V1.3.0	N/A
+Banking APIs	GetProduct Detail	/banking/product/{productId}	
+GET
+V1	2020-02-01	2020-09-29	2019-09-30, V1.0.0	2020-01-31, V1.2.0
+Banking APIs	GetProduct Detail	/banking/product/{productId}	
+GET
+V2	2020-07-31	2021-05-31	2020-01-31, V1.2.0	2021-04-29, V1.9.0
+Banking APIs	GetProduct Detail	/banking/product/{productId}	
+GET
+V3	2021-02-28	2023-02-28	2020-04-17, V1.3.0	2021-12-23, V1.15.0
+Banking APIs	GetProduct Detail	/banking/product/{productId}	
+GET
+V4	2022-11-31	N/A	2021-12-23, V1.15.0	N/A
+Banking APIs	GetAccounts	/banking/accounts/	
+GET
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetAccount Balances	/banking/accounts/balances	
+GET
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetBalances For Specific Accounts	/banking/accounts/balances	
+POST
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetAccount Balance	/banking/accounts/{accountId}/balance	
+GET
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetAccount Detail	/banking/accounts/{accountId}	
+GET
+V1	2020-11-01	2023-02-28	2019-09-30, V1.0.0	2021-12-23, V1.15.0
+Banking APIs	GetAccount Detail	/banking/accounts/{accountId}	
+GET
+V2	2022-11-31	N/A	2021-12-23, V1.15.0	N/A
+Banking APIs	GetTransactions For Account	/banking/accounts/{accountId}/transactions	
+GET
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetTransaction Detail	/banking/accounts/{accountId}/
+transactions/{transactionId}	
+GET
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetDirect Debits For Account	/banking/accounts/{accountId}/direct-debits	
+GET
+V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetBulk Direct Debits	/banking/accounts/direct-debits	
+GET
+V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetDirect Debits For Specific Accounts	/banking/accounts/direct-debits	
+POST
+V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetScheduled Payments For Account	/banking/accounts/{accountId}/
+payments/scheduled	
+GET
+V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetScheduled Payments Bulk	/banking/payments/scheduled	
+GET
+V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetScheduled Payments For Specific Accounts	/banking/payments/scheduled	
+POST
+V1	2020-11-01	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetPayees	/banking/payees	
+GET
+V1	2020-11-01	2022-08-31	2019-09-30, V1.0.0	2021-12-23, V1.15.0
+Banking APIs	GetPayees	/banking/payees	
+GET
+V2	2022-07-31	N/A	2019-09-30, V1.0.0	N/A
+Banking APIs	GetPayee Detail	/banking/payees/{payeeId}	
+GET
+V1	2020-11-01	2022-08-31	2019-09-30, V1.0.0	2021-12-23, V1.15.0
+Banking APIs	GetPayee Detail	/banking/payees/{payeeId}	
+GET
+V2	2022-07-31	N/A	2021-12-23, V1.15.0	N/A
+Energy APIs
+Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
+Energy APIs	Get Generic Plans	/energy/plans	
+GET
+V1	2022-10-01	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Generic Plan Detail	/energy/plans/{planId}	
+GET
+V1	2022-10-01	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Energy Accounts	/energy/accounts	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Energy Account Detail	/energy/accounts/{accountId}	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Agreed Payment Schedule	/energy/accounts/{accountId}/payment-schedule	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Concessions	/energy/accounts/{accountId}/concessions	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Balance For Energy Account	/energy/accounts/{accountId}/balance	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Bulk Balances (Energy)	/energy/accounts/balances	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Balances For Specific Energy Accounts	/energy/accounts/balances	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Invoices For Account	/energy/accounts/{accountId}/invoices	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Bulk Invoices	/energy/accounts/invoices	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Invoices For Specific Accounts	/energy/accounts/invoices	
+POST
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Billing For Account	/energy/accounts/{accountId}/billing	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Bulk Billing	/energy/accounts/billing	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Billing For Specific Accounts	/energy/accounts/billing	
+POST
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy Shared Responsibility APIs
+Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
+Energy APIs	Get Service Points	/energy/electricity/servicepoints	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Service Point Detail	/energy/electricity/servicepoints/{servicePointId}	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Usage For Service Point	/energy/electricity/servicepoints/<br/>{servicePointId}/usage	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Bulk Usage	/energy/electricity/servicepoints/usage	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Usage For Specific Service Points	/energy/electricity/servicepoints/usage	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get DER For Service Point	/energy/electricity/servicepoints/
+{servicePointId}/der	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get Bulk DER	/energy/electricity/servicepoints/der	
+GET
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Energy APIs	Get DER For Specific Service Points	/energy/electricity/servicepoints/der	
+POST
+V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+Dynamic Client Registration APIs
+Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
+DCR APIs	Register Data Recipient oAuth Client	/register	
+POST
+None	2021-10-29*	N/A	2021-10-29, V1.14.0*	N/A
+DCR APIs	Get oAuth Client Registration	/register/{ClientId}	
+GET
+None	2021-10-29*	N/A	2021-10-29, V1.14.0*	N/A
+DCR APIs	Update Data Recipient Registration	/register/{ClientId}	
+PUT
+None	2021-10-29*	N/A	2021-10-29, V1.14.0*	N/A
+DCR APIs	Delete Data Recipient oAuth Client Registration	/register/{ClientId}	
+DELETE
+None	2021-10-29*	N/A	2021-10-29, V1.14.0*	N/A
+NOTE: The CDR Register standards including Dynamic Client Registration were introduced into the Consumer Data Standards in v1.14.0. Prior to this the CDR Register specifications were hosted by the ACCC.
+
+Security APIs
+Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
+InfoSec Profile	Security Endpoints > CDR Arrangement Revocation Endpoint	<cdr_arrangement_revocation_endpoint>	
+POST
+1.5.0	2020-11-01	N/A	2020-04-17, V1.2.0	N/A
+NOTE Endpoints defined in normative references are not provided here.
+
+Common APIs
+Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
+Common APIs	Get Customer	/common/customer	
+GET
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Common APIs	Get Customer Detail	/common/customer/detail	
+GET
+V1	2020-11-01	2023-02-28	2019-09-30, V1.0.0	2021-12-23, V1.15.0
+Common APIs	Get Customer Detail	/common/customer/detail	
+GET
+V2	2022-11-31	N/A	2021-12-23, V1.15.0	N/A
+Common APIs	Get Status	/discovery/status	
+GET
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Common APIs	Get Outages	/discovery/outages	
+GET
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Admin APIs
+Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
+Admin APIs	Metadata Update	/admin/register/metadata	
+POST
+V1	2020-07-01	N/A	2019-09-30, V1.0.0	N/A
+Admin APIs	Get Metrics	/admin/metrics	
+GET
+V1	2020-07-01	2021-10-31	2019-09-30, V1.0.0	2021-04-29, V1.9.0
+Admin APIs	Get Metrics	/admin/metrics	
+GET
+V2	2021-07-31	2022-12-05	2020-09-16, V1.5.0	2021-10-06, V1.12.0
+Admin APIs	Get Metrics	/admin/metrics	
+GET
+V3	2022-10-01	N/A	2021-10-06, V1.12.0	N/A
+CDR Register APIs
+ These endpoints are not implemented by Data Holders and Data Recipients. They are hosted by the Register for consumption by participants. Data Holders and Data Recipient Software Products are required to call these endpoints to obtain metadata that enables connection and registration between participants as well as obtaining the status of participants in the CDR. These statuses are provided authoritatively by the Register to allow participants to determine whether a connecting third-party is permitted to perform registration requests or data sharing requests.
+Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
+CDR Register APIs	Get OpenId Provider Config	/.well-known/openid-configuration	
+GET
+None	2021-10-29†	N/A	2021-10-29, V1.14.0†	N/A
+CDR Register APIs	Get JWKS	/jwks	
+GET
+None	2021-10-29†	N/A	2021-10-29, V1.14.0†	N/A
+CDR Register APIs	Get Data Holder Brands	/{industry}/data-holders/brands	
+GET
+V1	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+CDR Register APIs	Get Data Holder Brands	/{industry}/data-holders/brands	
+GET
+V2	2022-08-30‡	N/A	2021-12-23, V1.15.0*	N/A
+CDR Register APIs	Get Software Statement Assertion (SSA)	/{industry}/data-recipients/
+brands/{dataRecipientBrandId}/
+software-products/{softwareProductId}/ssa	
+GET
+V2	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+CDR Register APIs	Get Software Statement Assertion (SSA)	/{industry}/data-recipients/
+brands/{dataRecipientBrandId}/
+software-products/{softwareProductId}/ssa	
+GET
+V3	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+CDR Register APIs	Get Software Products Statuses	/{industry}/data-recipients/
+brands/software-products/status	
+GET
+V1	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+CDR Register APIs	Get Software Products Statuses	/{industry}/data-recipients/
+brands/software-products/status	
+GET
+V2	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+CDR Register APIs	Get Data Recipient Statuses	/{industry}/data-recipients/status	
+GET
+V1	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+CDR Register APIs	Get Data Recipient Statuses	/{industry}/data-recipients/status	
+GET
+V2	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+CDR Register APIs	Get Data Recipients	/{industry}/data-recipients	
+GET
+V2	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+CDR Register APIs	Get Data Recipients	/{industry}/data-recipients	
+GET
+V3	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+CDR Register APIs	Get Data Holder Statuses	/{industry}/data-holders/status	
+GET
+V1	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+†NOTE: The CDR Register standards were introduced into the Consumer Data Standards in v1.14.0. Prior to this the CDR Register specifications were hosted by the ACCC.
+
+‡NOTE: This date has been defined to give certainty to Data Recipient and Data Holder participants but it is yet to be confirmed by the ACCC.
+
+*NOTE: Data Holder Brands V2 definition is still subject to change
+
 Data Recipients
 The following versioning schedule is reflective of the endpoints hosted by Data Recipient Software Products. Data Recipients should take into account their commencement date within the CDR, relevant obligations in accordance with the CDR Rules, as well as any exemptions granted when factoring in which API versions are considered applicable.
 
 Section	Sub-section	Endpoint	Method	Version	Binding Date	Retirement Date	Date Introduced	Date Deprecated
-InfoSec Profile	Endpoints	ADR Token Revocation Endpoint	POST	1.5.0	2020-07-01	2021-02-01	2019-09-30, V1.0.0	2020-04-17, V1.2.0
-InfoSec Profile	Endpoints	CDR Arrangement Revocation Endpoint	POST	1.5.0	2020-11-01	N/A	2020-04-17, V1.2.0	N/A
+InfoSec Profile	Security Endpoints > ADR Token Revocation Endpoint	/token/revoke	
+POST
+1.5.0	2020-07-01	2021-02-01	2019-09-30, V1.0.0	2020-04-17, V1.2.0
+InfoSec Profile	Security Endpoints > CDR Arrangement Revocation Endpoint	<RecipientBaseUri>/arrangements/revoke	
+POST
+1.5.0	2020-11-01	N/A	2020-04-17, V1.2.0	N/A
