@@ -120,7 +120,7 @@ V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
 Energy APIs	Get Balance For Energy Account	/energy/accounts/{accountId}/balance	
 GET
 V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
-Energy APIs	Get Bulk Balances (Energy)	/energy/accounts/balances	
+Energy APIs	Get Bulk Balances for Energy	/energy/accounts/balances	
 GET
 V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
 Energy APIs	Get Balances For Specific Energy Accounts	/energy/accounts/balances	
