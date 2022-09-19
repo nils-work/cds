@@ -26,7 +26,7 @@ Legacy FDO	30/07/2022	6
 Y22 #3	31/08/2022	2
 Legacy FDO	16/09/2022	1
 Legacy FDO	01/10/2022	1
-Y22 #4	15/11/2022	0
+Y22 #4	15/11/2022	1
 Legacy FDO	30/11/2022	3
 Legacy FDO	05/12/2022	1
 Legacy FDO	28/02/2023	3
@@ -281,6 +281,11 @@ V1	2021-10-29†	2023-04-07	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
 CDR Register APIs	Get Data Holder Brands	/{industry}/data-holders/brands	
 GET
 V2	2022-11-15	N/A	2021-12-23, V1.15.0*	N/A
+CDR Register APIs	Get Software Statement Assertion (SSA)	/{industry}/data-recipients/
+brands/{dataRecipientBrandId}/
+software-products/{softwareProductId}/ssa	
+GET
+V1	2021-10-29†	2023-04-07	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
 CDR Register APIs	Get Software Statement Assertion (SSA)	/{industry}/data-recipients/
 brands/{dataRecipientBrandId}/
 software-products/{softwareProductId}/ssa	
