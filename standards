@@ -34,14 +34,14 @@ These standards have been developed as part of the Australian Government's intro
 
 The Consumer Data Right (CDR) is intended to be applied sector by sector across the whole economy, beginning in the banking, energy and telecommunications sectors. These standards have been developed to facilitate the Consumer Data Right by acting as a specific baseline for implementation.
 
-These standards are maintained by the Data Standards Body (DSB) within Treasury, with the Data Standards Chair as the independent decision maker. The work of standards development is conducted in consultation with the Australian Competition and Consumer Commission (ACCC) and Office of the Australian Information Commissioner) (OAIC)] as co-regulators of the Consumer Data Right (CDR).
+These standards are maintained by the Data Standards Body (DSB) within Treasury, with the Data Standards Chair as the independent decision maker. The work of standards development is conducted in consultation with the Australian Competition and Consumer Commission (ACCC) and Office of the Australian Information Commissioner) (OAIC) as co-regulators of the Consumer Data Right (CDR).
 
 The standards are required to be published. The obligations on CDR participants to apply the published standards commence on the commencement of the Consumer Data Right rules:
 
 where the rules require compliance with the standards, non-compliance with the standards may constitute a breach of the rules.
 where the standards are specified as binding standards as required by the Consumer Data Right rules for the purposes of s56FA of the legislation, they apply as under contract between a data holder and an accredited data recipient. The legal effect of binding standards as between data holders and accredited data recipients is fully set out in s56FD and s56FE of the legislation.
 Version
-These standards represent version 1.18.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.19.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Interpretation
 Note that, in these standards, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in [RFC2119].
@@ -114,6 +114,14 @@ Phase 3: Retire Hybrid Flow includes, amongst other changes:
 Data Holders MUST support Authorization Code Flow
 Data Holders MAY retire Hybrid Flow
 April 7th 2023
+Get Energy Accounts V1	
+Data Holders MAY go-live on November 15 2022 with v1 of this endopint
+Data Holders MAY decommission v1 of this endopint as soon v2 is supported
+Get Energy Account Detail V1	
+Data Holders MAY go-live on November 15 2022 with v1 of this endopint
+Data Holders MAY decommission v1 of this endopint as soon v2 is supported
+Get Energy Accounts V2	Data Holder MUST implement v2 of this endpoint by April 7th 2023	
+Get Energy Account Detail V2	Data Holder MUST implement v2 of this endpoint by April 7th 2023	
 Register Dependency Schedule
 The Register APIs dependency schedule specifies the latest dates the CDR Register can release API versions. Delivery past these dates may impact the ability for data holders and data recipients to meet their future dated obligations.
 
@@ -285,24 +293,24 @@ A table-view of all endpoint versioning is available here.
 URI Structure
 Some example URIs that meet this standard are:
 
-1. https://www.bank.com.au/api/cds-au/v1/banking/accounts
-2. https://www.bank.com.au/api/cds-au/v1/banking/accounts/abc123/transactions/?x=y#bar
-3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products?page=2
-4. https://www.energyretailer.com.au/api/cds-au/v1/energy/usage
-5. https://www.energyretailer.com.au/api/cds-au/v1/ACME/apply
+1. https://www.bank.com.au/api/cds-au/v1/banking/accounts  
+2. https://www.bank.com.au/api/cds-au/v1/banking/accounts/abc123/transactions/?x=y#bar  
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products?page=2  
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy/usage  
+5. https://www.energyretailer.com.au/api/cds-au/v1/ACME/apply  
 The holder path for each example is:
 
-1. www.bank.com.au/api
-2. www.bank.com.au/api
-3. www.bank.com.au/complex/uri/taxonomy
-4. www.energyretailer.com.au/api
+1. www.bank.com.au/api  
+2. www.bank.com.au/api   
+3. www.bank.com.au/complex/uri/taxonomy  
+4. www.energyretailer.com.au/api  
 5. www.energyretailer.com.au/api
 The Base Path for each example is:
 
-1. https://www.bank.com.au/api/cds-au/v1/banking
-2. https://www.bank.com.au/api/cds-au/v1/banking
-3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking
-4. https://www.energyretailer.com.au/api/cds-au/v1/energy
+1. https://www.bank.com.au/api/cds-au/v1/banking  
+2. https://www.bank.com.au/api/cds-au/v1/banking   
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking  
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy  
 5. https://www.energyretailer.com.au/api/cds-au/v1/ACME
 The Resource Path for each example is:
 
@@ -1238,7 +1246,7 @@ Non-Normative Examples
 
 { "errors": [
   {
-    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",
+    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",    
     "title": "Unsupported Version",
     "detail": "'x-v' **MUST** be greater than or equal to '2'"
   }
@@ -1491,13 +1499,11 @@ Energy Accounts
 See below for the data language standards for the energy accounts scopes:
 
 Data cluster language	Permission language	Authorisation Scopes
-Accounts and plans	Account and plan information;
-National Meter Identifier (NMI);	energy:accounts.basic:read
+Accounts and plans	Account and plan information;	energy:accounts.basic:read
 Account and plan details	Account type;
 Fees, features, rates, and discounts;
 Additional account users;	energy:accounts.detail:read
 Account and plan details ‡	Account and plan information;
-National Meter Identifier (NMI);
 Account type;
 Fees, features, rates, and discounts;
 Additional account users;	energy:accounts.detail:read
@@ -1511,14 +1517,13 @@ Payments
 See below for the data language standards for the payments schedule scope:
 
 Data cluster language	Permission language	Authorisation Scopes
-Stored payment information	Payment details;
-Scheduled payment amount;	energy:accounts.paymentschedule:read
+Payment preferences	Payment and billing frequency;
+Any scheduled payment details;	energy:accounts.paymentschedule:read
 Billing
 See below for the data language standards for the billing scope:
 
 Data cluster language	Permission language	Authorisation Scopes
 Billing payments and history	Account balance;
-National Meter Identifier (NMI);
 Payment method;
 Payment status;
 Charges, discounts, credits;
@@ -13608,10 +13613,13 @@ GET /energy/accounts
 
 Obtain the list of energy accounts available under the authorised consent
 
+Other Versions: v1
+
 Endpoint Version
-Version	1
+Version	2
 Parameters
 Name	In	Type	Required	Description
+open-status	query	string	optional	Used to filter results according to open/closed status. Values can be OPEN, CLOSED or ALL. If absent then ALL is assumed
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
@@ -13620,6 +13628,11 @@ x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correla
 x-fapi-auth-date	header	string	conditional	The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-R-Draft]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the data recipient. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
 x-cds-client-headers	header	Base64	conditional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the data recipient. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
+Enumerated Values
+Parameter	Value
+open-status	ALL
+open-status	CLOSED
+open-status	OPEN
 Example responses
 
 200 Response
@@ -13631,6 +13644,7 @@ Example responses
         "accountId": "string",
         "accountNumber": "string",
         "displayName": "string",
+        "openStatus": "CLOSED",
         "creationDate": "string",
         "plans": [
           {
@@ -13662,7 +13676,7 @@ Example responses
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Successful response	EnergyAccountListResponse
+200	OK	Successful response	EnergyAccountListResponseV2
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Page Size
@@ -13721,8 +13735,10 @@ GET /energy/accounts/{accountId}
 
 Obtain detailed information for a specific energy account
 
+Other Versions: v1
+
 Endpoint Version
-Version	1
+Version	2
 Parameters
 Name	In	Type	Required	Description
 accountId	path	string	mandatory	ID of a specific account to obtain data for. This is a tokenised ID previous obtained from the Account List end point.
@@ -13741,6 +13757,7 @@ Example responses
     "accountId": "string",
     "accountNumber": "string",
     "displayName": "string",
+    "openStatus": "CLOSED",
     "creationDate": "string",
     "plans": [
       {
@@ -14117,7 +14134,7 @@ Example responses
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Successful response	EnergyAccountDetailResponse
+200	OK	Successful response	EnergyAccountDetailResponseV2
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
@@ -16591,7 +16608,7 @@ Name	Type	Required	Description
 data	EnergyDerRecord	mandatory	none
 links	Links	mandatory	none
 meta	Meta	mandatory	none
-EnergyAccountListResponse
+EnergyAccountListResponseV2
 
 {
   "data": {
@@ -16600,6 +16617,7 @@ EnergyAccountListResponse
         "accountId": "string",
         "accountNumber": "string",
         "displayName": "string",
+        "openStatus": "CLOSED",
         "creationDate": "string",
         "plans": [
           {
@@ -16633,16 +16651,17 @@ EnergyAccountListResponse
 Properties
 Name	Type	Required	Description
 data	object	mandatory	none
-» accounts	[EnergyAccount]	mandatory	Array of accounts
+» accounts	[EnergyAccountV2]	mandatory	Array of accounts
 links	LinksPaginated	mandatory	none
 meta	MetaPaginated	mandatory	none
-EnergyAccountDetailResponse
+EnergyAccountDetailResponseV2
 
 {
   "data": {
     "accountId": "string",
     "accountNumber": "string",
     "displayName": "string",
+    "openStatus": "CLOSED",
     "creationDate": "string",
     "plans": [
       {
@@ -17020,7 +17039,7 @@ EnergyAccountDetailResponse
 
 Properties
 Name	Type	Required	Description
-data	EnergyAccountDetail	mandatory	none
+data	EnergyAccountDetailV2	mandatory	none
 links	Links	mandatory	none
 meta	Meta	mandatory	none
 EnergyPaymentScheduleResponse
@@ -19505,12 +19524,13 @@ type	RENEWABLE
 type	GEOTHERMAL
 type	STORAGE
 type	OTHER
-EnergyAccountBase
+EnergyAccountBaseV2
 
 {
   "accountId": "string",
   "accountNumber": "string",
   "displayName": "string",
+  "openStatus": "CLOSED",
   "creationDate": "string"
 }
 
@@ -19519,13 +19539,19 @@ Name	Type	Required	Description
 accountId	string	mandatory	The ID of the account. To be created in accordance with CDR ID permanence requirements
 accountNumber	string	optional	Optional identifier of the account as defined by the data holder. This must be the value presented on physical statements (if it exists) and must not be used for the value of accountId
 displayName	string	optional	An optional display name for the account if one exists or can be derived. The content of this field is at the discretion of the data holder
-creationDate	DateString	mandatory	The date that the account was created or opened
-EnergyAccount
+openStatus	string	optional	Open or closed status for the account. If not present then OPEN is assumed
+creationDate	DateString	conditional	The date that the account was created or opened. Mandatory if openStatus is OPEN
+Enumerated Values
+Property	Value
+openStatus	CLOSED
+openStatus	OPEN
+EnergyAccountV2
 
 {
   "accountId": "string",
   "accountNumber": "string",
   "displayName": "string",
+  "openStatus": "CLOSED",
   "creationDate": "string",
   "plans": [
     {
@@ -19546,7 +19572,7 @@ Properties
 allOf
 
 Name	Type	Required	Description
-anonymous	EnergyAccountBase	mandatory	none
+anonymous	EnergyAccountBaseV2	mandatory	none
 and
 
 Name	Type	Required	Description
@@ -19554,16 +19580,17 @@ anonymous	object	mandatory	The array of plans containing service points and asso
 » plans	[object]	mandatory	The array of plans containing service points and associated plan details
 »» nickname	string	optional	Optional display name for the plan provided by the customer to help differentiate multiple plans
 »» servicePointIds	[string]	mandatory	An array of servicePointIds, representing NMIs, that this plan is linked to. If there are no service points allocated to this plan then an empty array would be expected
-»» planOverview	object	mandatory	none
+»» planOverview	object	conditional	Mandatory if openStatus is OPEN
 »»» displayName	string	optional	The name of the plan if one exists
 »»» startDate	DateString	mandatory	The start date of the applicability of this plan
 »»» endDate	DateString	optional	The end date of the applicability of this plan
-EnergyAccountDetail
+EnergyAccountDetailV2
 
 {
   "accountId": "string",
   "accountNumber": "string",
   "displayName": "string",
+  "openStatus": "CLOSED",
   "creationDate": "string",
   "plans": [
     {
@@ -19982,7 +20009,7 @@ Properties
 allOf
 
 Name	Type	Required	Description
-anonymous	EnergyAccountBase	mandatory	none
+anonymous	EnergyAccountBaseV2	mandatory	none
 and
 
 Name	Type	Required	Description
@@ -19990,11 +20017,11 @@ anonymous	object	mandatory	The array of plans containing service points and asso
 » plans	[object]	mandatory	The array of plans containing service points and associated plan details
 »» nickname	string	optional	Optional display name for the plan provided by the customer to help differentiate multiple plans
 »» servicePointIds	[string]	mandatory	An array of servicePointIds, representing NMIs, that this account is linked to
-»» planOverview	object	mandatory	none
+»» planOverview	object	conditional	Mandatory if openStatus is OPEN
 »»» displayName	string	optional	The name of the plan if one exists
 »»» startDate	DateString	mandatory	The start date of the applicability of this plan
 »»» endDate	DateString	optional	The end date of the applicability of this plan
-»» planDetail	object	mandatory	Detail on the plan applicable to this account
+»» planDetail	object	conditional	Detail on the plan applicable to this account. Mandatory if openStatus is OPEN
 »»» fuelType	string	mandatory	The fuel types covered by the plan
 »»» isContingentPlan	boolean	optional	Flag that indicates that the plan is contingent on the customer taking up an alternate fuel plan from the same retailer (for instance, if the fuelType is ELECTRICITY then a GAS plan from the same retailer must be taken up). Has no meaning if the plan has a fuelType of DUAL. If absent the value is assumed to be false
 »»» meteringCharges	[object]	optional	Charges for metering included in the plan
@@ -24965,6 +24992,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+13/09/2022	1.19.0	Changes arising from Decision 260 (Energy Closed Accounts)	See release notes and Decision 260 for details
 11/08/2022	1.18.0	Changes arising from Decision 249 (Maintenance iteration 11)	See release notes and Decision 249 for details
 23/05/2022	1.17.0	Changes arising from Decision 237 (Maintenance Iteration 10)	See release notes and Decision 237 for details
 22/03/2022	1.16.1	Minor errata and documentation fixes. Update of swagger files to OAS3	See release notes for details
@@ -25068,6 +25096,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+11/08/2022	1.18.0	Changes arising from Decision 249 (Maintenance Iteration 11)
 23/05/2022	1.17.0	Changes arising from Decision 237 (Maintenance Iteration 10)
 22/03/2022	1.16.1	Minor errata and documentation fixes. Update of swagger files to OAS3
 04/02/2022	1.16.0	Changes arising from Decision 222 (Insights and Trusted Adviser Disclosure Consents CX Standards)
