@@ -148,10 +148,16 @@ GET
 V1	2022-10-01	N/A	2021-10-29, V1.14.0	N/A
 Energy APIs	Get Energy Accounts	/energy/accounts	
 GET
-V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+V1	2022-11-15	2023-04-07	2021-10-29, V1.14.0	TBC, V1.19.0
+Energy APIs	Get Energy Accounts	/energy/accounts	
+GET
+V2	2023-04-07	N/A	TBC, V1.19.0	N/A
 Energy APIs	Get Energy Account Detail	/energy/accounts/{accountId}	
 GET
-V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
+V1	2022-11-15	2023-04-07	2021-10-29, V1.14.0	TBC, V1.19.0
+Energy APIs	Get Energy Account Detail	/energy/accounts/{accountId}	
+GET
+V2	2022-04-07	N/A	TBC, V1.19.0	N/A
 Energy APIs	Get Agreed Payment Schedule	/energy/accounts/{accountId}/payment-schedule	
 GET
 V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
