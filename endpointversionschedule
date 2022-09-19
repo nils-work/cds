@@ -1,9 +1,50 @@
 Logo
+Obligation Dates Schedule
 Endpoint Version Schedule
 Data Holders
 CDR Register APIs
 Data Recipients
 Consumer Data Standards
+Obligation Dates Schedule
+The following schedule represents future obligation dates. This includes a set of bi-monthly obligation milestone windows and historically assigned obligation dates.
+
+The calendar of obligation milestones are published to provide predictability. This calendar does not mean that any obligations exist at these dates however when addressing the future dating of obligations for any breaking changes, this calendar will be used to pin those obligations to pre-determined obligation milestones.
+
+These dates may be subject to change depending upon new or changed legislative and policy dates as well as optimisation and streamlining based on community feedback.
+
+Obligation Milestone	Milestone Date	# Obligations Assigned
+Legacy FDO	01/07/2021	1
+Legacy FDO	31/07/2021	1
+Legacy FDO	31/10/2021	1
+Legacy FDO	01/11/2021	2
+Legacy FDO	01/02/2022	2
+Y22 #1	31/03/2022	1
+Legacy FDO	01/07/2022	2
+Y22 #2	04/07/2022	1
+Legacy FDO	31/07/2022	4
+Legacy FDO	30/07/2022	6
+Y22 #3	31/08/2022	2
+Legacy FDO	16/09/2022	1
+Legacy FDO	01/10/2022	1
+Y22 #4	15/11/2022	0
+Legacy FDO	30/11/2022	3
+Legacy FDO	05/12/2022	1
+Legacy FDO	28/02/2023	3
+Y23 #1	07/04/2023	1
+Y23 #2	08/05/2023	0
+Y23 #3	10/07/2023	0
+Y23 #4	11/09/2023	0
+Y23 #5	13/11/2023	0
+Y24 #1	11/03/2024	0
+Y24 #2	13/05/2024	0
+Y24 #3	15/07/2024	0
+Y24 #4	09/09/2024	0
+Y24 #5	11/11/2024	0
+Obligations @
+End date
+COLLAPSE OBLIGATIONS
+
+LEGEND Ⓘ
 Endpoint Version Schedule
 The following tables describe the endpoint versions and the dates they become binding within the data standards.
 
@@ -236,48 +277,44 @@ GET
 None	2021-10-29†	N/A	2021-10-29, V1.14.0†	N/A
 CDR Register APIs	Get Data Holder Brands	/{industry}/data-holders/brands	
 GET
-V1	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+V1	2021-10-29†	2023-04-07	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
 CDR Register APIs	Get Data Holder Brands	/{industry}/data-holders/brands	
 GET
-V2	2022-08-30‡	N/A	2021-12-23, V1.15.0*	N/A
+V2	2022-11-15	N/A	2021-12-23, V1.15.0*	N/A
 CDR Register APIs	Get Software Statement Assertion (SSA)	/{industry}/data-recipients/
 brands/{dataRecipientBrandId}/
 software-products/{softwareProductId}/ssa	
 GET
-V2	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+V2	2021-10-29†	2023-04-07	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
 CDR Register APIs	Get Software Statement Assertion (SSA)	/{industry}/data-recipients/
 brands/{dataRecipientBrandId}/
 software-products/{softwareProductId}/ssa	
 GET
-V3	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+V3	2022-11-15	N/A	2021-12-23, V1.15.0	N/A
 CDR Register APIs	Get Software Products Statuses	/{industry}/data-recipients/
 brands/software-products/status	
 GET
-V1	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+V1	2021-10-29†	2023-04-07	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
 CDR Register APIs	Get Software Products Statuses	/{industry}/data-recipients/
 brands/software-products/status	
 GET
-V2	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+V2	2022-11-15	N/A	2021-12-23, V1.15.0	N/A
 CDR Register APIs	Get Data Recipient Statuses	/{industry}/data-recipients/status	
 GET
-V1	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+V1	2021-10-29†	2023-04-07	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
 CDR Register APIs	Get Data Recipient Statuses	/{industry}/data-recipients/status	
 GET
-V2	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+V2	2022-11-15	N/A	2021-12-23, V1.15.0	N/A
 CDR Register APIs	Get Data Recipients	/{industry}/data-recipients	
 GET
-V2	2021-10-29†	N/A	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
+V2	2021-10-29†	2023-04-07	2021-10-29, V1.14.0†	2021-12-23, V1.15.0
 CDR Register APIs	Get Data Recipients	/{industry}/data-recipients	
 GET
-V3	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+V3	2022-11-15	N/A	2021-12-23, V1.15.0	N/A
 CDR Register APIs	Get Data Holder Statuses	/{industry}/data-holders/status	
 GET
-V1	2022-08-30‡	N/A	2021-12-23, V1.15.0	N/A
+V1	2022-11-15	N/A	2021-12-23, V1.15.0	N/A
 †NOTE: The CDR Register standards were introduced into the Consumer Data Standards in v1.14.0. Prior to this the CDR Register specifications were hosted by the ACCC.
-
-‡NOTE: This date has been defined to give certainty to Data Recipient and Data Holder participants but it is yet to be confirmed by the ACCC.
-
-*NOTE: Data Holder Brands V2 definition is still subject to change
 
 Data Recipients
 The following versioning schedule is reflective of the endpoints hosted by Data Recipient Software Products. Data Recipients should take into account their commencement date within the CDR, relevant obligations in accordance with the CDR Rules, as well as any exemptions granted when factoring in which API versions are considered applicable.
