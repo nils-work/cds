@@ -30,9 +30,9 @@ Y22 #4	15/11/2022	1
 Legacy FDO	30/11/2022	3
 Legacy FDO	05/12/2022	1
 Legacy FDO	28/02/2023	3
-Y23 #1	07/04/2023	1
+Y23 #1	14/04/2023	1
 Y23 #2	08/05/2023	0
-Y23 #3	10/07/2023	0
+Y23 #3	10/07/2023	1
 Y23 #4	11/09/2023	0
 Y23 #5	13/11/2023	0
 Y24 #1	11/03/2024	0
@@ -148,16 +148,16 @@ GET
 V1	2022-10-01	N/A	2021-10-29, V1.14.0	N/A
 Energy APIs	Get Energy Accounts	/energy/accounts	
 GET
-V1	2022-11-15	2023-04-07	2021-10-29, V1.14.0	TBC, V1.19.0
+V1	2022-11-15	2023-04-14	2021-10-29, V1.14.0	TBC, V1.19.0
 Energy APIs	Get Energy Accounts	/energy/accounts	
 GET
-V2	2023-04-07	N/A	TBC, V1.19.0	N/A
+V2	2023-04-14	N/A	TBC, V1.19.0	N/A
 Energy APIs	Get Energy Account Detail	/energy/accounts/{accountId}	
 GET
-V1	2022-11-15	2023-04-07	2021-10-29, V1.14.0	TBC, V1.19.0
+V1	2022-11-15	2023-04-14	2021-10-29, V1.14.0	TBC, V1.19.0
 Energy APIs	Get Energy Account Detail	/energy/accounts/{accountId}	
 GET
-V2	2022-04-07	N/A	TBC, V1.19.0	N/A
+V2	2022-04-14	N/A	TBC, V1.19.0	N/A
 Energy APIs	Get Agreed Payment Schedule	/energy/accounts/{accountId}/payment-schedule	
 GET
 V1	2022-11-15	N/A	2021-10-29, V1.14.0	N/A
