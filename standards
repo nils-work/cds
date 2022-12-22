@@ -30,7 +30,6 @@ CDR Support Portal
 CDR Standards on GitHub
 CDR Maintenance on GitHub
 Test Documentation
- This is an archived version of the Consumer Data Right Standards and is retained for reference only.
 Introduction
 These standards have been developed as part of the Australian Government's introduction of the Consumer Data Right legislation to give Australians greater control over their data.
 
@@ -43,7 +42,7 @@ The standards are required to be published. The obligations on CDR participants 
 where the rules require compliance with the standards, non-compliance with the standards may constitute a breach of the rules.
 where the standards are specified as binding standards as required by the Consumer Data Right rules for the purposes of s56FA of the legislation, they apply as under contract between a data holder and an accredited data recipient. The legal effect of binding standards as between data holders and accredited data recipients is fully set out in s56FD and s56FE of the legislation.
 Version
-These standards represent version 1.20.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.21.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Interpretation
 Note that, in these standards, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in [RFC2119].
@@ -111,11 +110,6 @@ Get Metrics V2	Data holders MAY obsolete version 2 of this end point from Decemb
 Get Account Detail V1	Data holders MAY obsolete version 1 of this end point from February 28th 2023. Data recipients MUST upgrade their implementations to use version 2 by this time	February 28th 2023
 Get Product Detail V3	Data holders MAY obsolete version 3 of this end point from February 28th 2023. Data recipients MUST upgrade their implementations to use version 4 by this time	February 28th 2023
 Get Customer Detail V1	Data holders MAY obsolete version 1 of this end point from February 28th 2023. Data recipients MUST upgrade their implementations to use version 2 by this time	February 28th 2023
-Information Security profile	FAPI 1.0 adoption is introduced across three phases.
-Phase 3: Retire Hybrid Flow includes, amongst other changes:
-Data Holders MUST support Authorization Code Flow
-Data Holders MAY retire Hybrid Flow
-April 7th 2023
 Get Energy Accounts V1	
 Data Holders MAY go-live on November 15 2022 with v1 of this endopint
 Data Holders MAY decommission v1 of this endopint as soon v2 is supported
@@ -124,12 +118,21 @@ Get Energy Account Detail V1
 Data Holders MAY go-live on November 15 2022 with v1 of this endopint
 Data Holders MAY decommission v1 of this endopint as soon v2 is supported
 November 15th 2022
-Get Energy Accounts V2	Data Holder MUST implement v2 of this endpoint by April 7th 2023	April 7th 2023
-Get Energy Account Detail V2	Data Holder MUST implement v2 of this endpoint by April 7th 2023	April 7th 2023
 Error Codes: Secondary Data Holder flag	
 Data Holders MAY implement the isSecondaryDataHolderError field on November 15 2022
 Affected Data Holders MUST implement isSecondaryDataHolderError field by May 15 2023
 May 15th 2023
+Get Energy Accounts V2	Data Holder MUST implement v2 of this endpoint by April 14th 2023	April 14th 2023
+Get Energy Account Detail V2	Data Holder MUST implement v2 of this endpoint by April 14th 2023	April 14th 2023
+Information Security profile	FAPI 1.0 adoption is introduced across four phases.
+Phase 3: Support Authorization Code Flow and Hybrid Flow includes, amongst other changes:
+Data Holders MUST support Authorization Code Flow
+Data Holders MUST support Hybrid Flow
+April 14th 2023
+Information Security profile	FAPI 1.0 adoption is introduced across four phases.
+Phase 4: Retire Hybrid Flow:
+Data Holders MAY retire Hybrid Flow
+July 10th 2023
 Register Dependency Schedule
 The Register APIs dependency schedule specifies the latest dates the CDR Register can release API versions. Delivery past these dates may impact the ability for data holders and data recipients to meet their future dated obligations.
 
@@ -301,24 +304,24 @@ A table-view of all endpoint versioning is available here.
 URI Structure
 Some example URIs that meet this standard are:
 
-1. https://www.bank.com.au/api/cds-au/v1/banking/accounts
-2. https://www.bank.com.au/api/cds-au/v1/banking/accounts/abc123/transactions/?x=y#bar
-3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products?page=2
-4. https://www.energyretailer.com.au/api/cds-au/v1/energy/usage
-5. https://www.energyretailer.com.au/api/cds-au/v1/ACME/apply
+1. https://www.bank.com.au/api/cds-au/v1/banking/accounts  
+2. https://www.bank.com.au/api/cds-au/v1/banking/accounts/abc123/transactions/?x=y#bar  
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking/products?page=2  
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy/usage  
+5. https://www.energyretailer.com.au/api/cds-au/v1/ACME/apply  
 The holder path for each example is:
 
-1. www.bank.com.au/api
-2. www.bank.com.au/api
-3. www.bank.com.au/complex/uri/taxonomy
-4. www.energyretailer.com.au/api
+1. www.bank.com.au/api  
+2. www.bank.com.au/api   
+3. www.bank.com.au/complex/uri/taxonomy  
+4. www.energyretailer.com.au/api  
 5. www.energyretailer.com.au/api
 The Base Path for each example is:
 
-1. https://www.bank.com.au/api/cds-au/v1/banking
-2. https://www.bank.com.au/api/cds-au/v1/banking
-3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking
-4. https://www.energyretailer.com.au/api/cds-au/v1/energy
+1. https://www.bank.com.au/api/cds-au/v1/banking  
+2. https://www.bank.com.au/api/cds-au/v1/banking   
+3. https://www.bank.com.au/complex/uri/taxonomy/cds-au/v1/banking  
+4. https://www.energyretailer.com.au/api/cds-au/v1/energy  
 5. https://www.energyretailer.com.au/api/cds-au/v1/ACME
 The Resource Path for each example is:
 
@@ -1255,7 +1258,7 @@ Non-Normative Examples
 
 { "errors": [
   {
-    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",
+    "code": "urn:au-cds:error:cdr-all:Header/UnsupportedVersion",    
     "title": "Unsupported Version",
     "detail": "'x-v' **MUST** be greater than or equal to '2'"
   }
@@ -1930,48 +1933,15 @@ This profile supports the authentication flows specified by OpenID Connect [OIDC
 
 Specifically the OIDC Hybrid Flow outlined at section 3.3 of [OIDC].
 
-From July 4th 2022, OIDC Authorization Code Flow outlined at section 3.1 of [OIDC] is supported.
+From July 4th 2022, Authorization Code Flow outlined at section 3.1 of [OIDC] is supported.
 
 No other flows are currently supported.
 
 Baseline Security Provisions
 Data Holders
-From July 4th 2022 (FAPI 1.0 Migration Phase 1), the following requirements apply:
-
-Data Holders that do not support [PKCE] MUST ignore PKCE claims and MUST NOT reject clients sending PKCE claims.
-Data Holders MUST NOT reject requests with a "x-fapi-customer-ip-address" header containing a valid IPv4 or IPv6 address.
-Data Holders MAY support FAPI 1.0 Advanced Profile ([FAPI-1.0-Advanced]).
-Data Holders MAY support [PKCE] ([RFC7636]).
-Data Holders MAY allow the OIDC Authorization Code Flow, if supported, in accordance with FAPI 1.0 Advanced and MUST require [JARM] and [PKCE].
-From September 16th 2022 (FAPI 1.0 Migration Phase 2), the following requirements apply in addition to the FAPI 1.0 Migration Phase 1 requirements:
-
-Data Holders MUST support the OIDC Hybrid Flow.
-Data Holders MUST support FAPI 1.0 Advanced Profile ([FAPI-1.0-Advanced]).
-Data Holders MAY support [PKCE] ([RFC7636]).
-Data Holders SHOULD support OIDC Authorization Code Flow.
-From April 7th 2023 (FAPI 1.0 Migration Phase 3), the following requirements apply in addition to the FAPI 1.0 Migration Phase 2 requirements:
-
-Data Holders MUST support OIDC Authorization Code Flow.
-Data Holders MAY support the OIDC Hybrid Flow.
-Data Recipient Software Products
-From July 4th 2022 (FAPI 1.0 Migration Phase 1), the following requirements apply:
-
-Data Recipient Software Products SHOULD NOT reuse "authorization_code" values, and if reused, it will be rejected.
-Data Recipient Software Products MAY send requests with a "x-fapi-customer-ip-address" header containing a valid IPv4 or IPv6 address.
-From September 16th 2022, the following requirements apply in addition to the FAPI 1.0 Migration Phase 1 requirements:
-
-Data Recipient Software Products MUST support FAPI 1.0 Advanced Profile ([FAPI-1.0-Advanced]).
-Data Recipient Software Products MUST use [RFC9126] (PAR) with [PKCE] ([RFC7636]) and, if supported, MUST use S256 as the code challenge method.
-Data Recipient Software Products SHOULD use OIDC Authorization Code Flow.
-
-OIDC Hybrid Flow
-The [OIDC] Hybrid Flow is a type of redirection flow where the consumer's user agent is redirected from a Data Recipient Software Product’s (Relying Party) web site to a Data Holder’s Authorisation end point in the context of an [OIDC] authentication request. The OIDC Hybrid Flow incorporates aspects of the both the implicit flow and authorisation code flow detailed under [OIDC].
-
-Only a response_type (see section 3.3 of [OIDC]) of code id_token SHALL be allowed.
-
 The request_uri parameter is only supported if the Data Holder supports PAR.
 
-In addition, the following statements are applicable for this flow:
+In addition, the following statements are applicable to both the OIDC Hybrid Flow and Authorization Code Flow:
 
 Data Holders MUST request a user identifier that can uniquely identify the customer and that is already known by the customer in the redirected page
 Data Holders MUST NOT request that the customer enter an existing password in the redirected page
@@ -1983,25 +1953,79 @@ The provided OTP MUST be invalidated after a period of time at the discretion of
 The provided OTP MUST be numeric digits and be between 4 and 6 digits in length
 The algorithm for the creation of the OTP is at the discretion of the Data Holder but SHOULD incorporate a level of pseudorandomness appropriate for the use case
 Data Holders SHOULD implement additional controls to minimise the risk of enumeration attacks via the redirect page
-Data Recipient Software Products SHOULD record the following information each time an authorisation flow is executed: username (consumer’s ID at the Data Recipient Software Product), timestamp, IP, consent scopes and duration.
 In line with CDR Rule 4.24 on restrictions when asking CDR consumers to authorise disclosure of CDR data, unwarranted friction for OTP delivery is considered to include:
 
 the addition of any requirements beyond normal data holder practices for verification code delivery
 providing or requesting additional information beyond normal data holder practices for verification code delivery
 offering additional or alternative services
 reference or inclusion of other documents
-Additional requirements and guidelines for this flow are contained in the Consumer Experience section.
+From July 4th 2022 (FAPI 1.0 Migration Phase 1), the following requirements apply:
+
+Data Holders that do not support [PKCE] MUST ignore PKCE claims and MUST NOT reject clients sending PKCE claims.
+Data Holders MUST NOT reject requests with a "x-fapi-customer-ip-address" header containing a valid IPv4 or IPv6 address.
+Data Holders MAY support FAPI 1.0 Advanced Profile ([FAPI-1.0-Advanced]).
+Data Holders MAY support [PKCE] ([RFC7636]).
+Data Holders MAY allow the Authorization Code Flow, if supported, in accordance with FAPI 1.0 Advanced and MUST require [JARM] and [PKCE].
+From September 16th 2022 (FAPI 1.0 Migration Phase 2), the following requirements apply in addition to the FAPI 1.0 Migration Phase 1 requirements:
+
+Data Holders MUST support the OIDC Hybrid Flow.
+Data Holders MUST support FAPI 1.0 Advanced Profile ([FAPI-1.0-Advanced]).
+Data Holders MAY support [PKCE] ([RFC7636]).
+Data Holders SHOULD support Authorization Code Flow.
+From April 14th 2023 (FAPI 1.0 Migration Phase 3), the following requirements apply in addition to the FAPI 1.0 Migration Phase 2 requirements:
+* Data Holders MUST support Authorization Code Flow.
+* Data Holders MUST support the OIDC Hybrid Flow.
+
+From July 10th 2023 (FAPI 1.0 Migration Phase 4),
+
+Data Holders MAY retire support for the OIDC Hybrid Flow.
+Data Recipient Software Products
+The following statements are applicable to both the OIDC Hybrid Flow and Authorization Code Flow:
+
+Data Recipient Software Products SHOULD record the following information each time an authorisation flow is executed: username (consumer’s ID at the Data Recipient Software Product), timestamp, IP, consent scopes and duration.
+From July 4th 2022 (FAPI 1.0 Migration Phase 1), the following requirements apply:
+
+Data Recipient Software Products SHOULD NOT reuse "authorization_code" values, and if reused, it will be rejected.
+Data Recipient Software Products MAY send requests with a "x-fapi-customer-ip-address" header containing a valid IPv4 or IPv6 address.
+From September 16th 2022, the following requirements apply in addition to the FAPI 1.0 Migration Phase 1 requirements:
+
+Data Recipient Software Products MUST support FAPI 1.0 Advanced Profile ([FAPI-1.0-Advanced]).
+Data Recipient Software Products MUST use [RFC9126] (PAR) with [PKCE] ([RFC7636]) and, if supported, MUST use S256 as the code challenge method.
+Data Recipient Software Products SHOULD use Authorization Code Flow.
+
+OIDC Hybrid Flow
+The [OIDC] Hybrid Flow is a type of redirection flow where the consumer's user agent is redirected from a Data Recipient Software Product’s (Relying Party) web site to a Data Holder’s Authorisation end point in the context of an [OIDC] authentication request. The OIDC Hybrid Flow incorporates aspects of the both the implicit flow and authorisation code flow detailed under [OIDC].
+
+Only a response_type (see section 3.3 of [OIDC]) of code id_token SHALL be allowed.
 
 
-OIDC Authorization Code Flow
-From July 4th 2022:
-
-Data Holders MAY support OIDC Authorization Code Flow according to [FAPI-1.0-Advanced]
-Data Recipient Software Products MAY use OIDC Authorization Code Flow according to [FAPI-1.0-Advanced] if the Data Holder supports it.
-In addition, the following statements are applicable for this flow:
+Authorization Code Flow
+The following statements are applicable for this flow:
 
 Only a response_type (see section 3.1 of [OIDC]) of code SHALL be allowed.
 Data Holders MUST also support [JARM] and [PKCE]
+Data Holders
+Data Holders MUST support [JARM] in accordance with [FAPI-1.0-Advanced] section 5.2.2.2.
+
+JWT Secured Authorization Response Mode for OAuth 2.0 (JARM) Data Holders MAY support Authorisation Response encryption.
+
+However, at present, there is no confidential information in the authorization response, hence encryption of the authorization response is not required for the purposes of security or confidentiality. In addition, whilst response encryption MAY be used, to achieve greater interoperability, it is not recommended to use encryption in this case at this time.
+
+In addition,
+
+Data Holders MAY advertise they do not support authorisation response encryption: either by omitting these values from their OpenID Provider Metadata, or by presenting an empty array for the supported parameters.
+If the Data Holder supports authorisation response encryption and the authorization_encrypted_response_alg is omitted from the registration request, the Data Holder MAY require response encryption by returning a client registration response with the chosen “authorization_encrypted_response_alg” value.
+Data Recipient Software Products
+Data Recipients MUST support [JARM] in accordance with [FAPI-1.0-Advanced] section 5.2.3.2.
+
+In addition,
+
+Data Recipients MUST request authorisation response signing using one of the authorization_signing_alg_values_supported values offered by the Data Holder.
+Data Recipients MAY request response encryption using one of the advertised encryption sets.
+Data Recipients MAY request no response encryption by omitting the values in their client registration.
+If authorization_signed_response_alg is omitted, the default algorithm is "PS256".
+Additional requirements and guidelines for the authentication flows are contained in the Consumer Experience section.
+
 
 Client Authentication
 This section outlines how participants in the CDR regime will authenticate clients seeking access to end points.
@@ -2455,13 +2479,26 @@ redirect_uris	Optional	Array of redirection URI strings for use in redirect-base
 token_endpoint_auth_method	Required	The requested authentication method for the token endpoint. The only supported method will be private_key_jwt
 token_endpoint_auth_signing_alg	Required	The algorithm used for signing the JWT
 grant_types	Required	Array of OAuth 2.0 grant type strings that the client can use at the token endpoint. Supported values: [client_credentials, authorization_code, refresh_token]
-response_types	Required	Array of the OAuth 2.0 response type strings that the client can use at the authorization endpoint. value: [code id_token]
+response_types	Required	Array of the OAuth 2.0 response type strings that the client can use at the authorization endpoint. values: ["code", "code id_token"]
+
+Response type value “code” is required for Authorization Code Flow. Response type value “code id_token” is required for OIDC Hybrid Flow.
 application_type	Optional	Kind of the application. The only supported application type will be web
 id_token_signed_response_alg	Required	Algorithm with which an id_token is to be signed
 
-Supported values as constrained by [FAPI-RW-Draft]
-id_token_encrypted_response_alg	Required	JWE alg algorithm with which an id_token is to be encrypted
-id_token_encrypted_response_enc	Required	JWE enc algorithm with which an id_token is to be encrypted
+Supported values as constrained by [FAPI-1.0-Advanced]. Required for both Authorization Code Flow (response_type “code”) and OIDC Hybrid Flow (response_type “code id_token”).
+id_token_encrypted_response_alg	Required	JWE alg algorithm with which an id_token is to be encrypted.
+
+Required if OIDC Hybrid Flow (response_type “code id_token”) is registered. Must be ignored for Authorization Code Flow.
+id_token_encrypted_response_enc	Required	JWE enc algorithm with which an id_token is to be encrypted.
+
+Required if OIDC Hybrid Flow (response_type “code id_token”) is registered. Must be ignored for Authorization Code Flow.
+authorization_signed_response_alg	Conditional	The JWS alg algorithm required for signing authorization responses. If this is specified, the response will be signed using JWS and the configured algorithm. The algorithm “none” is not allowed.
+
+Required if response_type of “code” is registered by the client.
+authorization_encrypted_response_alg	Conditional	The JWE alg algorithm required for encrypting authorization responses. If unspecified, the default is that no encryption is performed.
+
+Required if “authorization_encrypted_response_enc” is included.
+authorization_encrypted_response_enc	Optional	The JWE enc algorithm required for encrypting authorization responses. If “authorization_encrypted_response_alg” is specified, the default for this value is “A128CBC-HS256”.
 request_object_signing_alg	Optional	Algorithm which the ADR expects to sign the request object if a request object will be part of the authorization request sent to the Data Holder
 
 If field not present in the request, data holders are expected to respond with an appropriate default value
@@ -2469,6 +2506,8 @@ If field not present in the request, data holders are expected to respond with a
 Supported values as constrained by [FAPI-RW-Draft]
 software_statement	Required	Software statement assertion issued by the CDR Register
 ID Token Algorithm Selection Considerations
+When requiring ID Token encryption, the following requirements are applicable.
+
 Participants MUST support, at a minimum, the following ID Token algorithms:
 
 Claim	Values
@@ -2479,6 +2518,18 @@ A128CBC-HS256
 Data Holders MUST support at a minimum, 1 algorithm for each claim.
 
 Data Recipients MUST support all the algorithms used in the ecosystem to ensure they can communicate with all Data Holders.
+
+ID Token algorithm considerations remain relevant where the OIDC Hybrid Flow is leveraged as defined in the Consumer Data Standards and in accordance with sections 5.1.1, 5.2.2.1, and 5.2.3.1 of [FAPI-1.0-Advanced].
+
+JARM Response Encryption Considerations
+If Data Holders support authorisation response encryption, they MUST support, at a minimum, one of each of the following alg and enc algorithms:
+
+Claim	Values
+authorization_encryption_alg_values_supported	RSA-OAEP
+RSA-OAEP-256
+authorization_encryption_enc_values_supported	A256GCM
+A128CBC-HS256
+Data Recipients MUST support the minimum required algorithms.
 
 Registration Validation
 Validation and use of the JWT and the claims described above MUST be performed in accordance with [JWT].
@@ -2844,21 +2895,18 @@ In addition to the mandatory claims specified in section 2 of the [OIDC] standar
 
 ID Tokens MUST be signed by Data Holders as specified in section 8.6 of [FAPI-RW-Draft].
 
-From September 16th 2022 (FAPI 1.0 Migration Phase 2), the following requirements apply:
-
-ID Tokens MUST be signed and MAY be encrypted when returned to a Data Recipient Software Product from the Token End Point, if the Data Holder supports the OIDC Authorization Code Flow in accordance with [FAPI-1.0-Advanced].
 OIDC Hybrid Flow requirements
 In accordance with [FAPI-RW-Draft], ID Tokens MUST be signed and encrypted when returned to a Data Recipient Software Product from both the Authorisation End Point and Token End Point.
 
 The ID Token returned from the Authorisation End Point MUST NOT contain any Personal Information (PI) claims.
 
-OIDC Authorization Code Flow requirements
-From September 16th 2022, if the Data Holder supports the OIDC Authorization Code Flow in accordance with [FAPI-1.0-Advanced], ID Tokens MUST be signed and MAY encrypted when returned to a Data Recipient Software Product from the Token End Point.
-
 Hashing value for state and authorisation code
-The c_hash value MUST be generated according to section 3.3.2.11 of [OIDC].
+The following requirements apply to the OIDC Hybrid Flow:
 
-The s_hash value MUST be generated according to section 5.1 of [FAPI-RW-Draft].
+The c_hash value MUST be generated according to section 3.3.2.11 of [OIDC].
+The s_hash value MUST be generated according to section 5.1.1 of [FAPI-1.0-Advanced].
+Authorization Code Flow requirements
+For response_type “code”, in accordance with [FAPI-1.0-Advanced], ID Tokens MUST be signed and MUST NOT be encrypted when returned to a Data Recipient Software Product from the Token End Point.
 
 Access Token
 Access Tokens MUST be used as specified in section 10.3 of [OAUTH2].
@@ -3327,10 +3375,13 @@ scopes_supported: This list of supported scopes.
 claims_supported: The list of supported claims.
 acr_values_supported: The supported ACR values.
 jwks_uri: The JSON Web Key Set for the data holder.
-id_token_encryption_alg_values_supported: The list of the supported JWE algorithms for securing the issued ID tokens. Must conform to [FAPI-RW-Draft] and [OIDD].
-id_token_encryption_enc_values_supported: The list of the supported JWE encryption methods for securing the issued ID tokens.
+id_token_encryption_alg_values_supported: The list of the supported JWE algorithms for securing the issued ID tokens. Must conform to [FAPI-RW-Draft] and [OIDD]. Required for Data Holders supporting OIDC Hybrid Flow.
+id_token_encryption_enc_values_supported: The list of the supported JWE encryption methods for securing the issued ID tokens. Required for Data Holders supporting OIDC Hybrid Flow.
 cdr_arrangement_revocation_endpoint: The URL of the CDR Arrangement Revocation End Point for consent revocation
 pushed_authorization_request_endpoint: URL of the Pushed Authorisation End Point used to support [PAR].
+authorization_signing_alg_values_supported: A JSON array containing a list of the JWS signing algorithms (alg values) supported by the authorization endpoint to sign the response. Required if Authorization Code Flow (response_type “code”) is supported.
+authorization_encryption_alg_values_supported: A JSON array containing a list of the JWE encryption algorithms (alg values) supported by the authorization endpoint to encrypt the response. If response encryption is used, Data Holders must support at least one of "RSA-OAEP" or "RSA-OAEP-256".
+authorization_encryption_enc_values_supported: A JSON array containing a list of the JWE encryption algorithms (enc values) supported by the authorization endpoint to encrypt the response. Required if “authorization_encryption_alg_values_supported” is provided. If response encryption is used, Data Holders must support at least one of "A256GCM" or "A128CBC-HS256".
 
 Authorisation End Point
 Non-Normative Example
@@ -3647,8 +3698,8 @@ Cache-Control: no-cache, no-store
 Authorise
 
 ## The request_uri is used by the ADR in the subsequent authorisation request as follows
-## (note this example is pre-RFC using Draft 01 of the PAR standard, hence it includes
-## the mandatory oAuth parameters as per FAPI R/W for confidential clients must be
+## (note this example is pre-RFC using Draft 01 of the PAR standard, hence it includes 
+## the mandatory oAuth parameters as per FAPI R/W for confidential clients must be 
 ## replayed in the request URL):
 
 GET /authorise?client_id=s6BhdRkqt3&
@@ -3881,12 +3932,15 @@ Example responses
     "client_credentials"
   ],
   "response_types": [
-    "code id_token"
+    "code"
   ],
   "application_type": "web",
   "id_token_signed_response_alg": "PS256",
   "id_token_encrypted_response_alg": "RSA-OAEP",
   "id_token_encrypted_response_enc": "A256GCM",
+  "authorization_signed_response_alg": "PS256",
+  "authorization_encrypted_response_alg": "RSA-OAEP",
+  "authorization_encrypted_response_enc": "A128CBC-HS256",
   "request_object_signing_alg": "PS256",
   "software_statement": "string",
   "software_id": "740C368F-ECF9-4D29-A2EA-0514A66B0CDE",
@@ -3964,12 +4018,15 @@ Example responses
     "client_credentials"
   ],
   "response_types": [
-    "code id_token"
+    "code"
   ],
   "application_type": "web",
   "id_token_signed_response_alg": "PS256",
   "id_token_encrypted_response_alg": "RSA-OAEP",
   "id_token_encrypted_response_enc": "A256GCM",
+  "authorization_signed_response_alg": "PS256",
+  "authorization_encrypted_response_alg": "RSA-OAEP",
+  "authorization_encrypted_response_enc": "A128CBC-HS256",
   "request_object_signing_alg": "PS256",
   "software_statement": "string",
   "software_id": "740C368F-ECF9-4D29-A2EA-0514A66B0CDE",
@@ -4056,12 +4113,15 @@ Example responses
     "client_credentials"
   ],
   "response_types": [
-    "code id_token"
+    "code"
   ],
   "application_type": "web",
   "id_token_signed_response_alg": "PS256",
   "id_token_encrypted_response_alg": "RSA-OAEP",
   "id_token_encrypted_response_enc": "A256GCM",
+  "authorization_signed_response_alg": "PS256",
+  "authorization_encrypted_response_alg": "RSA-OAEP",
+  "authorization_encrypted_response_enc": "A128CBC-HS256",
   "request_object_signing_alg": "PS256",
   "software_statement": "string",
   "software_id": "740C368F-ECF9-4D29-A2EA-0514A66B0CDE",
@@ -4162,12 +4222,15 @@ RegistrationProperties
     "client_credentials"
   ],
   "response_types": [
-    "code id_token"
+    "code"
   ],
   "application_type": "web",
   "id_token_signed_response_alg": "PS256",
   "id_token_encrypted_response_alg": "RSA-OAEP",
   "id_token_encrypted_response_enc": "A256GCM",
+  "authorization_signed_response_alg": "PS256",
+  "authorization_encrypted_response_alg": "RSA-OAEP",
+  "authorization_encrypted_response_enc": "A128CBC-HS256",
   "request_object_signing_alg": "PS256",
   "software_statement": "string",
   "software_id": "740C368F-ECF9-4D29-A2EA-0514A66B0CDE",
@@ -4200,10 +4263,19 @@ token_endpoint_auth_method	string	mandatory	The requested authentication method 
 token_endpoint_auth_signing_alg	string	mandatory	The algorithm used for signing the JWT
 grant_types	[string]	mandatory	Array of OAuth 2.0 grant type strings that the client can use at the token endpoint
 response_types	[string]	mandatory	Array of the OAuth 2.0 response type strings that the client can use at the authorization endpoint.
+
+Response type value code is required for Authorization Code Flow. Response type value code id_token is required for OIDC Hybrid Flow.
 application_type	string	optional	Kind of the application. The only supported application type will be web
-id_token_signed_response_alg	string	optional	Algorithm with which an id_token is to be signed
+id_token_signed_response_alg	string	mandatory	Algorithm with which an id_token is to be signed
 id_token_encrypted_response_alg	string	mandatory	JWE alg algorithm with which an id_token is to be encrypted
 id_token_encrypted_response_enc	string	mandatory	JWE enc algorithm with which an id_token is to be encrypted
+authorization_signed_response_alg	string	optional	The JWS alg algorithm required for signing authorization responses. If this is specified, the response will be signed using JWS and the configured algorithm. The algorithm “none” is not allowed.
+
+Required if response_type of “code” is registered by the client.
+authorization_encrypted_response_alg	string	optional	The JWE alg algorithm required for encrypting authorization responses. If unspecified, the default is that no encryption is performed.
+
+Required if “authorization_encrypted_response_enc” is included.
+authorization_encrypted_response_enc	string	optional	The JWE enc algorithm required for encrypting authorization responses. If “authorization_encrypted_response_alg” is specified, the default for this value is “A128CBC-HS256”.
 request_object_signing_alg	string	mandatory	Algorithm which the ADR expects to sign the request object if a request object will be part of the authorization request sent to the Data Holder
 software_statement	string(JWT)	mandatory	The Software Statement Assertion, as defined in CDR standards
 software_id	string	mandatory	String representing a unique identifier assigned by the Register and used by registration endpoints to identify the software product to be dynamically registered.
@@ -4219,10 +4291,17 @@ token_endpoint_auth_signing_alg	ES256
 grant_types	client_credentials
 grant_types	authorization_code
 grant_types	refresh_token
+response_types	code
 response_types	code id_token
 application_type	web
 id_token_signed_response_alg	PS256
 id_token_signed_response_alg	ES256
+authorization_signed_response_alg	PS256
+authorization_signed_response_alg	ES256
+authorization_encrypted_response_alg	RSA-OAEP
+authorization_encrypted_response_alg	RSA-OAEP-256
+authorization_encrypted_response_enc	A256GCM
+authorization_encrypted_response_enc	A128CBC-HS256
 request_object_signing_alg	PS256
 request_object_signing_alg	ES256
 ClientRegistration
@@ -4259,12 +4338,15 @@ ClientRegistration
     "client_credentials"
   ],
   "response_types": [
-    "code id_token"
+    "code"
   ],
   "application_type": "web",
   "id_token_signed_response_alg": "PS256",
   "id_token_encrypted_response_alg": "RSA-OAEP",
   "id_token_encrypted_response_enc": "A256GCM",
+  "authorization_signed_response_alg": "PS256",
+  "authorization_encrypted_response_alg": "RSA-OAEP",
+  "authorization_encrypted_response_enc": "A128CBC-HS256",
   "request_object_signing_alg": "PS256",
   "software_statement": "string",
   "software_id": "740C368F-ECF9-4D29-A2EA-0514A66B0CDE",
@@ -30259,6 +30341,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+16/12/2022	1.21.0	Changes arising from Decision 282	See release notes and Decision 282 for details.
 03/11/2022	1.20.0	Changes arising from Decision 259 (Maintenance iteration 12)	See release notes and Decision 259 for details. Also includes first draft of Telco standards
 13/09/2022	1.19.0	Changes arising from Decision 260 (Energy Closed Accounts)	See release notes and Decision 260 for details
 11/08/2022	1.18.0	Changes arising from Decision 249 (Maintenance iteration 11)	See release notes and Decision 249 for details
@@ -30364,6 +30447,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+13/11/2022	1.20.0	Changes arising from Decision 259 (Maintenance iteration 12)
 13/09/2022	1.19.0	Changes arising from Decision 260 (Energy Closed Accounts)
 11/08/2022	1.18.0	Changes arising from Decision 249 (Maintenance Iteration 11)
 23/05/2022	1.17.0	Changes arising from Decision 237 (Maintenance Iteration 10)
