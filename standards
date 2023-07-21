@@ -24,6 +24,14 @@ CDR Standards on GitHub
 CDR Maintenance on GitHub
 Test Documentation
 Introduction
+The Version Delta tab can be used to see in context changes between this version of the standards and the immediately previous version of the standards.
+This text is an example of a new addition to the standards:
++ New text added here
+This text is an example of text removed from the standards:
+- Old text removed
+Note: changes to request and response payloads are listed at the beginning of the relevant API section due to the documentation being auto generated from OpenAPI specification files.
+
+Additional note for v1.24.0: For this version only the delta statements from v1.23.0 have been retained in v1.24.0 as the release dates between the two versions were close together.  The affected delta statements will be noted as being associated with v1.23.0
 These standards have been developed as part of the Australian Government's introduction of the Consumer Data Right legislation to give Australians greater control over their data.
 
 The Consumer Data Right (CDR) is intended to be applied sector by sector across the whole economy, beginning in the banking, energy and telecommunications sectors. These standards have been developed to facilitate the Consumer Data Right by acting as a specific baseline for implementation.
@@ -37,12 +45,13 @@ where the standards are specified as binding standards as required by the Consum
 Some of these standards will be binding data standards under the Competition and Consumer (Consumer Data Right) Data Standards (No. 1) 2023. See that instrument here. In summary, provisions of these standards (as they exist from time to time) that impose obligations or prohibitions on CDR entities are binding data standards. Provisions included in these standards merely by way of guidance are not binding data standards.
 
 Version
-These standards represent version 1.23.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.24.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Interpretation
 Note that, in these standards, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in [RFC2119].
 
 Future Dated Obligations
+Added Future Dated Obligation for Get Generic Plan Detail V2 and Get Energy Account Detail V3
 The standards, as published from time to time, may include specific statements indicating that a specific section of the standards will not take effect until a future date or may cease to have effect on some future date.
 
 The table below highlights these areas of the standards.
@@ -83,6 +92,15 @@ Data Holders MAY retire Hybrid Flow
 July 10th 2023
 Get Accounts V2	Version 2 of this end point MUST be made available by affected data holders by July 10th 2023	July 10th 2023
 Get Account Detail V3	Version 3 of this end point MUST be made available by affected data holders by July 10th 2023	July 10th 2023
+Get Generic Plan Detail V2	
+Data Holder MUST implement v2 of this endpoint by November 1st 2023
+Data Holders MAY obsolete v1 of this endpoint from September 9th 2024
+November 1st 2023
+Get Energy Account Detail V3	
+Data Holder MUST implement v3 of this endpoint by November 1st 2023
+Data Holders MAY obsolete v2 of this endpoint from September 9th 2024
+November 1st 2023
+Private Key JWT Client Authentication	Change to support [RFC7521] such that, until November 13th 2023, clients authenticating using Private Key JWT are recommended to provide the client_id, but no longer required. From November 13th 2023, it is then optional to provide the client_id. This applies to ADRs and the CDR Register authenticating with Data Holders and ADRs authenticating with the CDR Regsiter.	November 13th 2023
 Get Accounts V1	Data Holders MAY decommission v1 of this end point from March 11th 2024	March 11th 2024
 Get Account Detail V2	Data Holders MAY decommission v2 of this end point from March 11th 2024	March 11th 2024
 Register Dependency Schedule
@@ -101,6 +119,9 @@ Get Data Holder Statuses V1	CDR Register must introduce version 1 of this end po
 The actual release dates for the Register APIs are expected to occur prior to these dates and are not defined by the Standards.
 
 Endpoint Version Schedule
+Updated version schedule for following Energy APIs:
+ Get Generic Plan Detail
+ Get Energy Account Detail
 A table-view of all endpoint versioning is available here.
 
 Normative References
@@ -133,6 +154,7 @@ Reference	Description	Version
 [RFC5322]	Internet Message Format: https://tools.ietf.org/html/rfc5322	October 2008
 [RFC6750]	The OAuth 2.0 Authorization Framework: Bearer Token Usage: https://tools.ietf.org/html/rfc6750	Oct 2012
 [RFC7009]	OAuth 2.0 Token Revocation: https://tools.ietf.org/html/rfc7009	Aug 2013
+[RFC7521]	Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants: https://tools.ietf.org/html/rfc7521	May 2015
 [RFC7523]	JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants: https://tools.ietf.org/html/rfc7523	May 2015
 [RFC7662]	OAuth 2.0 Token Introspection: https://tools.ietf.org/html/rfc7662	Oct 2015
 [RFC8414]	OAuth 2.0 Authorization Server Metadata: https://tools.ietf.org/html/rfc8414	Jun 2018
@@ -613,6 +635,7 @@ Normative references
 The only exception to this, unless explicitly stated, is normative standards. The requirements for expressing arrays within those normative standards apply per the normative references.
 
 Common Field Types
+Added actual % values represented by examples for RateString field type
 The following table outlines the common data types for fields used in the standard.
 
 Type	Description	Valid Examples
@@ -656,10 +679,10 @@ CurrencyString	Standard 3 character currency codes as per ISO-4217	“AUD”
 RateString	A string representing a percentage (e.g. an interest rate). A rate of 100% would be represented by the value 1.0 and a rate of -100% by -1.0
 - At least 1 and up to a total of 16 significant digits before decimal point
 - Up to 16 digits following the decimal point
-- No formatting, eg thousand separating commas	“0.05”
-“-0.05”
-“12.3456789”
-“-99.123456789123”
+- No formatting, eg thousand separating commas	“0.05”(=5%)
+“-0.05”(=-5%)
+“12.3456789”(=1234.56789%)
+“-99.123456789123”(=9912.3456789123%)
 AmountString	A string representing an amount of currency.
 - A positive, zero or negative number
 - Negative numbers identified with a ‘-‘
@@ -724,6 +747,10 @@ IDs MUST be immutable across sessions and consents but MUST NOT be transferable 
 IDs MUST NOT be transferable between different customers for the same Data Recipient Software Product. For example, a Data Recipient Software Product should obtain a different ID for a joint account if the ID was obtained independently using authorisations from both customers.
 In payloads the field name of “id” should NEVER be used. Each ID field should be meaningfully named so that wherever that ID is used across multiple end points it always refers to the same ID set. For instance, the IDs for accounts would be represented in JSON in a field named “accountId”.
 Error Codes
+Replaced following in description of 'Invalid Page Size':
+- page_size
+with:
++ page-size
 These standards define a standard list of error codes that Data Recipient Software Products and Data Holders SHOULD or MUST conform to. Further,
 
 Data Recipient Software Products and Data Holders SHOULD use the standard error codes as defined
@@ -872,7 +899,7 @@ The error detail SHOULD be the parameter name of the invalid date field. The err
 
 This error code MUST be supported for unauthenticated and authenticated APIs.
 Invalid Page Size	urn:au-cds:error:cds-all:
-Field/InvalidPageSize	The value provided in the page-size pagination field is greater than the maximum allowed by the Consumer Data Standards (page_size > 1000).
+Field/InvalidPageSize	The value provided in the page-size pagination field is greater than the maximum allowed by the Consumer Data Standards (page-size > 1000).
 
 This error code MUST be supported for unauthenticated and authenticated APIs.
 Invalid Version	urn:au-cds:error:cds-all:
@@ -1627,9 +1654,17 @@ Password link	Data Holders MUST NOT include forgotten details links in redirect 
 Authentication:
 OTP expiry	Data Holders MUST communicate the expiry period of the OTP to the consumer in the authentication flow.
 Authorisation Standards
+Added new Authorisation CX Standard:
++ Authorisation: Account selection functionality
 Area	CX Standard
 Authorisation:
 Account selection	Data holders MUST allow the consumer to select which of their accounts to share data from if the data request includes account-specific data and if there are multiple accounts available. The Data holder MAY omit this step if none of the data being requested is specific to an account (e.g. Saved Payees).
+Authorisation:
+Account selection functionality	
+Data holders MAY include additional functionality to support account discovery and selection where further navigation or interaction is required to view all accounts. This may, for example, include search, sort, filter, scroll, grouping, and pagination, or other controls in line with existing consumer experiences. Any such functionality MUST NOT introduce unwarranted friction.
+
+Note: Unwarranted friction should have regard to CDR Rule 4.24 and is considered to include the addition of any requirements beyond normal data holder practices for an equivalent account selection process.
+
 Authorisation:
 Profile selection	
 Data holders MAY add a 'profile selection' step or equivalent prior to the account selection step if a single identifier provides access to different customer accounts. For example, one customer ID may give access to business customer and individual customer accounts.
@@ -2027,17 +2062,21 @@ Authorisation Servers MUST support the authentication of clients using the priva
 The private_key_jwt authentication method is enabled through the delivery of an encoded [JWT] signed using the Data Recipient Software Product's private key and thus facilitates non-repudiation.
 Client public keys are obtained from the [JWKS] endpoints.
 For the client authentication assertion, the [JWT] represents an assertion that MUST contain the following REQUIRED Claim Values and MAY contain the following OPTIONAL Claim Values:
-
 iss - REQUIRED. Issuer Identifier for the Issuer of the response. The client ID of the bearer.
 sub - REQUIRED. Subject Identifier. The client ID of the bearer.
 aud - REQUIRED. Audience(s) that the JWT is intended for. The issuer identifier URL of the authorisation server according to [RFC8414] SHOULD be used as the value of the audience. In order to facilitate interoperability, the authorisation server MUST accept its Issuer Identifier, Token Endpoint URL, or the URI of the endpoint being invoked as values that identify it as an intended audience.
 jti - REQUIRED. JWT ID. A unique identifier for the token, which can be used to prevent reuse of the token. These tokens MUST only be used once.
 exp - REQUIRED. Expiration time on or after which the ID Token MUST NOT be accepted for processing. Value is a JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC expiry time.
 iat - OPTIONAL. Time at which the JWT was issued. Value is a JSON number representing the number of seconds from 1970-01-01T00:00:00Z to the UTC issued at time.
-The aforementioned assertion MUST be sent to the Authorisation Server's Token endpoint with the POST method and MUST include the following REQUIRED parameters and MAY contain the following OPTIONAL parameters:
+Updated the requirements for the client_id claim. It is now recommended the client_id be provided until November 13th 2023. After which it is optional for clients to provide this claim. It is then beholden on the CDR Register and Data Holders to permit client authentication where the client omits the client_id claim. This facilitates Data Holders seeking FAPI compliance by supporting Private Key JWT client authentication as per [RFC7521].
+The aforementioned assertion MUST be sent to the Authorisation Server's Token endpoint with the POST method and MUST include the following REQUIRED parameters, SHOULD include the following RECOMMENDED parameters and MAY contain the following OPTIONAL parameters:
 
 grant_type - REQUIRED. The grant type(s) supported by the Authorisation Server.
-client_id - REQUIRED. The client ID of the bearer.
+client_id -
+Until November 13th 2023
+RECOMMENDED. The client ID of the bearer.
+From November 13th 2023
+OPTIONAL. The client ID of the bearer in accordance with [RFC7521].
 client_assertion_type - REQUIRED. This MUST be set to urn:ietf:params:oauth:client-assertion-type:jwt-bearer.
 client_assertion - REQUIRED. The encoded assertion JWT.
 scope - OPTIONAL. The requested scope as described in Section 3.3 of [RFC6749].
@@ -2329,6 +2368,9 @@ As per the CDS Scopes and Claims, openid and profile are included in the SSA
 Get Software Statement Assertion API v1 & v2 has the scope claim explicitly defined.
 
 Registration Request using JWT
+**v1.23.0 Change**
+Removed following requirement from id_token_encrypted_response_alg and id_token_encrypted_response_enc fields:
+- Must be ignored for Authorization Code Flow
 Example Request Client registration with OpenID Hybrid Flow
 
 HTTP/1.1 POST /register
@@ -2857,6 +2899,8 @@ The following requirements apply to the OIDC Hybrid Flow:
 The c_hash value MUST be generated according to section 3.3.2.11 of [OIDC].
 The s_hash value MUST be generated according to section 5.1.1 of [FAPI-1.0-Advanced].
 Authorization Code Flow requirements
+**v1.23.0 Change**
+Authorization Code Flow requirements: Removed requirement stating ID tokens MUST NOT be encrypted
 For response_type code, in accordance with [FAPI-1.0-Advanced], ID Tokens MUST be signed when returned to a Data Recipient Software Product from the Token End Point.
 
 Access Token
@@ -3043,6 +3087,15 @@ TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
 TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 Certificate Management
+Made following changes to Certificate Signing Request Profile table:
++ Included additional fields that can be provided in a CSR
++ Changed 'Common Name' to 'Software Product Name' only for client certificate
++ Changed 'Organization' to include the Brand Name only
++ Added column indication which fields are  mandatory
++ Included a statement noting that if optional fields are required then they will be validated to ensure correctness
+
+Replaced test enviroment details from Certificate Trust Model table with following:
++ Details provided to participants when they begin CTS process
 Issued by the Register for Data Holders
 Certificate	Function	Notes
 Server Certificate(s)	Certificate is issued to a FQDN
@@ -3051,6 +3104,12 @@ Secures the following endpoints:
 - Resource endpoints
 - InfoSec endpoints
 - Admin endpoints	It will be up to the DH on how these endpoints are segregated. They may all be on the one domain (so only one certificate required) or could be separated.
+Fixed documentation issues in the Server Certificate(s) row of the `Issued by the Register CA for Data Recipients` table:
+Replaced following:
+-Revocation endpoint
+-CDR Arrangement Management endpoint
+with:
++CDR Arrangement Revocation endpoint
 Issued by the Register CA for Data Recipients
 Certificate	Function	Notes
 Client Certificate	Secures the following:
@@ -3058,38 +3117,51 @@ Client Certificate	Secures the following:
 - Consuming Data Holder APIs	
 Server Certificate(s)	Certificate is issued to a FQDN.
 Secures the following:
-- Revocation endpoint
-- CDR Arrangement Management endpoint
-- JWKS endpoint	ADRs may choose to secure their endpoints with an the Register CA issued certificate or a certificate issued by a public CA.
+- CDR Arrangement Revocation endpoint
+- JWKS endpoint	ADRs may choose to secure their endpoints with the Register CA issued certificate or a certificate issued by a public CA.
+Corrected typo in description of `CDR Certificate Authority` section:
+Replaced:
+-the the Register
+with:
++the ACCC Register
 CDR Certificate Authority
-DigiCert acts as the certificate authority that issues and manages certificates to CDR participants as directed by the the Register in its capacity as the CDR Registrar.
+DigiCert acts as the certificate authority that issues and manages certificates to CDR participants as directed by the ACCC Register in its capacity as the CDR Registrar.
 
 Certificate Trust Model
 The CDR utilises a private certificate trust chain for all Register CA secured endpoints being hosted by Data Holders, Data Recipients and the Register.
 
 This trust chain encompasses a set of root and intermediate CAs issued for the test and production environments.
 
-Test Environment	CA Root Test
-CA Intermediate Test
+Test Environment	Details provided to participants when they begin CTS process
 Production Environment	CA Root Production
 CA Intermediate Production
 Certificate Signing Request Profile
 When requesting the Register CA certificates, certificate signing requests will need to be provided, conforming to the following profile:
 
-CSR Field	Server	Client
-Common Name	Primary DNS Name
-e.g. api1.test.entity.com	Software Product Name OR
-Brand Name
-SAN (Optional)	Secondary DNS Name(s)
+CSR Field	Required	Server	Client
+Common Name (CN)	Mandatory	Primary DNS Name
+e.g. api1.test.entity.com	Software Product Name
+SAN	Optional	Secondary DNS Name(s)
 e.g. api2.test.entity.com	N/A
-Organization	Brand Name (Legal Entity Name)	Brand Name (Legal Entity Name)
-Organizational Unit	Consumer Data Right	Consumer Data Right
-Country	Country of participant
+Organization (O)	Mandatory	Brand Name	Brand Name
+Organizational Unit (OU)	Mandatory	Consumer Data Right	Consumer Data Right
+Country (C)	Mandatory	Country of participant
 e.g. AU	Country of participant
 e.g. AU
-Signature Algorithm	SHA256	SHA256
-Key Algorithm	RSA	RSA
-Key Size	2048	2048
+State (ST)	Optional	State of the Participant
+e.g. New South Wales	State of the Participant
+e.g. New South Wales
+Locality (L)	Optional	Locality of the Participant
+e.g. Sydney	Locality of the Participant
+e.g. Sydney
+Email Address	Optional	Participant's email address to be
+displayed in the issued certificate	Participant's email address to be
+displayed in the issued certificate
+Signature Algorithm	Mandatory	SHA256	SHA256
+Key Algorithm	Mandatory	RSA	RSA
+Key Size	Mandatory	2048	2048
+Note: optional values, if provided, will be validated to be correct.
+
 Please refer to the Register onboarding guide for further information on certificate issuance.
 
 Certificate Usage
@@ -3260,6 +3332,10 @@ From September 16th 2022, the following requirements apply in addition to the FA
 Data Recipients MUST ONLY send authorisation request data using [RFC9126] (PAR) and use [PKCE] ([RFC7636]) in accordance with [FAPI-1.0-Advanced].
 Data Recipients Software Products MUST support [PKCE] ([RFC7636]) and MUST use S256 as the code challenge method.
 Security Endpoints
+Added statements noting CORS is not required for the following:
+ * OpenID Provider Configuration End Point
+ * Authorisation End Point
+ * JSON Web Key Set End Point
 OpenID Provider Configuration End Point
 Non-Normative Example
 
@@ -3308,6 +3384,8 @@ Transport Security	TLS
 Client Authentication Required	No
 Bearer Token Required	No
 Data Holders MUST make their OpenID Provider Metadata available via a configuration end point as outlined in Section 3 and 4 of the OpenID Connect Discovery standards [OIDD].
+
+This endpoint does not require CORS.
 
 At a minimum, the Data Holder metadata MUST include:
 
@@ -3399,6 +3477,8 @@ Client Authentication Required	No
 Bearer Token Required	No
 The requirements for the Authorisation End Point are specified in section 3.3.2 of [OIDC] and further specified under section 5.2.2 of [FAPI-RW-Draft]. This end point is invoked as part of the Hybrid Authentication flow.
 
+This endpoint does not require CORS.
+
 JSON Web Key Set End Point
 Description	Value
 Hosted By	Data Holder & Data Recipient Software Product
@@ -3410,6 +3490,8 @@ The requirements for the JWKS End Point are specified in various sections of [OI
 This end point is used by the Data Holder to provide the public keys they will use when required.
 
 Data Holders MUST support a JWKS End Point.
+
+This endpoint does not require CORS.
 
 JWKS URIs
 In addition to [FAPI-1.0-Advanced] section 8.9 from July 4th 2022, the following requirements apply:
@@ -3812,6 +3894,7 @@ This specification defines the APIs for Data Holders exposing Dynamic Client Reg
 
 DCR OpenAPI Specification (JSON)
 DCR OpenAPI Specification (YAML)
+Added statement noting CORS is not required for the Register Data Recipient oAuth Client API
 Register Data Recipient oAuth Client
 
 Code samples
@@ -3840,6 +3923,8 @@ $.ajax({
 POST /register
 
 Register a client using a CDR Register issued Software Statement Assertion.
+
+This endpoint does not require CORS.
 
 Body parameter
 
@@ -4344,6 +4429,9 @@ error	unapproved_software_statement
 Register APIs
 The following section provides an overview of the Register APIs for Data Holders and Data Recipients to collect participant metadata. These endpoints are exposed by the Register and consumed by Data Holders and Data Recipients.
 
+Added statements noting CORS is not required for the following APIs:
+ * Get OpenId Provider Config
+ * Get JWKS
  These endpoints are not implemented by Data Holders and Data Recipients. They are hosted by the Register for consumption by participants. Data Holders and Data Recipient Software Products are required to call these endpoints to obtain metadata that enables connection and registration between participants as well as obtaining the status of participants in the CDR. These statuses are provided authoritatively by the Register to allow participants to determine whether a connecting third-party is permitted to perform registration requests or data sharing requests.
 
 Register OpenAPI Specification (JSON)
@@ -4387,6 +4475,8 @@ $.ajax({
 GET /.well-known/openid-configuration
 
 Endpoint used by participants to discover the CDR Register OpenID configuration and obtain information needed to interact with it, including its OAuth 2.0 endpoint locations.
+
+This endpoint does not require CORS.
 
 Endpoint Version
 Version	Versioning is not supported for this endpoint
@@ -4457,6 +4547,8 @@ $.ajax({
 GET /jwks
 
 JWKS endpoint containing the public keys used by the CDR Register to validate the signature of issued SSAs and authenticate outbound calls to participants in the CDR.
+
+This endpoint does not require CORS.
 
 Endpoint Version
 Version	Versioning is not supported for this endpoint
@@ -5905,7 +5997,12 @@ High Traffic Period: Any time in the 18 hour period between 6am and 12am (midnig
 Low Traffic Period: Any time of the day not considered to be included in a high traffic period.
 Large Payload: An API which is capable of returning a large data response that would reasonably impose higher data retrieval times on the resource server. Typically bulk request end points.
 Session Requirements
-A expiry time of a unique session should be set according to the statements included in the Security Profile.
+Corrected following typo:
+Replaced:
+- A expiry time of a unique...
+with:
++ The expiry time of a unique...
+The expiry time of a unique session should be set according to the statements included in the Security Profile.
 
 After a unique session is expired it is expected that the Data Recipient Software Product, for the same customer, may establish a new session as long as the authorisation is still valid.
 
@@ -5924,6 +6021,20 @@ May occur without notification if the change is to resolve a critical service or
 The unavailability of a secondary data holder will mean that some requests cannot be fulfilled by a data holder making a Shared Responsibility Data Request. This will not be taken to mean that the data holder is unavailable.
 
 Performance Requirements
+Listed specific APIs in the `Unattended` section
+
+Fixed incorrect Energy API names replacing:
+- Get Accounts
+- Get Account Detail
+- Get Balance For Account
+- Get Bulk Balances
+- Get Balances For Specific Accounts
+with:
++ Get Energy Accounts
++ Get Energy Account Detail
++ Get Balance For Energy Account
++ Get Bulk Balances for Energy
++ Get Balances For Specific Energy Accounts
 API end point performance will be measured in response time of individual API requests from receipt of request to delivery of response.
 
 It is understood that different response times can be measured depending on which technical layer of an API implementation stack is instrumented and that not all of the technical layers between the Data Recipient Software Product and the Data Holder will be in the control of the Data Holder. As this is implementation specific it is expected that the Data Holder will ensure that the measurement of response time occurs as close to the Data Recipient Software Product as practicable.
@@ -5934,23 +6045,26 @@ In light of these considerations, the performance requirement for Data Holders i
 
 The nominated threshold for each end point will be according to the following table:
 
+Corrected the requirement for the Large Payload tier to remove reference to unattended calls
 Tier	Response Time	Applies To…
 Unauthenticated	1500ms	All Unauthenticated end points not otherwise specified in a separate threshold.
 High Priority	1000ms	All calls to the following end points:
 All InfoSec end points including Dynamic Client Registration
 CDR Arrangement Revocation
-The following Unauthenticated end points:
+The following unauthenticated end points:
 Common
 Get Status
 Get Outages
 Customer Present calls to the following end points:
 Banking
 Get Accounts
+
 Energy
-Get Accounts
-Get Account Detail
-Get Balance For Account
+Get Energy Accounts
+Get Energy Account Detail
+Get Balance For Energy Account
 Get Invoices For Account
+
 Common
 Get Customer
 Get Customer Detail
@@ -5968,22 +6082,56 @@ Get Direct Debits For Account
 Get Scheduled Payments For Account
 Get Scheduled Payments Bulk
 Get Scheduled Payments For Specific Accounts
+
 Energy
 Get Agreed Payment Schedule
 Get Concessions
-Get Bulk Balances
-Get Balances For Specific Accounts
+Get Bulk Balances for Energy
+Get Balances For Specific Energy Accounts
 Get Bulk Invoices
 Get Invoices For Specific Accounts
 Get Billing For Account
-Unattended	4000ms	Unattended calls to the following end points that are not Large Payload end points:
-High Priority Authenticated end points
-Low Priority Authenticated end points
-All Admin end points.
-Large Payload	6000ms	Any Unattended calls to the following end points:
+Unattended	4000ms	Unattended calls to the following end points:
+Banking
+Get Accounts
+Get Account Detail
+Get Account Balance
+Get Bulk Balances
+Get Balances For Specific Accounts
+Get Transactions For Account
+Get Transaction Detail
+Get Payees
+Get Payee Detail
+Get Direct Debits For Account
+Get Scheduled Payments For Account
+Get Scheduled Payments Bulk
+Get Scheduled Payments For Specific Accounts
+
+Energy
+Get Energy Accounts
+Get Energy Account Detail
+Get Balance For Energy Account
+Get Invoices For Account
+Get Agreed Payment Schedule
+Get Concessions
+Get Bulk Balances for Energy
+Get Balances For Specific Energy Accounts
+Get Bulk Invoices
+Get Invoices For Specific Accounts
+Get Billing For Account
+
+Common
+Get Customer
+Get Customer Detail
+
+Admin
+Metadata Update
+Get Metrics
+Large Payload	6000ms	Any calls to the following end points:
 Banking
 Get Bulk Direct Debits
 Get Direct Debits For Specific Accounts
+
 Energy
 Get Bulk Billing
 Get Billing For Specific Accounts
@@ -6095,6 +6243,13 @@ This specification defines the APIs for Data Holders exposing Banking endpoints.
 
 Banking OpenAPI Specification (JSON)
 Banking OpenAPI Specification (YAML)
+Updated description of `BankingAccountDetailV3.lendingRates` field
+from:
+- Fully described deposit rates for this account based on the equivalent structure in Product Reference
+to:
++ Fully described lending rates for this account based on the equivalent structure in Product Reference
+
+Corrected various spelling and grammatical mistakes
 Get Accounts
 
 Code samples
@@ -6894,7 +7049,7 @@ Posted date/time if available, then
 Execution date/time if available, then
 A reasonable date/time nominated by the data holder using internal data structures
 For transaction amounts it should be assumed that a negative value indicates a reduction of the available balance on the account while a positive value indicates an increase in the available balance on the account
-For aggregated transactions (ie. groups of sub transactions reported as a single entry for the account) only the aggregated information, with as much consistent information accross the subsidiary transactions as possible, is required to be shared
+For aggregated transactions (ie. groups of sub transactions reported as a single entry for the account) only the aggregated information, with as much consistent information across the subsidiary transactions as possible, is required to be shared
 Endpoint Version
 Version	1
 Parameters
@@ -10312,7 +10467,7 @@ anonymous	object	mandatory	none
 » depositRate	RateString	optional	current rate to calculate interest earned being applied to deposit balances as it stands at the time of the API call
 » lendingRate	RateString	optional	The current rate to calculate interest payable being applied to lending balances as it stands at the time of the API call
 » depositRates	[BankingProductDepositRate]	optional	Fully described deposit rates for this account based on the equivalent structure in Product Reference
-» lendingRates	[BankingProductLendingRateV2]	optional	Fully described deposit rates for this account based on the equivalent structure in Product Reference
+» lendingRates	[BankingProductLendingRateV2]	optional	Fully described lending rates for this account based on the equivalent structure in Product Reference
 » features	[allOf]	optional	Array of features of the account based on the equivalent structure in Product Reference with the following additional field
 allOf
 
@@ -10501,7 +10656,7 @@ merchantCategoryCode	string	optional	The merchant category code (or MCC) for an 
 billerCode	string	optional	BPAY Biller Code for the transaction (if available)
 billerName	string	optional	Name of the BPAY biller for the transaction (if available)
 crn	string	conditional	BPAY CRN for the transaction (if available).
-Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
+Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
 apcaNumber	string	optional	6 Digit APCA number for the initiating institution. The field is fixed-width and padded with leading zeros if applicable.
 Enumerated Values
 Property	Value
@@ -11013,7 +11168,7 @@ Properties
 Name	Type	Required	Description
 billerCode	string	mandatory	BPAY Biller Code of the Biller
 crn	string	conditional	BPAY CRN of the Biller (if available).
-Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
+Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
 billerName	string	mandatory	Name of the Biller
 BankingInternationalPayee
 
@@ -11929,6 +12084,15 @@ PERS_LOANS	This grouping of products includes all lending for personal purposes 
 RESIDENTIAL_MORTGAGES	This grouping of products includes all lending products that are available for the primary purpose of borrowing for the purpose of purchasing or renovating residential property, where a residential property will be used as security. This group will include both fixed, variable & secured overdraft types of product and may include both owner-occupied and investment purpose borrowing.
 TRADE_FINANCE	This grouping of products includes specialised lending products specifically designed to facilitate domestic & international trade. This includes the issuance of letters of credit, factoring, export credit.
 Product & Account Components
+Updated description of 'PENSION_RECIPIENT' value in
+'Product Eligibility Types' table from:
+- A recipient of a government pension may apply for the product
+to:
++ Only a recipient of a government pension may apply for the product
+and 'Product Discount Eligibility Types' table from:
+- A recipient of a government pension may receive the discount
+to:
++ Only a recipient of a government pension may receive the discount
 
 Product Feature Types
 Description of the usage of the featureType field as it applies to products.
@@ -11986,7 +12150,7 @@ MIN_INCOME	The customer must have an income greater than a specified threshold t
 MIN_TURNOVER	Only a business with greater than a minimum turnover may apply	Minimum turnover in AmountString format
 NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
 OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
-PENSION_RECIPIENT	A recipient of a government pension may apply for the product	NA
+PENSION_RECIPIENT	Only a recipient of a government pension may apply for the product	NA
 RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
 STAFF	Only a staff member of the provider may apply	NA
 STUDENT	Only students may apply for the product	NA
@@ -12029,7 +12193,7 @@ MIN_INCOME	The customer must have an income greater than a specified threshold t
 MIN_TURNOVER	Only a business with greater than a minimum turnover is eligible	Minimum turnover in AmountString format
 NATURAL_PERSON	The customer must be a natural person rather than another legal entity	NA
 OTHER	Another eligibility criteria exists as described in the additionalInfo field (if this option is specified then the additionalInfo field is mandatory)	NA
-PENSION_RECIPIENT	A recipient of a government pension may receive the discount	Optional. Should contain a description of which pensions qualify
+PENSION_RECIPIENT	Only a recipient of a government pension may receive the discount	Optional. Should contain a description of which pensions qualify
 RESIDENCY_STATUS	An eligibility constraint based on residency status applies	A description of the status required
 STAFF	Only a staff member of the provider may receive the discount	NA
 STUDENT	Only students may receive the discount	Optional. Should contain a description of who qualifies as a student, e.g. do apprentices qualify?
@@ -12072,6 +12236,39 @@ This specification defines the APIs for Data Holders exposing Energy endpoints.
 
 Energy OpenAPI Specification (JSON)
 Energy OpenAPI Specification (YAML)
+Bug Fix: Removed 'x-fapi-interaction-id' from response headers of Get Energy Plans and Get Energy Plan Details APIs
+
+Updated the versions of the following APIs:
++ Get Generic Plan Detail from v1 to v2
++ Get Energy Account Detail from v2 to v3
+
+Updated the following structures
+from:
+- EnergyPlanSolarFeedInTariff
+- EnergyPlanContract
+- EnergyAccountDetailV2
+- EnergyAccountDetailResponseV2
+- EnergyPlanContractFull
+- EnergyPlanDetail
+- EnergyPlanResponse
+
+to:
++ EnergyPlanSolarFeedInTariffV2
++ EnergyPlanContractV2
++ EnergyAccountDetailV3
++ EnergyAccountDetailResponseV3
++ EnergyPlanContractFullV2
++ EnergyPlanDetailV2
++ EnergyPlanResponseV2
+
+Added following to EnergyPlanSolarFeedInTariffV2:
++ rates object
++ startDate field
++ endDate field
+
+Standardised 'post codes' to 'postcodes'
+
+Corrected various spelling and grammatical mistakes
 Get Generic Plans
 
 Code samples
@@ -12201,9 +12398,6 @@ ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-400	x-fapi-interaction-id	string		An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-406	x-fapi-interaction-id	string		An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-422	x-fapi-interaction-id	string		An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  This operation does not require authentication
 Get Generic Plan Detail
 
@@ -12234,10 +12428,12 @@ $.ajax({
 
 GET /energy/plans/{planId}
 
-Obtain detailed information on a single energy plan offered openly to the market
+Obtain detailed information on a single energy plan offered openly to the market.
+
+Other Versions: v1
 
 Endpoint Version
-Version	1
+Version	2
 Parameters
 Name	In	Type	Required	Description
 planId	path	string	mandatory	ID of the specific plan requested
@@ -12413,15 +12609,29 @@ Example responses
         {
           "displayName": "string",
           "description": "string",
+          "startDate": "string",
+          "endDate": "string",
           "scheme": "PREMIUM",
           "payerType": "GOVERNMENT",
           "tariffUType": "singleTariff",
           "singleTariff": {
-            "amount": "string"
+            "rates": [
+              {
+                "unitPrice": "string",
+                "measureUnit": "KWH",
+                "volume": 0
+              }
+            ]
           },
           "timeVaryingTariffs": {
             "type": "PEAK",
-            "amount": "string",
+            "rates": [
+              {
+                "unitPrice": "string",
+                "measureUnit": "KWH",
+                "volume": 0
+              }
+            ],
             "timeVariations": [
               {
                 "days": [
@@ -12634,15 +12844,29 @@ Example responses
         {
           "displayName": "string",
           "description": "string",
+          "startDate": "string",
+          "endDate": "string",
           "scheme": "PREMIUM",
           "payerType": "GOVERNMENT",
           "tariffUType": "singleTariff",
           "singleTariff": {
-            "amount": "string"
+            "rates": [
+              {
+                "unitPrice": "string",
+                "measureUnit": "KWH",
+                "volume": 0
+              }
+            ]
           },
           "timeVaryingTariffs": {
             "type": "PEAK",
-            "amount": "string",
+            "rates": [
+              {
+                "unitPrice": "string",
+                "measureUnit": "KWH",
+                "volume": 0
+              }
+            ],
             "timeVariations": [
               {
                 "days": [
@@ -12738,7 +12962,7 @@ Example responses
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Successful response	EnergyPlanResponse
+200	OK	Successful response	EnergyPlanResponseV2
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
@@ -12752,9 +12976,6 @@ ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
-400	x-fapi-interaction-id	string		An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-404	x-fapi-interaction-id	string		An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-406	x-fapi-interaction-id	string		An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
  This operation does not require authentication
 Get Service Points
 
@@ -14054,10 +14275,10 @@ GET /energy/accounts/{accountId}
 
 Obtain detailed information for a specific energy account
 
-Other Versions: v1
+Other Versions: v1 v2
 
 Endpoint Version
-Version	2
+Version	3
 Parameters
 Name	In	Type	Required	Description
 accountId	path	string	mandatory	ID of a specific account to obtain data for. This is a tokenised ID previous obtained from the Account List end point.
@@ -14206,15 +14427,21 @@ Example responses
               {
                 "displayName": "string",
                 "description": "string",
+                "startDate": "string",
+                "endDate": "string",
                 "scheme": "PREMIUM",
                 "payerType": "GOVERNMENT",
                 "tariffUType": "singleTariff",
                 "singleTariff": {
-                  "amount": "string"
+                  "rates": [
+                    {}
+                  ]
                 },
                 "timeVaryingTariffs": {
                   "type": "PEAK",
-                  "amount": "string",
+                  "rates": [
+                    {}
+                  ],
                   "timeVariations": [
                     {}
                   ]
@@ -14371,15 +14598,21 @@ Example responses
               {
                 "displayName": "string",
                 "description": "string",
+                "startDate": "string",
+                "endDate": "string",
                 "scheme": "PREMIUM",
                 "payerType": "GOVERNMENT",
                 "tariffUType": "singleTariff",
                 "singleTariff": {
-                  "amount": "string"
+                  "rates": [
+                    {}
+                  ]
                 },
                 "timeVaryingTariffs": {
                   "type": "PEAK",
-                  "amount": "string",
+                  "rates": [
+                    {}
+                  ],
                   "timeVariations": [
                     {}
                   ]
@@ -14453,7 +14686,7 @@ Example responses
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Successful response	EnergyAccountDetailResponseV2
+200	OK	Successful response	EnergyAccountDetailResponseV3
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
@@ -16092,7 +16325,7 @@ data	object	mandatory	none
 » plans	[EnergyPlan]	mandatory	Array of plans
 links	LinksPaginated	mandatory	none
 meta	MetaPaginated	mandatory	none
-EnergyPlanResponse
+EnergyPlanResponseV2
 
 {
   "data": {
@@ -16260,15 +16493,29 @@ EnergyPlanResponse
         {
           "displayName": "string",
           "description": "string",
+          "startDate": "string",
+          "endDate": "string",
           "scheme": "PREMIUM",
           "payerType": "GOVERNMENT",
           "tariffUType": "singleTariff",
           "singleTariff": {
-            "amount": "string"
+            "rates": [
+              {
+                "unitPrice": "string",
+                "measureUnit": "KWH",
+                "volume": 0
+              }
+            ]
           },
           "timeVaryingTariffs": {
             "type": "PEAK",
-            "amount": "string",
+            "rates": [
+              {
+                "unitPrice": "string",
+                "measureUnit": "KWH",
+                "volume": 0
+              }
+            ],
             "timeVariations": [
               {
                 "days": [
@@ -16481,15 +16728,29 @@ EnergyPlanResponse
         {
           "displayName": "string",
           "description": "string",
+          "startDate": "string",
+          "endDate": "string",
           "scheme": "PREMIUM",
           "payerType": "GOVERNMENT",
           "tariffUType": "singleTariff",
           "singleTariff": {
-            "amount": "string"
+            "rates": [
+              {
+                "unitPrice": "string",
+                "measureUnit": "KWH",
+                "volume": 0
+              }
+            ]
           },
           "timeVaryingTariffs": {
             "type": "PEAK",
-            "amount": "string",
+            "rates": [
+              {
+                "unitPrice": "string",
+                "measureUnit": "KWH",
+                "volume": 0
+              }
+            ],
             "timeVariations": [
               {
                 "days": [
@@ -16586,7 +16847,7 @@ EnergyPlanResponse
 
 Properties
 Name	Type	Required	Description
-data	EnergyPlanDetail	mandatory	none
+data	EnergyPlanDetailV2	mandatory	none
 links	Links	mandatory	none
 meta	Meta	optional	none
 EnergyServicePointListResponse
@@ -16975,7 +17236,7 @@ data	object	mandatory	none
 » accounts	[EnergyAccountV2]	mandatory	Array of accounts
 links	LinksPaginated	mandatory	none
 meta	MetaPaginated	mandatory	none
-EnergyAccountDetailResponseV2
+EnergyAccountDetailResponseV3
 
 {
   "data": {
@@ -17112,15 +17373,21 @@ EnergyAccountDetailResponseV2
               {
                 "displayName": "string",
                 "description": "string",
+                "startDate": "string",
+                "endDate": "string",
                 "scheme": "PREMIUM",
                 "payerType": "GOVERNMENT",
                 "tariffUType": "singleTariff",
                 "singleTariff": {
-                  "amount": "string"
+                  "rates": [
+                    {}
+                  ]
                 },
                 "timeVaryingTariffs": {
                   "type": "PEAK",
-                  "amount": "string",
+                  "rates": [
+                    {}
+                  ],
                   "timeVariations": [
                     {}
                   ]
@@ -17277,15 +17544,21 @@ EnergyAccountDetailResponseV2
               {
                 "displayName": "string",
                 "description": "string",
+                "startDate": "string",
+                "endDate": "string",
                 "scheme": "PREMIUM",
                 "payerType": "GOVERNMENT",
                 "tariffUType": "singleTariff",
                 "singleTariff": {
-                  "amount": "string"
+                  "rates": [
+                    {}
+                  ]
                 },
                 "timeVaryingTariffs": {
                   "type": "PEAK",
-                  "amount": "string",
+                  "rates": [
+                    {}
+                  ],
                   "timeVariations": [
                     {}
                   ]
@@ -17360,7 +17633,7 @@ EnergyAccountDetailResponseV2
 
 Properties
 Name	Type	Required	Description
-data	EnergyAccountDetailV2	mandatory	none
+data	EnergyAccountDetailV3	mandatory	none
 links	Links	mandatory	none
 meta	Meta	optional	none
 EnergyPaymentScheduleResponse
@@ -17762,8 +18035,8 @@ additionalInformation	object	optional	Object that contains links to additional i
 » bundleUri	URIString	optional	A link to detail on bundles that this plan can be a part of
 customerType	string	optional	The type of customer that the plan is offered to. If absent then the plan is available to all customers
 geography	object	optional	Describes the geographical area that the plan is available for. If absent then it is assumed the plan is not geographically limited
-» excludedPostcodes	[string]	optional	Array of valid Australian post codes that are specifically excluded from the plan. Each element is a single four digit postcode (e.g. 3000) or a range of postcodes defined by two four digit postcodes and a hyphen (e.g. 3000-3999)
-» includedPostcodes	[string]	optional	Array of valid Australian post codes that are included from the plan. If absent defaults to all non-excluded post codes. Each element is a single four digit postcode (e.g. 3000) or a range of postcodes defined by two four digit postcodes and a hyphen (e.g. 3000-3999)
+» excludedPostcodes	[string]	optional	Array of valid Australian postcodes that are specifically excluded from the plan. Each element is a single four digit postcode (e.g. 3000) or a range of postcodes defined by two four digit postcodes and a hyphen (e.g. 3000-3999)
+» includedPostcodes	[string]	optional	Array of valid Australian postcodes that are included from the plan. If absent defaults to all non-excluded postcodes. Each element is a single four digit postcode (e.g. 3000) or a range of postcodes defined by two four digit postcodes and a hyphen (e.g. 3000-3999)
 » distributors	[string]	mandatory	Array of distributors for the plan. Must have at least one entry
 Enumerated Values
 Property	Value
@@ -17775,7 +18048,7 @@ fuelType	GAS
 fuelType	DUAL
 customerType	RESIDENTIAL
 customerType	BUSINESS
-EnergyPlanDetail
+EnergyPlanDetailV2
 
 {
   "planId": "string",
@@ -17942,15 +18215,29 @@ EnergyPlanDetail
       {
         "displayName": "string",
         "description": "string",
+        "startDate": "string",
+        "endDate": "string",
         "scheme": "PREMIUM",
         "payerType": "GOVERNMENT",
         "tariffUType": "singleTariff",
         "singleTariff": {
-          "amount": "string"
+          "rates": [
+            {
+              "unitPrice": "string",
+              "measureUnit": "KWH",
+              "volume": 0
+            }
+          ]
         },
         "timeVaryingTariffs": {
           "type": "PEAK",
-          "amount": "string",
+          "rates": [
+            {
+              "unitPrice": "string",
+              "measureUnit": "KWH",
+              "volume": 0
+            }
+          ],
           "timeVariations": [
             {
               "days": [
@@ -18163,15 +18450,29 @@ EnergyPlanDetail
       {
         "displayName": "string",
         "description": "string",
+        "startDate": "string",
+        "endDate": "string",
         "scheme": "PREMIUM",
         "payerType": "GOVERNMENT",
         "tariffUType": "singleTariff",
         "singleTariff": {
-          "amount": "string"
+          "rates": [
+            {
+              "unitPrice": "string",
+              "measureUnit": "KWH",
+              "volume": 0
+            }
+          ]
         },
         "timeVaryingTariffs": {
           "type": "PEAK",
-          "amount": "string",
+          "rates": [
+            {
+              "unitPrice": "string",
+              "measureUnit": "KWH",
+              "volume": 0
+            }
+          ],
           "timeVariations": [
             {
               "days": [
@@ -18276,9 +18577,9 @@ anonymous	object	mandatory	none
 »» minimumValue	AmountString	mandatory	Minimum value of the charge if the charge is a range or the absolute value of the charge if no range is specified
 »» maximumValue	AmountString	optional	The upper limit of the charge if the charge could occur in a range
 »» period	ExternalRef	optional	The charges that occur on a schedule indicates the frequency. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
-» gasContract	EnergyPlanContractFull	conditional	The details of the terms for the supply of electricity under this plan. Is mandatory if fuelType is set to GAS or DUAL
-» electricityContract	EnergyPlanContractFull	conditional	The details of the terms for the supply of electricity under this plan. Is mandatory if fuelType is set to ELECTRICITY or DUAL
-EnergyPlanContract
+» gasContract	EnergyPlanContractFullV2	conditional	The details of the terms for the supply of electricity under this plan. Is mandatory if fuelType is set to GAS or DUAL
+» electricityContract	EnergyPlanContractFullV2	conditional	The details of the terms for the supply of electricity under this plan. Is mandatory if fuelType is set to ELECTRICITY or DUAL
+EnergyPlanContractV2
 
 {
   "additionalFeeInformation": "string",
@@ -18405,15 +18706,29 @@ EnergyPlanContract
     {
       "displayName": "string",
       "description": "string",
+      "startDate": "string",
+      "endDate": "string",
       "scheme": "PREMIUM",
       "payerType": "GOVERNMENT",
       "tariffUType": "singleTariff",
       "singleTariff": {
-        "amount": "string"
+        "rates": [
+          {
+            "unitPrice": "string",
+            "measureUnit": "KWH",
+            "volume": 0
+          }
+        ]
       },
       "timeVaryingTariffs": {
         "type": "PEAK",
-        "amount": "string",
+        "rates": [
+          {
+            "unitPrice": "string",
+            "measureUnit": "KWH",
+            "volume": 0
+          }
+        ],
         "timeVariations": [
           {
             "days": [
@@ -18516,7 +18831,7 @@ discounts	EnergyPlanDiscounts	optional	Optional list of discounts available for 
 greenPowerCharges	EnergyPlanGreenPowerCharges	optional	Optional list of charges applicable to green power
 eligibility	EnergyPlanEligibility	optional	Eligibility restrictions or requirements
 fees	EnergyPlanFees	optional	An array of fees applicable to the plan
-solarFeedInTariff	EnergyPlanSolarFeedInTariff	optional	Array of feed in tariffs for solar power
+solarFeedInTariff	EnergyPlanSolarFeedInTariffV2	optional	Array of feed in tariffs for solar power
 tariffPeriod	EnergyPlanTariffPeriod	mandatory	Array of tariff periods
 Enumerated Values
 Property	Value
@@ -18534,7 +18849,7 @@ paymentOption	CREDIT_CARD
 paymentOption	DIRECT_DEBIT
 paymentOption	BPAY
 paymentOption	OTHER
-EnergyPlanContractFull
+EnergyPlanContractFullV2
 
 {
   "additionalFeeInformation": "string",
@@ -18661,15 +18976,29 @@ EnergyPlanContractFull
     {
       "displayName": "string",
       "description": "string",
+      "startDate": "string",
+      "endDate": "string",
       "scheme": "PREMIUM",
       "payerType": "GOVERNMENT",
       "tariffUType": "singleTariff",
       "singleTariff": {
-        "amount": "string"
+        "rates": [
+          {
+            "unitPrice": "string",
+            "measureUnit": "KWH",
+            "volume": 0
+          }
+        ]
       },
       "timeVaryingTariffs": {
         "type": "PEAK",
-        "amount": "string",
+        "rates": [
+          {
+            "unitPrice": "string",
+            "measureUnit": "KWH",
+            "volume": 0
+          }
+        ],
         "timeVariations": [
           {
             "days": [
@@ -18762,7 +19091,7 @@ Properties
 allOf
 
 Name	Type	Required	Description
-anonymous	EnergyPlanContract	mandatory	none
+anonymous	EnergyPlanContractV2	mandatory	none
 and
 
 Name	Type	Required	Description
@@ -19109,21 +19438,35 @@ term	WEEKLY
 term	MONTHLY
 term	BIANNUAL
 term	VARIABLE
-EnergyPlanSolarFeedInTariff
+EnergyPlanSolarFeedInTariffV2
 
 [
   {
     "displayName": "string",
     "description": "string",
+    "startDate": "string",
+    "endDate": "string",
     "scheme": "PREMIUM",
     "payerType": "GOVERNMENT",
     "tariffUType": "singleTariff",
     "singleTariff": {
-      "amount": "string"
+      "rates": [
+        {
+          "unitPrice": "string",
+          "measureUnit": "KWH",
+          "volume": 0
+        }
+      ]
     },
     "timeVaryingTariffs": {
       "type": "PEAK",
-      "amount": "string",
+      "rates": [
+        {
+          "unitPrice": "string",
+          "measureUnit": "KWH",
+          "volume": 0
+        }
+      ],
       "timeVariations": [
         {
           "days": [
@@ -19143,18 +19486,26 @@ Properties
 Name	Type	Required	Description
 displayName	string	mandatory	The name of the tariff
 description	string	optional	A description of the tariff
+startDate	DateString	optional	The start date of the application of the feed in tariff
+endDate	DateString	optional	The end date of the application of the feed in tariff
 scheme	string	mandatory	The applicable scheme
 payerType	string	mandatory	The type of the payer
 tariffUType	string	mandatory	The type of the payer
 singleTariff	object	conditional	Represents a constant tariff. Mandatory if tariffUType is set to singleTariff
-» amount	AmountString	mandatory	The tariff amount
-timeVaryingTariffs	object	conditional	Represents a tariff based on time. Mandatory if tariffUType is set to timeVaryingTariffs
-» type	string	optional	The type of the charging time period. If absent applies to all periods
-» amount	AmountString	mandatory	The tariff amount
-» timeVariations	[object]	mandatory	Array of time periods for which this tariff is applicable
-»» days	[string]	mandatory	The days that the tariff applies to. At least one entry required
-»» startTime	TimeString	optional	The beginning of the time period per day for which the tariff applies. If absent assumes start of day (ie. midnight)
-»» endTime	TimeString	optional	The end of the time period per day for which the tariff applies. If absent assumes end of day (ie. one second before midnight)
+» rates	[object]	mandatory	Array of feed in rates
+»» unitPrice	AmountString	mandatory	Unit price of usage per measure unit (exclusive of GST)
+»» measureUnit	string	optional	The measurement unit of rate. Assumed to be KWH if absent
+»» volume	number	optional	Volume that this rate applies to. Only applicable for ‘stepped’ rates where different rates apply for different volumes of usage in a period
+» timeVaryingTariffs	object	conditional	Represents a tariff based on time. Mandatory if tariffUType is set to timeVaryingTariffs
+»» type	string	optional	The type of the charging time period. If absent applies to all periods
+»» rates	[object]	optional	Array of feed in rates
+»»» unitPrice	AmountString	mandatory	Unit price of usage per measure unit (exclusive of GST)
+»»» measureUnit	string	optional	The measurement unit of rate. Assumed to be KWH if absent
+»»» volume	number	optional	Volume that this rate applies to. Only applicable for ‘stepped’ rates where different rates apply for different volumes of usage in a period
+»» timeVariations	[object]	mandatory	Array of time periods for which this tariff is applicable
+»»» days	[string]	mandatory	The days that the tariff applies to. At least one entry required
+»»» startTime	TimeString	optional	The beginning of the time period per day for which the tariff applies. If absent assumes start of day (ie. midnight)
+»»» endTime	TimeString	optional	The end of the time period per day for which the tariff applies. If absent assumes end of day (ie. one second before midnight)
 Enumerated Values
 Property	Value
 scheme	PREMIUM
@@ -19163,9 +19514,25 @@ payerType	GOVERNMENT
 payerType	RETAILER
 tariffUType	singleTariff
 tariffUType	timeVaryingTariffs
+measureUnit	KWH
+measureUnit	KVA
+measureUnit	KVAR
+measureUnit	KVARH
+measureUnit	KW
+measureUnit	DAYS
+measureUnit	METER
+measureUnit	MONTH
 type	PEAK
 type	OFF_PEAK
 type	SHOULDER
+measureUnit	KWH
+measureUnit	KVA
+measureUnit	KVAR
+measureUnit	KVARH
+measureUnit	KW
+measureUnit	DAYS
+measureUnit	METER
+measureUnit	MONTH
 days	SUN
 days	MON
 days	TUE
@@ -19907,7 +20274,7 @@ anonymous	object	mandatory	The array of plans containing service points and asso
 »»» displayName	string	optional	The name of the plan if one exists
 »»» startDate	DateString	mandatory	The start date of the applicability of this plan
 »»» endDate	DateString	optional	The end date of the applicability of this plan
-EnergyAccountDetailV2
+EnergyAccountDetailV3
 
 {
   "accountId": "string",
@@ -20051,15 +20418,29 @@ EnergyAccountDetailV2
             {
               "displayName": "string",
               "description": "string",
+              "startDate": "string",
+              "endDate": "string",
               "scheme": "PREMIUM",
               "payerType": "GOVERNMENT",
               "tariffUType": "singleTariff",
               "singleTariff": {
-                "amount": "string"
+                "rates": [
+                  {
+                    "unitPrice": "string",
+                    "measureUnit": "KWH",
+                    "volume": 0
+                  }
+                ]
               },
               "timeVaryingTariffs": {
                 "type": "PEAK",
-                "amount": "string",
+                "rates": [
+                  {
+                    "unitPrice": "string",
+                    "measureUnit": "KWH",
+                    "volume": 0
+                  }
+                ],
                 "timeVariations": [
                   {
                     "days": [],
@@ -20238,15 +20619,29 @@ EnergyAccountDetailV2
             {
               "displayName": "string",
               "description": "string",
+              "startDate": "string",
+              "endDate": "string",
               "scheme": "PREMIUM",
               "payerType": "GOVERNMENT",
               "tariffUType": "singleTariff",
               "singleTariff": {
-                "amount": "string"
+                "rates": [
+                  {
+                    "unitPrice": "string",
+                    "measureUnit": "KWH",
+                    "volume": 0
+                  }
+                ]
               },
               "timeVaryingTariffs": {
                 "type": "PEAK",
-                "amount": "string",
+                "rates": [
+                  {
+                    "unitPrice": "string",
+                    "measureUnit": "KWH",
+                    "volume": 0
+                  }
+                ],
                 "timeVariations": [
                   {
                     "days": [],
@@ -20353,8 +20748,8 @@ anonymous	object	mandatory	The array of plans containing service points and asso
 »»»» minimumValue	AmountString	mandatory	Minimum value of the charge if the charge is a range or the absolute value of the charge if no range is specified
 »»»» maximumValue	AmountString	optional	The upper limit of the charge if the charge could occur in a range
 »»»» period	ExternalRef	optional	The charges that occur on a schedule indicates the frequency. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
-»»» gasContract	EnergyPlanContract	conditional	The details of the terms for the supply of electricity under this plan. Is mandatory if fuelType is set to GAS or DUAL
-»»» electricityContract	EnergyPlanContract	conditional	The details of the terms for the supply of electricity under this plan. Is mandatory if fuelType is set to ELECTRICITY or DUAL
+»»» gasContract	EnergyPlanContractV2	conditional	The details of the terms for the supply of electricity under this plan. Is mandatory if fuelType is set to GAS or DUAL
+»»» electricityContract	EnergyPlanContractV2	conditional	The details of the terms for the supply of electricity under this plan. Is mandatory if fuelType is set to ELECTRICITY or DUAL
 »» authorisedContacts	[object]	optional	An array of additional contacts that are authorised to act on this account
 »»» firstName	string	optional	For people with single names this field need not be present. The single name should be in the lastName field
 »»» lastName	string	mandatory	For people with single names the single name should be in this field
@@ -20398,7 +20793,7 @@ EnergyPaymentSchedule
 
 Properties
 Name	Type	Required	Description
-amount	AmountString	optional	Optional payment amount indicating that a constant payment amount is scheduled to be paid (used in bill smooting scenarios)
+amount	AmountString	optional	Optional payment amount indicating that a constant payment amount is scheduled to be paid (used in bill smoothing scenarios)
 paymentScheduleUType	string	mandatory	The type of object present in this response
 cardDebit	object	conditional	Represents a regular credit card payment schedule. Mandatory if paymentScheduleUType is set to cardDebit
 » cardScheme	string	mandatory	The type of credit card held on file
@@ -21162,6 +21557,7 @@ This specification defines the APIs for Data Holders exposing Telecommunications
  Note that the standards for the telecommunications sector are currently in draft only and are not binding
 Telco OpenAPI Specification (JSON)
 Telco OpenAPI Specification (YAML)
+Corrected various spelling and grammatical mistakes
 Get Telco Products
 
 Code samples
@@ -25072,7 +25468,7 @@ TelcoPaymentSchedule
 
 Properties
 Name	Type	Required	Description
-amount	AmountString	optional	Optional payment amount indicating that a constant payment amount is scheduled to be paid (used in bill smooting scenarios)
+amount	AmountString	optional	Optional payment amount indicating that a constant payment amount is scheduled to be paid (used in bill smoothing scenarios)
 paymentScheduleUType	string	mandatory	The type of object present in this response
 cardDebit	TelcoPaymentScheduleCardDebit	conditional	Represents a regular credit card payment schedule. Mandatory if paymentScheduleUType is set to cardDebit
 directDebit	TelcoPaymentScheduleDirectDebit	conditional	Represents a regular direct debit from a specified bank account. Mandatory if paymentScheduleUType is set to directDebit
@@ -27621,6 +28017,7 @@ This specification defines the Common APIs that apply to Data Holders multiple s
 
 Common OpenAPI Specification (JSON)
 Common OpenAPI Specification (YAML)
+Updated x-fapi-auth-date definitions to be aligned to the HTTP Headers section and Banking APIs
 Get Customer
 
 Code samples
@@ -27679,7 +28076,7 @@ Name	In	Type	Required	Description
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-x-fapi-auth-date	header	string	conditional	The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer is currently logged. Otherwise optional where the customer has not logged in. Not to be included for unauthenticated calls.
+x-fapi-auth-date	header	string	conditional	The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-R-Draft]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
 x-cds-client-headers	header	Base64	conditional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
@@ -27789,7 +28186,7 @@ Name	In	Type	Required	Description
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
-x-fapi-auth-date	header	string	conditional	The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer is currently logged. Otherwise optional where the customer has not logged in. Not to be included for unauthenticated calls.
+x-fapi-auth-date	header	string	conditional	The time when the customer last logged in to the Data Recipient Software Product as described in [FAPI-R-Draft]. Required for all resource calls (customer present and unattended). Not required for unauthenticated calls.
 x-fapi-customer-ip-address	header	string	optional	The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
 x-cds-client-headers	header	Base64	conditional	The customer's original standard http headers Base64 encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls. Not required for unattended or unauthenticated calls.
 Example responses
@@ -28887,6 +29284,17 @@ This provides an overview of CDS Administration Endpoints. Please note this API 
 
 Admin OpenAPI Specification (JSON)
 Admin OpenAPI Specification (YAML)
+Corrected spelling mistake in description of 'RejectionMetricsV2.unauthenticated' field:
+- Rejection counts for all uauthenticated end points
++ Rejection counts for all unauthenticated end points
+
+Updated description of 'period' parameter of Get Metrics API:
+- Values can be CURRENT (meaning metrics for current day), HISTORIC (meaning metrics for previous days or months) or ALL...
++ Values can be CURRENT (meaning metrics for current period, dependent on the metric type), HISTORIC (meaning metrics for previous period, depending on the metric type) or ALL...
+
+Updated description of 'SecondaryHolderMetrics.rejections':
+- Number of calls resulting in a rejection due to server execution over time
++ Number of calls rejected due to traffic thresholds over time
 Metadata Update
 
 Code samples
@@ -29001,7 +29409,7 @@ Endpoint Version
 Version	3
 Parameters
 Name	In	Type	Required	Description
-period	query	string	optional	The period of metrics to be requested. Values can be CURRENT (meaning metrics for current day), HISTORIC (meaning metrics for previous days or months) or ALL. If absent the default is ALL.
+period	query	string	optional	The period of metrics to be requested. Values can be CURRENT (meaning metrics for current period, dependent on the metric type), HISTORIC (meaning metrics for previous period, depending on the metric type) or ALL. If absent the default is ALL.
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder should respond with a 406 Not Acceptable.
 Enumerated Values
@@ -29710,7 +30118,7 @@ Name	Type	Required	Description
 authenticated	object	mandatory	Rejection counts for all authenticated end points
 » currentDay	number	conditional	Number of calls rejected for current day
 » previousDays	[number]	conditional	Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
-unauthenticated	object	mandatory	Rejection counts for all uauthenticated end points
+unauthenticated	object	mandatory	Rejection counts for all unauthenticated end points
 » currentDay	number	conditional	Number of calls rejected for current day
 » previousDays	[number]	conditional	Number of calls rejected for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available.
 SecondaryHolderMetrics
@@ -29737,7 +30145,7 @@ Name	Type	Required	Description
 errors	object	mandatory	Number of calls resulting in error due to server execution over time
 » currentDay	number	conditional	Number of errors for current day
 » previousDays	[number]	conditional	Number of errors for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available
-rejections	object	mandatory	Number of calls resulting in a rejection due to server execution over time
+rejections	object	mandatory	Number of calls rejected due to traffic thresholds over time
 » currentDay	number	conditional	Number of rejections for current day
 » previousDays	[number]	conditional	Number of rejections for previous days. The first element indicates yesterday and so on. A maximum of seven entries is required if available
 Links
@@ -31780,6 +32188,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+07/05/2023	1.24.0	Changes arising from Decision 281 (Maintenance iteration 14)	See release notes and Decision 281 for details.
 14/04/2023	1.23.0	Changes arising from Decision Proposal 298	See release notes and Decision 298 for details.
 22/03/2023	1.22.1	Patch release including updates to draft Telco standards	See release notes for details.
 22/12/2022	1.22.0	Changes arising from Decision 271 (Maintenance iteration 13)	See release notes and Decision 272 for details.
@@ -31889,6 +32298,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+24/04/2023	1.23.0	Changes arising from Decision Proposal 298
 22/03/2023	1.22.1	Changes arising from Change Request 576 (Maintenance iteration 14)
 22/12/2022	1.22.0	Changes arising from Decision 271 (Maintenance iteration 13)
 16/12/2022	1.21.0	Changes arising from Decision 282
