@@ -1,13 +1,6 @@
 Logo
 Search
 Introduction
-Version
-Interpretation
-Future Dated Obligations
-Register Dependency Schedule
-Endpoint Version Schedule
-Normative References
-Informative References
 High Level Standards
 Consumer Experience
 Security Profile
@@ -44,7 +37,7 @@ where the standards are specified as binding standards as required by the Consum
 Some of these standards will be binding data standards under the Competition and Consumer (Consumer Data Right) Data Standards (No. 1) 2023. See that instrument here. In summary, provisions of these standards (as they exist from time to time) that impose obligations or prohibitions on CDR entities are binding data standards. Provisions included in these standards merely by way of guidance are not binding data standards.
 
 Version
-These standards represent version 1.22.1 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.23.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Interpretation
 Note that, in these standards, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in [RFC2119].
@@ -2444,12 +2437,12 @@ application_type	Optional	Kind of the application. The only supported applicatio
 id_token_signed_response_alg	Required	Algorithm with which an id_token is to be signed
 
 Supported values as constrained by [FAPI-1.0-Advanced]. Required for both Authorization Code Flow (response_type “code”) and OIDC Hybrid Flow (response_type “code id_token”).
-id_token_encrypted_response_alg	Required	JWE alg algorithm with which an id_token is to be encrypted.
+id_token_encrypted_response_alg	Conditional	JWE alg algorithm with which an id_token is to be encrypted.
 
-Required if OIDC Hybrid Flow (response_type “code id_token”) is registered. Must be ignored for Authorization Code Flow.
-id_token_encrypted_response_enc	Required	JWE enc algorithm with which an id_token is to be encrypted.
+Required if OIDC Hybrid Flow (response type code id_token) is registered.
+id_token_encrypted_response_enc	Conditional	JWE enc algorithm with which an id_token is to be encrypted.
 
-Required if OIDC Hybrid Flow (response_type “code id_token”) is registered. Must be ignored for Authorization Code Flow.
+Required if OIDC Hybrid Flow (response type code id_token) is registered.
 authorization_signed_response_alg	Conditional	The JWS alg algorithm required for signing authorization responses. If this is specified, the response will be signed using JWS and the configured algorithm. The algorithm “none” is not allowed.
 
 Required if response_type of “code” is registered by the client.
@@ -2864,7 +2857,7 @@ The following requirements apply to the OIDC Hybrid Flow:
 The c_hash value MUST be generated according to section 3.3.2.11 of [OIDC].
 The s_hash value MUST be generated according to section 5.1.1 of [FAPI-1.0-Advanced].
 Authorization Code Flow requirements
-For response_type “code”, in accordance with [FAPI-1.0-Advanced], ID Tokens MUST be signed and MUST NOT be encrypted when returned to a Data Recipient Software Product from the Token End Point.
+For response_type code, in accordance with [FAPI-1.0-Advanced], ID Tokens MUST be signed when returned to a Data Recipient Software Product from the Token End Point.
 
 Access Token
 Access Tokens MUST be used as specified in section 10.3 of [OAUTH2].
@@ -4221,8 +4214,12 @@ response_types	[string]	mandatory	Array of the OAuth 2.0 response type strings t
 Response type value code is required for Authorization Code Flow. Response type value code id_token is required for OIDC Hybrid Flow.
 application_type	Enum	optional	Kind of the application. The only supported application type will be web
 id_token_signed_response_alg	Enum	mandatory	Algorithm with which an id_token is to be signed
-id_token_encrypted_response_alg	ExternalRef	mandatory	JWE alg algorithm with which an id_token is to be encrypted
-id_token_encrypted_response_enc	ExternalRef	mandatory	JWE enc algorithm with which an id_token is to be encrypted
+id_token_encrypted_response_alg	ExternalRef	conditional	JWE alg algorithm with which an id_token is to be encrypted.
+
+Required if OIDC Hybrid Flow (response type code id_token) is registered.
+id_token_encrypted_response_enc	ExternalRef	conditional	JWE enc algorithm with which an id_token is to be encrypted.
+
+Required if OIDC Hybrid Flow (response type code id_token) is registered.
 authorization_signed_response_alg	string	optional	The JWS alg algorithm required for signing authorization responses. If this is specified, the response will be signed using JWS and the configured algorithm. The algorithm “none” is not allowed.
 
 Required if response_type of “code” is registered by the client.
@@ -31783,6 +31780,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+14/04/2023	1.23.0	Changes arising from Decision Proposal 298	See release notes and Decision 298 for details.
 22/03/2023	1.22.1	Patch release including updates to draft Telco standards	See release notes for details.
 22/12/2022	1.22.0	Changes arising from Decision 271 (Maintenance iteration 13)	See release notes and Decision 272 for details.
 16/12/2022	1.21.0	Changes arising from Decision 282	See release notes and Decision 282 for details.
@@ -31891,6 +31889,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+22/03/2023	1.22.1	Changes arising from Change Request 576 (Maintenance iteration 14)
 22/12/2022	1.22.0	Changes arising from Decision 271 (Maintenance iteration 13)
 16/12/2022	1.21.0	Changes arising from Decision 282
 13/11/2022	1.20.0	Changes arising from Decision 259 (Maintenance iteration 12)
