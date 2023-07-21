@@ -1,4 +1,4 @@
-Logosanta
+Logo
 Search
 Introduction
 Version
@@ -41,8 +41,10 @@ The standards are required to be published. The obligations on CDR participants 
 
 where the rules require compliance with the standards, non-compliance with the standards may constitute a breach of the rules.
 where the standards are specified as binding standards as required by the Consumer Data Right rules for the purposes of s56FA of the legislation, they apply as under contract between a data holder and an accredited data recipient. The legal effect of binding standards as between data holders and accredited data recipients is fully set out in s56FD and s56FE of the legislation.
+Some of these standards will be binding data standards under the Competition and Consumer (Consumer Data Right) Data Standards (No. 1) 2023. See that instrument here. In summary, provisions of these standards (as they exist from time to time) that impose obligations or prohibitions on CDR entities are binding data standards. Provisions included in these standards merely by way of guidance are not binding data standards.
+
 Version
-These standards represent version 1.22.0 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
+These standards represent version 1.22.1 of the high level standards. See the versioning section for more information on how versions are managed in the standard.
 
 Interpretation
 Note that, in these standards, the key words MUST, MUST NOT, REQUIRED, SHALL, SHALL NOT, SHOULD, SHOULD NOT, RECOMMENDED, MAY, and OPTIONAL are to be interpreted as described in [RFC2119].
@@ -53,56 +55,17 @@ The standards, as published from time to time, may include specific statements i
 The table below highlights these areas of the standards.
 
 Section	Description	Applicable Date
-Standard Error Codes	Data Recipients and Data Holders MAY implement the standard error codes from July 1st 2021	July 1st 2021
-Get Metrics V2	Version 2 of this end point MUST be made available by affected data holders by the end of July 2021	July 31st 2021
-Get Metrics V1	Data holders MAY obsolete version 1 of this end point from October 31st 2021. Data Holders who go live with consumer data sharing from July 1st 2021 MAY go live with only Get Metrics v2 support. The CDR Register MUST upgrade their implementation to use version 2 by this time	October 31st 2021
-Amending Consent	Data Holders MUST implement the following standards from November 1st 2021 when a CDR consumer is invited to amend a current authorisation as per rule 4.22A and the ADR has supplied a cdr_arrangement_id	November 1st 2021
-CX Standards: Unavailable Accounts	Data Holders MAY implement the following data standards effective from 1 November 2021:
-Unavailable Accounts: No accounts can be shown
-Unavailable Accounts: Authorisation not permitted
-Unavailable Accounts: Request sharing rights
-November 1st 2021
-CX Standards: Withdrawals	Data Holders MUST implement the following data standards effective from 1 February 2022:
-Withdrawal: Secondary User Instruction
-February 1st 2022
-Standard Error Codes	Data Recipients and Data Holders MUST implement the standard error codes from February 1st 2022	February 1st 2022
-Data Recipient CDR Arrangement Endpoint	From March 31st 2022, Data Recipients MUST support "CDR Arrangement JWT" method and "CDR Arrangement Form Parameter" method.
-Data Recipients SHOULD support the "CDR Arrangement JWT" method before March 31st 2022	March 31st 2022
-Profile Scope Data Language	For new and amended consents and authorisations only, CDR participants SHOULD comply with the following standards from 1 February 2022, but MUST comply by 1 July 2022:
-Technical Standards: Revised Claims
-CX Standards: Profile Scope - Data Language Standards
-Note: These standards changes do not apply to existing consents and authorisations unless they are amended on or following the compliance dates.	July 1st 2022
-CX Standards: Joint Accounts	Data holders MUST implement the following data standards from 1 July 2022:
-Notifications: Alternative notification schedules for joint accounts
-Notifications: Joint account alerts
-Authorisation: Pending status
-Withdrawal: Joint accounts
-July 1st 2022
-Information Security profile	FAPI 1.0 adoption is introduced across three phases.
-Phase 1: Voluntary FAPI 1.0 support & hygiene enhancements includes, amongst other changes:
-Enforces requirements for authorisation code, token and request object use
-Data Holders MAY support of FAPI 1.0 Final
-Data Holders MAY support of Authorization Code Flow (including [PKCE] and [JARM]) in conjunction with Hybrid Flow
-July 4th 2022
-Get Payee Detail V2	Version 2 of this end point MUST be made available by affected data holders by July 31st 2022	July 31st 2022
-Data Recipient CDR Arrangement Endpoint	From July 31st 2022, Data Holders MUST revoke consent using "CDR Arrangement JWT" method.
-Data Holders SHOULD use the "CDR Arrangement JWT" method from March 31st 2022	July 31st 2022
-Get Payees V2	Version 2 of this end point MUST be made available by affected data holders by July 31st 2022	July 31st 2022
-Self-Signed JWT Client Authentication	Until July 31st 2022, Data Recipients MUST accept the Resource Path for the endpoint and the <RecipientBaseURI> as a valid audience value. From July 31st 2022, Data Holders MUST use an audience value matching the Resource Path for the endpoint and the Data Recipient MUST verify the audience matches the Resource Path for the endpoint.	July 31st 2022
-Get Payees V1	Data holders MAY obsolete version 1 of this end point from August 31st 2022. Data recipients MUST upgrade their implementations to use version 2 by this time	August 31st 2022
-Get Payee Detail V1	Data holders MAY obsolete version 1 of this end point from August 31st 2022. Data recipients MUST upgrade their implementations to use version 2 by this time	August 31st 2022
-Information Security profile	FAPI 1.0 adoption is introduced across three phases.
-Phase 2: FAPI 1.0 Final (Baseline & Advanced) includes, amongst other changes:
-Enforces additional requirements for authorisation code, token and request object use
-Enforces PAR-only authorisation request data submission
-Refresh token cycling is not permitted
-Data Holders and Data Recipients MUST support FAPI 1.0 Final including [RFC9126], [RFC7636] and [JARM]
-Data Holders SHOULD support of Authorization Code Flow in conjunction with Hybrid Flow
-September 16th 2022
 Get Metrics V3	Version 3 of this end point MUST be made available by affected data holders by October 1st 2022	October 1st 2022
 Standard Error Codes	Data Holders MAY retire application-specific error codes in favour of standard error codes from November 1st 2022	November 1st 2022
 Data Recipient CDR Arrangement Endpoint	From November 15th 2022, Data Recipients MUST validate the cdr_arrangement_id, if presented, is the same as the value included in the "CDR Arrangement JWT".	November 15th 2022
-Registration Validation	Data Holders MUST ignore unsupported authorisation scopes presented in the SSA for the creation and update of client registrations from August 31st 2022	August 31st 2022
+Get Energy Accounts V1	
+Data Holders MAY go-live on November 15 2022 with v1 of this end point
+Data Holders MAY decommission v1 of this end point as soon v2 is supported
+November 15th 2022
+Get Energy Account Detail V1	
+Data Holders MAY go-live on November 15 2022 with v1 of this end point
+Data Holders MAY decommission v1 of this end point as soon v2 is supported
+November 15th 2022
 Get Account Detail V2	Version 2 of this end point MUST be made available by affected data holders by November 30th 2022	November 30th 2022
 Get Customer Detail V2	Version 2 of this end point MUST be made available by affected data holders by November 30th 2022	November 30th 2022
 Get Product Detail V4	Version 4 of this end point MUST be made available by affected data holders by November 30th 2022	November 30th 2022
@@ -110,18 +73,6 @@ Get Metrics V2	Data holders MAY obsolete version 2 of this end point from Decemb
 Get Account Detail V1	Data holders MAY obsolete version 1 of this end point from February 28th 2023. Data recipients MUST upgrade their implementations to use version 2 by this time	February 28th 2023
 Get Product Detail V3	Data holders MAY obsolete version 3 of this end point from February 28th 2023. Data recipients MUST upgrade their implementations to use version 4 by this time	February 28th 2023
 Get Customer Detail V1	Data holders MAY obsolete version 1 of this end point from February 28th 2023. Data recipients MUST upgrade their implementations to use version 2 by this time	February 28th 2023
-Get Energy Accounts V1	
-Data Holders MAY go-live on November 15 2022 with v1 of this endopint
-Data Holders MAY decommission v1 of this endopint as soon v2 is supported
-November 15th 2022
-Get Energy Account Detail V1	
-Data Holders MAY go-live on November 15 2022 with v1 of this endopint
-Data Holders MAY decommission v1 of this endopint as soon v2 is supported
-November 15th 2022
-Error Codes: Secondary Data Holder flag	
-Data Holders MAY implement the isSecondaryDataHolderError field on November 15 2022
-Affected Data Holders MUST implement isSecondaryDataHolderError field by May 15 2023
-May 15th 2023
 Get Energy Accounts V2	Data Holder MUST implement v2 of this endpoint by April 14th 2023	April 14th 2023
 Get Energy Account Detail V2	Data Holder MUST implement v2 of this endpoint by April 14th 2023	April 14th 2023
 Information Security profile	FAPI 1.0 adoption is introduced across four phases.
@@ -129,6 +80,10 @@ Phase 3: Support Authorization Code Flow and Hybrid Flow includes, amongst other
 Data Holders MUST support Authorization Code Flow
 Data Holders MUST support Hybrid Flow
 April 14th 2023
+Error Codes: Secondary Data Holder flag	
+Data Holders MAY implement the isSecondaryDataHolderError field on November 15 2022
+Affected Data Holders MUST implement isSecondaryDataHolderError field by May 15 2023
+May 15th 2023
 Information Security profile	FAPI 1.0 adoption is introduced across four phases.
 Phase 4: Retire Hybrid Flow:
 Data Holders MAY retire Hybrid Flow
@@ -12239,13 +12194,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -12790,13 +12745,13 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Invalid Resource
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -12897,13 +12852,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -13067,14 +13022,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Service Point
 404 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -13200,17 +13155,17 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Service Point
 404 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -13336,13 +13291,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -13420,7 +13375,7 @@ x-cds-client-headers	header	Base64	conditional	The customer's original standard 
 body	body	servicePointIdList	mandatory	Request payload containing list of specific Service Points to obtain data for
 » data	body	object	mandatory	none
 »» servicePointIds	body	[string]	mandatory	Array of specific servicePointIds to obtain data for
-» meta	body	Meta	mandatory	none
+» meta	body	Meta	optional	none
 Enumerated Values
 Parameter	Value
 interval-reads	NONE
@@ -13483,15 +13438,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Service Point
 422 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -13617,14 +13572,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Service Point
 404 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -13763,13 +13718,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -13844,7 +13799,7 @@ x-cds-client-headers	header	Base64	conditional	The customer's original standard 
 body	body	servicePointIdList	mandatory	Request payload containing list of specific Service Points to obtain data for
 » data	body	object	mandatory	none
 »» servicePointIds	body	[string]	mandatory	Array of specific servicePointIds to obtain data for
-» meta	body	Meta	mandatory	none
+» meta	body	Meta	optional	none
 Example responses
 
 200 Response
@@ -13924,15 +13879,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Service Point
 422 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -14048,13 +14003,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -14505,14 +14460,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Energy Account
 404 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -14624,14 +14579,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Energy Account
 404 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -14724,14 +14679,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Energy Account
 404 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -14809,14 +14764,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Energy Account
 404 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -14908,13 +14863,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -14989,7 +14944,7 @@ x-cds-client-headers	header	Base64	conditional	The customer's original standard 
 body	body	accountIdList	mandatory	Request payload containing list of specific Accounts to obtain data for
 » data	body	object	mandatory	none
 »» accountIds	body	[string]	mandatory	Array of specific accountIds to obtain data for
-» meta	body	Meta	mandatory	none
+» meta	body	Meta	optional	none
 Example responses
 
 200 Response
@@ -15022,15 +14977,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Energy Account
 422 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -15176,17 +15131,17 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Energy Account
 404 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -15332,13 +15287,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -15415,7 +15370,7 @@ x-cds-client-headers	header	Base64	conditional	The customer's original standard 
 body	body	accountIdList	mandatory	Request payload containing list of specific Accounts to obtain data for
 » data	body	object	mandatory	none
 »» accountIds	body	[string]	mandatory	Array of specific accountIds to obtain data for
-» meta	body	Meta	mandatory	none
+» meta	body	Meta	optional	none
 Example responses
 
 200 Response
@@ -15499,15 +15454,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Energy Account
 422 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -15682,17 +15637,17 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Energy Account
 404 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -15867,13 +15822,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -15950,7 +15905,7 @@ x-cds-client-headers	header	Base64	conditional	The customer's original standard 
 body	body	accountIdList	mandatory	Request payload containing list of specific Accounts to obtain data for
 » data	body	object	mandatory	none
 »» accountIds	body	[string]	mandatory	Array of specific accountIds to obtain data for
-» meta	body	Meta	mandatory	none
+» meta	body	Meta	optional	none
 Example responses
 
 200 Response
@@ -16063,15 +16018,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Energy Account
 422 - Invalid Energy Account
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -16976,7 +16931,7 @@ Properties
 Name	Type	Required	Description
 data	EnergyDerRecord	mandatory	none
 links	Links	mandatory	none
-meta	Meta	mandatory	none
+meta	Meta	optional	none
 EnergyAccountListResponseV2
 
 {
@@ -17410,7 +17365,7 @@ Properties
 Name	Type	Required	Description
 data	EnergyAccountDetailV2	mandatory	none
 links	Links	mandatory	none
-meta	Meta	mandatory	none
+meta	Meta	optional	none
 EnergyPaymentScheduleResponse
 
 {
@@ -17456,7 +17411,7 @@ Name	Type	Required	Description
 data	object	mandatory	none
 » paymentSchedules	[EnergyPaymentSchedule]	mandatory	Array may be empty if no payment schedule exist
 links	Links	mandatory	none
-meta	Meta	mandatory	none
+meta	Meta	optional	none
 EnergyConcessionsResponse
 
 {
@@ -17489,7 +17444,7 @@ Name	Type	Required	Description
 data	object	mandatory	none
 » concessions	[EnergyConcession]	mandatory	Array may be empty if no concessions exist
 links	Links	mandatory	none
-meta	Meta	mandatory	none
+meta	Meta	optional	none
 EnergyBalanceListResponse
 
 {
@@ -17539,7 +17494,7 @@ Name	Type	Required	Description
 data	object	mandatory	none
 » balance	AmountString	mandatory	The current balance of the account. A positive value indicates that amount is owing to be paid. A negative value indicates that the account is in credit
 links	Links	mandatory	none
-meta	Meta	mandatory	none
+meta	Meta	optional	none
 EnergyInvoiceListResponse
 
 {
@@ -17731,7 +17686,7 @@ data	object	mandatory	none
 » transactions	[EnergyBillingTransaction]	mandatory	Array of transactions sorted by date and time in descending order
 links	LinksPaginated	mandatory	none
 meta	MetaPaginated	mandatory	none
-ErrorListResponse
+ResponseErrorListV2
 
 {
   "errors": [
@@ -19600,7 +19555,7 @@ distributionLossFactor	object	mandatory	none
 » description	string	mandatory	Description of the data loss factor code and value
 » lossValue	string	mandatory	The value associated with the loss factor code
 relatedParticipants	[object]	mandatory	none
-» party	string	mandatory	The name of the party/orginsation related to this service point
+» party	string	mandatory	The name of the party/organisation related to this service point
 » role	string	mandatory	The role performed by this participant in relation to the service point. Note the details of enumeration values below:
 FRMP - Financially Responsible Market Participant
 LNSP - Local Network Service Provider or Embedded Network Manager for child connection points
@@ -21247,8 +21202,8 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-type	query	string	optional	Used to filter results on the type field. Any one of the valid values for this field can be supplied. If absent, defaults to include all products. Valid values are ‘MOBILE’, ‘BROADBAND’
-billing-type	query	string	optional	Used to filter results on the billing-type field. Any one of the valid values for this field can be supplied. If absent, defaults to include all billing types. Valid values are ‘PRE_PAID’, ‘POST_PAID’, 'UPFRONT_PAID', 'OTHER'
+type	query	string	optional	Used to filter results on the type field. Any one of the valid values for this field can be supplied. If absent, defaults to include ALL products. Valid values are MOBILE service. BROADBAND fixed internet service or ALL
+billing-type	query	string	optional	Used to filter results on the billing-type field. Any one of the valid values for this field can be supplied. If absent, defaults to include all billing types. Valid values are ‘PRE_PAID’, ‘POST_PAID’, 'UPFRONT_PAID', 'ALL'
 effective	query	string	optional	Allows for the filtering of productd based on whether the current time is within the period of time defined as effective by the effectiveFrom and effectiveTo fields. Valid values are ‘CURRENT’, ‘FUTURE’ and ‘ALL’. If absent defaults to 'CURRENT'
 updated-since	query	DateTimeString	optional	Only include products that have been updated after the specified date and time. If absent defaults to include all plans
 brand	query	string	optional	Used to filter results on the brand field. If absent, defaults to include all products. For service providers that operate a number of mobile and internet brands
@@ -21260,10 +21215,11 @@ Enumerated Values
 Parameter	Value
 type	MOBILE
 type	BROADBAND
+type	ALL
 billing-type	PRE_PAID
 billing-type	POST_PAID
 billing-type	UPFRONT_PAID
-billing-type	OTHER
+billing-type	ALL
 effective	CURRENT
 effective	FUTURE
 effective	ALL
@@ -21298,7 +21254,7 @@ Example responses
             "name": "string",
             "description": "string",
             "period": "string",
-            "chargeAmount": "string"
+            "amount": "string"
           }
         ],
         "thirdPartyAgentId": "string",
@@ -21333,19 +21289,16 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
-400	x-fapi-interaction-id	string		none
-406	x-fapi-interaction-id	string		none
-422	x-fapi-interaction-id	string		none
  This operation does not require authentication
 Get Telco Product Detail
 
@@ -21414,7 +21367,7 @@ Example responses
         "name": "string",
         "description": "string",
         "period": "string",
-        "chargeAmount": "string"
+        "amount": "string"
       }
     ],
     "thirdPartyAgentId": "string",
@@ -21501,19 +21454,16 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Invalid Resource
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
-400	x-fapi-interaction-id	string		none
-404	x-fapi-interaction-id	string		none
-406	x-fapi-interaction-id	string		none
  This operation does not require authentication
 Get Usage For Telco Service
 
@@ -21558,11 +21508,9 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-serviceId	path	string	mandatory	ID of the specific service requested such as a mobile MSISDN, FNN or internet service e.g NBN AVC Service ID. This is a tokenised ID returned from the account. In accordance with CDR ID permanence requirements
+serviceId	path	string	mandatory	ID of the specific service requested. E.g. a mobile MSISDN, FNN or internet service e.g NBN AVC Service ID. This is a tokenised ID returned from the account. In accordance with CDR ID permanence requirements
 oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
 newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
-page	query	PositiveInteger	optional	Page of results to request (standard pagination)
-page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -21625,16 +21573,9 @@ Example responses
     }
   },
   "links": {
-    "self": "string",
-    "first": "string",
-    "prev": "string",
-    "next": "string",
-    "last": "string"
+    "self": "string"
   },
-  "meta": {
-    "totalRecords": 0,
-    "totalPages": 0
-  }
+  "meta": {}
 }
 Responses
 Status	Meaning	Description	Schema
@@ -21643,17 +21584,17 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Service Point
 404 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -21721,65 +21662,71 @@ Example responses
 200 Response
 
 {
-  "accounts": [
-    {
-      "accountId": "string",
-      "services": [
-        {
-          "service": {
-            "serviceId": "string",
-            "displayName": "string",
-            "phoneNumber": "string",
-            "startDate": "string",
-            "endDate": "string",
-            "usage": {
-              "data": {
-                "upload": 0,
-                "download": 0,
-                "sessions": 0,
-                "amount": "string",
-                "roaming": {
+  "data": {
+    "accounts": [
+      {
+        "accountId": "string",
+        "services": [
+          {
+            "service": {
+              "serviceId": "string",
+              "displayName": "string",
+              "phoneNumber": "string",
+              "startDate": "string",
+              "endDate": "string",
+              "usage": {
+                "data": {
+                  "upload": 0,
                   "download": 0,
-                  "amount": "string"
-                }
-              },
-              "voice": {
-                "national": {
-                  "duration": "string",
-                  "number": 0,
-                  "amount": "string"
+                  "sessions": 0,
+                  "amount": "string",
+                  "roaming": {
+                    "download": 0,
+                    "amount": "string"
+                  }
                 },
-                "international": {
-                  "duration": "string",
-                  "number": 0,
-                  "amount": "string"
+                "voice": {
+                  "national": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  },
+                  "international": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  },
+                  "roaming": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  }
                 },
-                "roaming": {
-                  "duration": "string",
-                  "number": 0,
-                  "amount": "string"
-                }
-              },
-              "messaging": {
-                "sms": {
-                  "national": 0,
-                  "international": 0,
-                  "roaming": 0,
-                  "amount": "string"
-                },
-                "mms": {
-                  "national": 0,
-                  "international": 0,
-                  "roaming": 0,
-                  "amount": "string"
+                "messaging": {
+                  "sms": {
+                    "national": 0,
+                    "international": 0,
+                    "roaming": 0,
+                    "amount": "string"
+                  },
+                  "mms": {
+                    "national": 0,
+                    "international": 0,
+                    "roaming": 0,
+                    "amount": "string"
+                  }
                 }
               }
             }
           }
-        }
-      ]
-    }
-  ]
+        ]
+      }
+    ]
+  },
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
 }
 Responses
 Status	Meaning	Description	Schema
@@ -21788,13 +21735,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -21858,8 +21805,6 @@ Endpoint Version
 Version	1
 Parameters
 Name	In	Type	Required	Description
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
-newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
@@ -21877,86 +21822,88 @@ Example responses
 200 Response
 
 {
-  "data": [
-    {
-      "serviceId": "string",
-      "displayName": "string",
-      "phoneNumber": "string",
-      "startDate": "string",
-      "endDate": "string",
-      "usage": {
-        "data": {
-          "upload": 0,
-          "download": 0,
-          "sessions": 0,
-          "amount": "string",
-          "roaming": {
-            "download": 0,
-            "amount": "string"
+  "data": {
+    "accounts": [
+      {
+        "accountId": "string",
+        "services": [
+          {
+            "service": {
+              "serviceId": "string",
+              "displayName": "string",
+              "phoneNumber": "string",
+              "startDate": "string",
+              "endDate": "string",
+              "usage": {
+                "data": {
+                  "upload": 0,
+                  "download": 0,
+                  "sessions": 0,
+                  "amount": "string",
+                  "roaming": {
+                    "download": 0,
+                    "amount": "string"
+                  }
+                },
+                "voice": {
+                  "national": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  },
+                  "international": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  },
+                  "roaming": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  }
+                },
+                "messaging": {
+                  "sms": {
+                    "national": 0,
+                    "international": 0,
+                    "roaming": 0,
+                    "amount": "string"
+                  },
+                  "mms": {
+                    "national": 0,
+                    "international": 0,
+                    "roaming": 0,
+                    "amount": "string"
+                  }
+                }
+              }
+            }
           }
-        },
-        "voice": {
-          "national": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          },
-          "international": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          },
-          "roaming": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          }
-        },
-        "messaging": {
-          "sms": {
-            "national": 0,
-            "international": 0,
-            "roaming": 0,
-            "amount": "string"
-          },
-          "mms": {
-            "national": 0,
-            "international": 0,
-            "roaming": 0,
-            "amount": "string"
-          }
-        }
+        ]
       }
-    }
-  ],
-  "links": {
-    "self": "string",
-    "first": "string",
-    "prev": "string",
-    "next": "string",
-    "last": "string"
+    ]
   },
-  "meta": {
-    "totalRecords": 0,
-    "totalPages": 0
-  }
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Successful response	TelcoServiceUsageListResponse
+200	OK	Successful response	TelcoUsageListResponse
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Service Point
 422 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -22011,6 +21958,7 @@ Version	1
 Parameters
 Name	In	Type	Required	Description
 open-status	query	string	optional	Used to filter results according to open/closed status. Values can be OPEN, CLOSED or ALL. If absent then ALL is assumed
+updated-since	query	DateString	optional	Only include accounts that have been updated after the specified date and time. If absent defaults to include all plans
 page	query	PositiveInteger	optional	Page of results to request (standard pagination)
 page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
@@ -22076,13 +22024,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -22179,18 +22127,7 @@ Example responses
               "period": "string"
             }
           ]
-        },
-        "authorisedContacts": [
-          {
-            "firstName": "string",
-            "lastName": "string",
-            "middleNames": [
-              "string"
-            ],
-            "prefix": "string",
-            "suffix": "string"
-          }
-        ]
+        }
       }
     ]
   },
@@ -22205,14 +22142,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Telco Account
 404 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -22314,9 +22251,16 @@ Example responses
     ]
   },
   "links": {
-    "self": "string"
+    "self": "string",
+    "first": "string",
+    "prev": "string",
+    "next": "string",
+    "last": "string"
   },
-  "meta": {}
+  "meta": {
+    "totalRecords": 0,
+    "totalPages": 0
+  }
 }
 Responses
 Status	Meaning	Description	Schema
@@ -22324,14 +22268,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Telco Account
 404 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -22414,9 +22358,16 @@ Example responses
     ]
   },
   "links": {
-    "self": "string"
+    "self": "string",
+    "first": "string",
+    "prev": "string",
+    "next": "string",
+    "last": "string"
   },
-  "meta": {}
+  "meta": {
+    "totalRecords": 0,
+    "totalPages": 0
+  }
 }
 Responses
 Status	Meaning	Description	Schema
@@ -22424,14 +22375,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Telco Account
 404 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -22569,14 +22520,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Telco Account
 404 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -22730,13 +22681,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -22906,15 +22857,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Telco Account
 422 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -22967,10 +22918,6 @@ Version	1
 Parameters
 Name	In	Type	Required	Description
 accountId	path	string	mandatory	ID of a specific account to obtain data for. This is a tokenised ID previously obtained from the Account List end point. In accordance with CDR ID permanence requirements
-newest-date	query	DateString	optional	Constrain the request to records with effective date at or before this date. If absent defaults to current date. Format is aligned to DateString common type
-oldest-date	query	DateString	optional	Constrain the request to records with effective date at or after this date. If absent defaults to newest-date minus 24 months. Format is aligned to DateString common type
-page	query	PositiveInteger	optional	Page of results to request (standard pagination)
-page-size	query	PositiveInteger	optional	Page size to request. Default is 25 (standard pagination)
 x-v	header	string	mandatory	Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between x-min-v and x-v. If the value of x-min-v is equal to or higher than the value of x-v then the x-min-v header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See HTTP Headers
 x-min-v	header	string	optional	Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between x-min-v and x-v. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
 x-fapi-interaction-id	header	string	optional	An [RFC4122] UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
@@ -22982,103 +22929,109 @@ Example responses
 200 Response
 
 {
-  "invoices": [
-    {
-      "accountId": "string",
-      "invoiceNumber": "string",
-      "issueDate": "string",
-      "dueDate": "string",
-      "period": {
-        "startDate": "string",
-        "endDate": "string"
-      },
-      "invoiceAmount": "string",
-      "gstAmount": "string",
-      "payOnTimeDiscount": {
-        "discountAmount": "string",
+  "data": {
+    "invoices": [
+      {
+        "accountId": "string",
+        "invoiceNumber": "string",
+        "issueDate": "string",
+        "dueDate": "string",
+        "period": {
+          "startDate": "string",
+          "endDate": "string"
+        },
+        "invoiceAmount": "string",
         "gstAmount": "string",
-        "date": "string"
-      },
-      "balanceAtIssue": "string",
-      "services": [
-        "string"
-      ],
-      "accountCharges": {
-        "totalUsageCharges": "string",
-        "totalOnceOffCharges": "string",
-        "totalDiscounts": "string",
-        "otherCharges": {
-          "amount": "string",
-          "description": "string",
-          "type": "SERVICE"
+        "payOnTimeDiscount": {
+          "discountAmount": "string",
+          "gstAmount": "string",
+          "date": "string"
         },
-        "totalGst": "string"
-      },
-      "accountUsage": {
-        "data": {
-          "upload": 0,
-          "download": 0,
-          "sessions": 0,
-          "amount": "string",
-          "roaming": {
+        "balanceAtIssue": "string",
+        "services": [
+          "string"
+        ],
+        "accountCharges": {
+          "totalUsageCharges": "string",
+          "totalOnceOffCharges": "string",
+          "totalDiscounts": "string",
+          "otherCharges": {
+            "amount": "string",
+            "description": "string",
+            "type": "SERVICE"
+          },
+          "totalGst": "string"
+        },
+        "accountUsage": {
+          "data": {
+            "upload": 0,
             "download": 0,
-            "amount": "string"
+            "sessions": 0,
+            "amount": "string",
+            "roaming": {
+              "download": 0,
+              "amount": "string"
+            }
+          },
+          "voice": {
+            "national": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "international": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "roaming": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            }
+          },
+          "messaging": {
+            "sms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            },
+            "mms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            }
           }
         },
-        "voice": {
-          "national": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          },
-          "international": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          },
-          "roaming": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          }
-        },
-        "messaging": {
-          "sms": {
-            "national": 0,
-            "international": 0,
-            "roaming": 0,
-            "amount": "string"
-          },
-          "mms": {
-            "national": 0,
-            "international": 0,
-            "roaming": 0,
-            "amount": "string"
-          }
-        }
-      },
-      "paymentStatus": "PAID"
-    }
-  ]
+        "paymentStatus": "PAID"
+      }
+    ]
+  },
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
 }
 Responses
 Status	Meaning	Description	Schema
-200	OK	Successful response	TelcoInvoiceListResponse
+200	OK	Successful response	TelcoInvoiceResponse
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Telco Account
 404 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -23146,84 +23099,97 @@ Example responses
 200 Response
 
 {
-  "invoices": [
-    {
-      "accountId": "string",
-      "invoiceNumber": "string",
-      "issueDate": "string",
-      "dueDate": "string",
-      "period": {
-        "startDate": "string",
-        "endDate": "string"
-      },
-      "invoiceAmount": "string",
-      "gstAmount": "string",
-      "payOnTimeDiscount": {
-        "discountAmount": "string",
+  "data": {
+    "invoices": [
+      {
+        "accountId": "string",
+        "invoiceNumber": "string",
+        "issueDate": "string",
+        "dueDate": "string",
+        "period": {
+          "startDate": "string",
+          "endDate": "string"
+        },
+        "invoiceAmount": "string",
         "gstAmount": "string",
-        "date": "string"
-      },
-      "balanceAtIssue": "string",
-      "services": [
-        "string"
-      ],
-      "accountCharges": {
-        "totalUsageCharges": "string",
-        "totalOnceOffCharges": "string",
-        "totalDiscounts": "string",
-        "otherCharges": {
-          "amount": "string",
-          "description": "string",
-          "type": "SERVICE"
+        "payOnTimeDiscount": {
+          "discountAmount": "string",
+          "gstAmount": "string",
+          "date": "string"
         },
-        "totalGst": "string"
-      },
-      "accountUsage": {
-        "data": {
-          "upload": 0,
-          "download": 0,
-          "sessions": 0,
-          "amount": "string",
-          "roaming": {
+        "balanceAtIssue": "string",
+        "services": [
+          "string"
+        ],
+        "accountCharges": {
+          "totalUsageCharges": "string",
+          "totalOnceOffCharges": "string",
+          "totalDiscounts": "string",
+          "otherCharges": {
+            "amount": "string",
+            "description": "string",
+            "type": "SERVICE"
+          },
+          "totalGst": "string"
+        },
+        "accountUsage": {
+          "data": {
+            "upload": 0,
             "download": 0,
-            "amount": "string"
+            "sessions": 0,
+            "amount": "string",
+            "roaming": {
+              "download": 0,
+              "amount": "string"
+            }
+          },
+          "voice": {
+            "national": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "international": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "roaming": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            }
+          },
+          "messaging": {
+            "sms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            },
+            "mms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            }
           }
         },
-        "voice": {
-          "national": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          },
-          "international": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          },
-          "roaming": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          }
-        },
-        "messaging": {
-          "sms": {
-            "national": 0,
-            "international": 0,
-            "roaming": 0,
-            "amount": "string"
-          },
-          "mms": {
-            "national": 0,
-            "international": 0,
-            "roaming": 0,
-            "amount": "string"
-          }
-        }
-      },
-      "paymentStatus": "PAID"
-    }
-  ]
+        "paymentStatus": "PAID"
+      }
+    ]
+  },
+  "links": {
+    "self": "string",
+    "first": "string",
+    "prev": "string",
+    "next": "string",
+    "last": "string"
+  },
+  "meta": {
+    "totalRecords": 0,
+    "totalPages": 0
+  }
 }
 Responses
 Status	Meaning	Description	Schema
@@ -23232,13 +23198,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -23321,84 +23287,97 @@ Example responses
 200 Response
 
 {
-  "invoices": [
-    {
-      "accountId": "string",
-      "invoiceNumber": "string",
-      "issueDate": "string",
-      "dueDate": "string",
-      "period": {
-        "startDate": "string",
-        "endDate": "string"
-      },
-      "invoiceAmount": "string",
-      "gstAmount": "string",
-      "payOnTimeDiscount": {
-        "discountAmount": "string",
+  "data": {
+    "invoices": [
+      {
+        "accountId": "string",
+        "invoiceNumber": "string",
+        "issueDate": "string",
+        "dueDate": "string",
+        "period": {
+          "startDate": "string",
+          "endDate": "string"
+        },
+        "invoiceAmount": "string",
         "gstAmount": "string",
-        "date": "string"
-      },
-      "balanceAtIssue": "string",
-      "services": [
-        "string"
-      ],
-      "accountCharges": {
-        "totalUsageCharges": "string",
-        "totalOnceOffCharges": "string",
-        "totalDiscounts": "string",
-        "otherCharges": {
-          "amount": "string",
-          "description": "string",
-          "type": "SERVICE"
+        "payOnTimeDiscount": {
+          "discountAmount": "string",
+          "gstAmount": "string",
+          "date": "string"
         },
-        "totalGst": "string"
-      },
-      "accountUsage": {
-        "data": {
-          "upload": 0,
-          "download": 0,
-          "sessions": 0,
-          "amount": "string",
-          "roaming": {
+        "balanceAtIssue": "string",
+        "services": [
+          "string"
+        ],
+        "accountCharges": {
+          "totalUsageCharges": "string",
+          "totalOnceOffCharges": "string",
+          "totalDiscounts": "string",
+          "otherCharges": {
+            "amount": "string",
+            "description": "string",
+            "type": "SERVICE"
+          },
+          "totalGst": "string"
+        },
+        "accountUsage": {
+          "data": {
+            "upload": 0,
             "download": 0,
-            "amount": "string"
+            "sessions": 0,
+            "amount": "string",
+            "roaming": {
+              "download": 0,
+              "amount": "string"
+            }
+          },
+          "voice": {
+            "national": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "international": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "roaming": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            }
+          },
+          "messaging": {
+            "sms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            },
+            "mms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            }
           }
         },
-        "voice": {
-          "national": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          },
-          "international": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          },
-          "roaming": {
-            "duration": "string",
-            "number": 0,
-            "amount": "string"
-          }
-        },
-        "messaging": {
-          "sms": {
-            "national": 0,
-            "international": 0,
-            "roaming": 0,
-            "amount": "string"
-          },
-          "mms": {
-            "national": 0,
-            "international": 0,
-            "roaming": 0,
-            "amount": "string"
-          }
-        }
-      },
-      "paymentStatus": "PAID"
-    }
-  ]
+        "paymentStatus": "PAID"
+      }
+    ]
+  },
+  "links": {
+    "self": "string",
+    "first": "string",
+    "prev": "string",
+    "next": "string",
+    "last": "string"
+  },
+  "meta": {
+    "totalRecords": 0,
+    "totalPages": 0
+  }
 }
 Responses
 Status	Meaning	Description	Schema
@@ -23407,15 +23386,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Telco Account
 422 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -23551,17 +23530,17 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Telco Account
 404 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -23697,13 +23676,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -23854,15 +23833,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Telco Account
 422 - Invalid Telco Account
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		none
@@ -23902,7 +23881,7 @@ TelcoProductListResponse
             "name": "string",
             "description": "string",
             "period": "string",
-            "chargeAmount": "string"
+            "amount": "string"
           }
         ],
         "thirdPartyAgentId": "string",
@@ -23963,7 +23942,7 @@ TelcoProductResponse
         "name": "string",
         "description": "string",
         "period": "string",
-        "chargeAmount": "string"
+        "amount": "string"
       }
     ],
     "thirdPartyAgentId": "string",
@@ -24122,23 +24101,16 @@ TelcoUsageResponse
     ]
   },
   "links": {
-    "self": "string",
-    "first": "string",
-    "prev": "string",
-    "next": "string",
-    "last": "string"
+    "self": "string"
   },
-  "meta": {
-    "totalRecords": 0,
-    "totalPages": 0
-  }
+  "meta": {}
 }
 
 Properties
 Name	Type	Required	Description
 data	TelcoAccountUsage	mandatory	none
-links	LinksPaginated	mandatory	none
-meta	MetaPaginated	mandatory	none
+links	Links	mandatory	none
+meta	Meta	mandatory	none
 TelcoServiceUsageResponse
 
 {
@@ -24193,23 +24165,16 @@ TelcoServiceUsageResponse
     }
   },
   "links": {
-    "self": "string",
-    "first": "string",
-    "prev": "string",
-    "next": "string",
-    "last": "string"
+    "self": "string"
   },
-  "meta": {
-    "totalRecords": 0,
-    "totalPages": 0
-  }
+  "meta": {}
 }
 
 Properties
 Name	Type	Required	Description
 data	TelcoServiceUsage	mandatory	none
-links	LinksPaginated	mandatory	none
-meta	MetaPaginated	mandatory	none
+links	Links	mandatory	none
+meta	Meta	mandatory	none
 TelcoServiceUsageListResponse
 
 {
@@ -24366,18 +24331,7 @@ TelcoAccountDetailResponse
               "period": "string"
             }
           ]
-        },
-        "authorisedContacts": [
-          {
-            "firstName": "string",
-            "lastName": "string",
-            "middleNames": [
-              "string"
-            ],
-            "prefix": "string",
-            "suffix": "string"
-          }
-        ]
+        }
       }
     ]
   },
@@ -24389,22 +24343,7 @@ TelcoAccountDetailResponse
 
 Properties
 Name	Type	Required	Description
-data	any	mandatory	none
-allOf
-
-Name	Type	Required	Description
-» anonymous	TelcoAccountBase	mandatory	none
-and
-
-Name	Type	Required	Description
-» anonymous	TelcoAccount	mandatory	The array of plans containing services and associated plan details
-and
-
-Name	Type	Required	Description
-» anonymous	TelcoAccountDetail	mandatory	The array of plans containing services and associated plan details
-continued
-
-Name	Type	Required	Description
+data	TelcoAccountDetailResponseData	mandatory	none
 links	Links	mandatory	none
 meta	Meta	mandatory	none
 TelcoPaymentScheduleResponse
@@ -24442,16 +24381,23 @@ TelcoPaymentScheduleResponse
     ]
   },
   "links": {
-    "self": "string"
+    "self": "string",
+    "first": "string",
+    "prev": "string",
+    "next": "string",
+    "last": "string"
   },
-  "meta": {}
+  "meta": {
+    "totalRecords": 0,
+    "totalPages": 0
+  }
 }
 
 Properties
 Name	Type	Required	Description
 data	TelcoPaymentScheduleResponseData	mandatory	none
-links	Links	mandatory	none
-meta	Meta	mandatory	none
+links	LinksPaginated	mandatory	none
+meta	MetaPaginated	mandatory	none
 TelcoConcessionsResponse
 
 {
@@ -24474,16 +24420,23 @@ TelcoConcessionsResponse
     ]
   },
   "links": {
-    "self": "string"
+    "self": "string",
+    "first": "string",
+    "prev": "string",
+    "next": "string",
+    "last": "string"
   },
-  "meta": {}
+  "meta": {
+    "totalRecords": 0,
+    "totalPages": 0
+  }
 }
 
 Properties
 Name	Type	Required	Description
 data	TelcoConcessionsResponseData	mandatory	none
-links	Links	mandatory	none
-meta	Meta	mandatory	none
+links	LinksPaginated	mandatory	none
+meta	MetaPaginated	mandatory	none
 TelcoBalanceListResponse
 
 {
@@ -24572,7 +24525,7 @@ TelcoBalanceListResponse
 
 Properties
 Name	Type	Required	Description
-data	TelcoBalanceListResponseBalances	mandatory	none
+data	TelcoBalanceListResponseData	mandatory	none
 links	LinksPaginated	mandatory	none
 meta	MetaPaginated	mandatory	none
 TelcoBalanceResponse
@@ -24722,7 +24675,18 @@ Name	Type	Required	Description
 data	TelcoTransactionListResponseData	mandatory	none
 links	LinksPaginated	mandatory	none
 meta	MetaPaginated	mandatory	none
-ErrorListResponse
+MetaError
+
+{
+  "urn": "string"
+}
+
+Additional data for customised error codes
+
+Properties
+Name	Type	Required	Description
+urn	string	conditional	The CDR error code URN which the application-specific error code extends. Mandatory if the error code is an application-specific error rather than a standardised error code.
+ResponseErrorListV2
 
 {
   "errors": [
@@ -24739,7 +24703,11 @@ ErrorListResponse
 
 Properties
 Name	Type	Required	Description
-errors	[ErrorListResponsErrors]	mandatory	none
+errors	[object]	mandatory	none
+» code	string	mandatory	The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the meta object. Otherwise, the value is the error code URN.
+» title	string	mandatory	A short, human-readable summary of the problem that MUST NOT change from occurrence to occurrence of the problem represented by the error code.
+» detail	string	mandatory	A human-readable explanation specific to this occurrence of the problem.
+» meta	MetaError	optional	Additional data for customised error codes
 TelcoProduct
 
 {
@@ -24766,7 +24734,7 @@ TelcoProduct
       "name": "string",
       "description": "string",
       "period": "string",
-      "chargeAmount": "string"
+      "amount": "string"
     }
   ],
   "thirdPartyAgentId": "string",
@@ -24789,10 +24757,10 @@ effectiveTo	DateTimeString	optional	The date and time at which this product will
 lastUpdated	DateTimeString	optional	The last date and time that the information for this plan was changed (or the creation date for the plan if it has never been altered)
 displayName	string	optional	The display name of the product
 description	string	optional	A description of the product
-type	string	mandatory	The type of product
+type	string	mandatory	The type of product. MOBILE service or BROADBAND fixed internet service
 purpose	string	optional	The purpose type of the product. If absent, then the value PERSONAL is assumed
 billingType	string	mandatory	The type of product
-contract	TelcoContract	conditional	Summary of the contract details. Required if a contract is required
+contract	TelcoContract	conditional	Summary of the contract details. Mandatory if the billing type is POST_PAID and a contract agreement is required with the service provider for the plan
 bundle	boolean	optional	Required if part of a bundle. If not present FALSE is assumed
 brand	string	mandatory	The ID of the brand under which this product is offered
 brandName	string	mandatory	The display name of the brand under which this product is offered
@@ -24821,12 +24789,12 @@ TelcoContract
   "contractUri": "string"
 }
 
-Summary of the contract details. Required if a contract is required
+Summary of the contract details. Mandatory if the billing type is POST_PAID and a contract agreement is required with the service provider for the plan
 
 Properties
 Name	Type	Required	Description
 name	string	mandatory	Name of the contract
-description	string	optional	Description if the contract
+description	string	optional	Description of the contract
 duration	Number	mandatory	Minimum contract duration in months
 contractUri	URIString	optional	URI of the contract conditions
 TelcoServiceDetail
@@ -24901,7 +24869,7 @@ TelcoAccountUsage
 Properties
 Name	Type	Required	Description
 accountId	string	mandatory	Tokenised ID of the account. In accordance with CDR ID permanence requirements
-services	[TelcoAccountUsageServices]	optional	List of services that are part of the account
+services	[TelcoAccountUsageServices]	mandatory	List of services that are part of the account
 TelcoServiceUsage
 
 {
@@ -24988,7 +24956,7 @@ Enumerated Values
 Property	Value
 openStatus	CLOSED
 openStatus	OPEN
-TelcoAccountResponse
+TelcoAccountResponseData
 
 {
   "accountId": "string",
@@ -25024,6 +24992,57 @@ and
 
 Name	Type	Required	Description
 anonymous	TelcoAccount	mandatory	The array of plans containing services and associated plan details
+TelcoAccountDetailResponseData
+
+{
+  "accountId": "string",
+  "accountNumber": "string",
+  "displayName": "string",
+  "creationDate": "string",
+  "lastUpdated": "string",
+  "brand": "string",
+  "openStatus": "CLOSED",
+  "plans": [
+    {
+      "nickname": "string",
+      "type": "MOBILE",
+      "billingType": "PRE_PAID",
+      "serviceIds": [
+        "string"
+      ],
+      "planOverview": {
+        "displayName": "string",
+        "startDate": "string",
+        "endDate": "string"
+      },
+      "planDetail": {
+        "charges": [
+          {
+            "displayName": "string",
+            "description": "string",
+            "minimumValue": "string",
+            "maximumValue": "string",
+            "period": "string"
+          }
+        ]
+      }
+    }
+  ]
+}
+
+Properties
+allOf
+
+Name	Type	Required	Description
+anonymous	TelcoAccountBase	mandatory	none
+and
+
+Name	Type	Required	Description
+anonymous	TelcoAccount	mandatory	The array of plans containing services and associated plan details
+and
+
+Name	Type	Required	Description
+anonymous	TelcoAccountDetail	mandatory	The array of plans containing services and associated plan details
 TelcoPaymentSchedule
 
 {
@@ -25797,7 +25816,7 @@ TelcoProductListResponseData
           "name": "string",
           "description": "string",
           "period": "string",
-          "chargeAmount": "string"
+          "amount": "string"
         }
       ],
       "thirdPartyAgentId": "string",
@@ -25818,6 +25837,81 @@ Properties
 Name	Type	Required	Description
 plans	[TelcoProduct]	mandatory	Array of Products
 TelcoUsageListResponse
+
+{
+  "data": {
+    "accounts": [
+      {
+        "accountId": "string",
+        "services": [
+          {
+            "service": {
+              "serviceId": "string",
+              "displayName": "string",
+              "phoneNumber": "string",
+              "startDate": "string",
+              "endDate": "string",
+              "usage": {
+                "data": {
+                  "upload": 0,
+                  "download": 0,
+                  "sessions": 0,
+                  "amount": "string",
+                  "roaming": {
+                    "download": 0,
+                    "amount": "string"
+                  }
+                },
+                "voice": {
+                  "national": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  },
+                  "international": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  },
+                  "roaming": {
+                    "duration": "string",
+                    "number": 0,
+                    "amount": "string"
+                  }
+                },
+                "messaging": {
+                  "sms": {
+                    "national": 0,
+                    "international": 0,
+                    "roaming": 0,
+                    "amount": "string"
+                  },
+                  "mms": {
+                    "national": 0,
+                    "international": 0,
+                    "roaming": 0,
+                    "amount": "string"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
+}
+
+Properties
+Name	Type	Required	Description
+data	TelcoUsageListResponseData	mandatory	none
+links	Links	mandatory	none
+meta	Meta	mandatory	none
+TelcoUsageListResponseData
 
 {
   "accounts": [
@@ -25917,7 +26011,7 @@ TelcoAccountListResponseData
 
 Properties
 Name	Type	Required	Description
-accounts	[TelcoAccountResponse]	mandatory	Array of accounts
+accounts	[TelcoAccountResponseData]	mandatory	Array of accounts
 TelcoPaymentScheduleResponseData
 
 {
@@ -25979,7 +26073,7 @@ TelcoConcessionsResponseData
 Properties
 Name	Type	Required	Description
 concessions	[TelcoConcession]	mandatory	Array may be empty if no concessions exist
-TelcoBalanceListResponseBalances
+TelcoBalanceListResponseData
 
 {
   "balances": [
@@ -26128,7 +26222,202 @@ Properties
 Name	Type	Required	Description
 accountId	string	optional	The ID of the account. In accordance with CDR ID permanence requirements
 balance	TelcoBalance	optional	Object containing account service usage summary
+TelcoInvoiceResponse
+
+{
+  "data": {
+    "invoices": [
+      {
+        "accountId": "string",
+        "invoiceNumber": "string",
+        "issueDate": "string",
+        "dueDate": "string",
+        "period": {
+          "startDate": "string",
+          "endDate": "string"
+        },
+        "invoiceAmount": "string",
+        "gstAmount": "string",
+        "payOnTimeDiscount": {
+          "discountAmount": "string",
+          "gstAmount": "string",
+          "date": "string"
+        },
+        "balanceAtIssue": "string",
+        "services": [
+          "string"
+        ],
+        "accountCharges": {
+          "totalUsageCharges": "string",
+          "totalOnceOffCharges": "string",
+          "totalDiscounts": "string",
+          "otherCharges": {
+            "amount": "string",
+            "description": "string",
+            "type": "SERVICE"
+          },
+          "totalGst": "string"
+        },
+        "accountUsage": {
+          "data": {
+            "upload": 0,
+            "download": 0,
+            "sessions": 0,
+            "amount": "string",
+            "roaming": {
+              "download": 0,
+              "amount": "string"
+            }
+          },
+          "voice": {
+            "national": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "international": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "roaming": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            }
+          },
+          "messaging": {
+            "sms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            },
+            "mms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            }
+          }
+        },
+        "paymentStatus": "PAID"
+      }
+    ]
+  },
+  "links": {
+    "self": "string"
+  },
+  "meta": {}
+}
+
+Properties
+Name	Type	Required	Description
+data	TelcoInvoiceListResponseData	mandatory	none
+links	Links	mandatory	none
+meta	Meta	mandatory	none
 TelcoInvoiceListResponse
+
+{
+  "data": {
+    "invoices": [
+      {
+        "accountId": "string",
+        "invoiceNumber": "string",
+        "issueDate": "string",
+        "dueDate": "string",
+        "period": {
+          "startDate": "string",
+          "endDate": "string"
+        },
+        "invoiceAmount": "string",
+        "gstAmount": "string",
+        "payOnTimeDiscount": {
+          "discountAmount": "string",
+          "gstAmount": "string",
+          "date": "string"
+        },
+        "balanceAtIssue": "string",
+        "services": [
+          "string"
+        ],
+        "accountCharges": {
+          "totalUsageCharges": "string",
+          "totalOnceOffCharges": "string",
+          "totalDiscounts": "string",
+          "otherCharges": {
+            "amount": "string",
+            "description": "string",
+            "type": "SERVICE"
+          },
+          "totalGst": "string"
+        },
+        "accountUsage": {
+          "data": {
+            "upload": 0,
+            "download": 0,
+            "sessions": 0,
+            "amount": "string",
+            "roaming": {
+              "download": 0,
+              "amount": "string"
+            }
+          },
+          "voice": {
+            "national": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "international": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            },
+            "roaming": {
+              "duration": "string",
+              "number": 0,
+              "amount": "string"
+            }
+          },
+          "messaging": {
+            "sms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            },
+            "mms": {
+              "national": 0,
+              "international": 0,
+              "roaming": 0,
+              "amount": "string"
+            }
+          }
+        },
+        "paymentStatus": "PAID"
+      }
+    ]
+  },
+  "links": {
+    "self": "string",
+    "first": "string",
+    "prev": "string",
+    "next": "string",
+    "last": "string"
+  },
+  "meta": {
+    "totalRecords": 0,
+    "totalPages": 0
+  }
+}
+
+Properties
+Name	Type	Required	Description
+data	TelcoInvoiceListResponseData	mandatory	none
+links	LinksPaginated	mandatory	none
+meta	MetaPaginated	mandatory	none
+TelcoInvoiceListResponseData
 
 {
   "invoices": [
@@ -26269,41 +26558,13 @@ TelcoTransactionListResponseData
 Properties
 Name	Type	Required	Description
 transactions	[TelcoBillingTransaction]	mandatory	Array of transactions sorted by date and time in descending order
-ErrorListResponseMeta
-
-{
-  "urn": "string"
-}
-
-Additional data for customised error codes
-
-Properties
-Name	Type	Required	Description
-urn	string	conditional	The CDR error code URN which the application-specific error code extends. Mandatory if the error code is an application-specific error rather than a standardised error code.
-ErrorListResponsErrors
-
-{
-  "code": "string",
-  "title": "string",
-  "detail": "string",
-  "meta": {
-    "urn": "string"
-  }
-}
-
-Properties
-Name	Type	Required	Description
-code	string	mandatory	The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the meta object. Otherwise, the value is the error code URN.
-title	string	mandatory	A short, human-readable summary of the problem that MUST NOT change from occurrence to occurrence of the problem represented by the error code.
-detail	string	mandatory	A human-readable explanation specific to this occurrence of the problem.
-meta	ErrorListResponseMeta	optional	Additional data for customised error codes
 TelcoProductPricing
 
 {
   "name": "string",
   "description": "string",
   "period": "string",
-  "chargeAmount": "string"
+  "amount": "string"
 }
 
 Properties
@@ -26311,7 +26572,7 @@ Name	Type	Required	Description
 name	string	mandatory	The display name of the pricing
 description	string	mandatory	The description of the pricing
 period	ExternalRef	optional	The duration that occurs on a pricing schedule indicates the frequency. Formatted according to ISO 8601 Durations (excludes recurrence syntax)
-chargeAmount	AmountString	mandatory	The amount charged for the duration period
+amount	AmountString	mandatory	The amount charged for the duration period
 TelcoAdditionalInformation
 
 {
@@ -26634,7 +26895,7 @@ Name	Type	Required	Description
 displayName	string	optional	The name of the plan if one exists
 startDate	DateString	mandatory	The start date of the applicability of this plan
 endDate	DateString	optional	The end date of the applicability of this plan
-TelcoAccountPlans
+TelcoAccountPlan
 
 {
   "nickname": "string",
@@ -26653,10 +26914,10 @@ TelcoAccountPlans
 Properties
 Name	Type	Required	Description
 nickname	string	optional	Optional display name for the plan provided by the customer to help differentiate multiple plans
-type	string	optional	The type of the plan
-billingType	string	optional	The billing type of then plan
+type	string	mandatory	The type of the plan. The type of plan. A MOBILE service or BROADBAND fixed internet service
+billingType	string	mandatory	The billing type of then plan
 serviceIds	[string]	mandatory	The serviceId representing a unique service identifier such as a mobile MSISDN, FNN or internet service e.g NBN AVC Service ID. In accordance with CDR ID permanence requirement
-planOverview	TelcoAccountPlanOverview	conditional	Mandatory if openStatus is OPEN
+planOverview	TelcoAccountPlanOverview	mandatory	Mandatory if openStatus is OPEN
 Enumerated Values
 Property	Value
 type	MOBILE
@@ -26689,26 +26950,29 @@ The array of plans containing services and associated plan details
 
 Properties
 Name	Type	Required	Description
-plans	[TelcoAccountPlans]	mandatory	The array of plans containing service and associated plan details
-TelcoAccountDetailPlanDetail
+plans	[TelcoAccountPlan]	mandatory	The array of plans containing service and associated plan details
+TelcoAccountPlanDetail
 
 {
-  "charges": [
-    {
-      "displayName": "string",
-      "description": "string",
-      "minimumValue": "string",
-      "maximumValue": "string",
-      "period": "string"
-    }
-  ]
+  "planDetail": {
+    "charges": [
+      {
+        "displayName": "string",
+        "description": "string",
+        "minimumValue": "string",
+        "maximumValue": "string",
+        "period": "string"
+      }
+    ]
+  }
 }
 
 Detail on the plan applicable to this account. Mandatory if openStatus is OPEN
 
 Properties
 Name	Type	Required	Description
-charges	[TelcoProductDetailMeteringCharges]	mandatory	Charges for metering included in the plan
+planDetail	object	mandatory	none
+» charges	[TelcoProductDetailMeteringCharges]	mandatory	Charges for metering included in the plan
 TelcoAccountDetailAuthorisedContacts
 
 {
@@ -26728,55 +26992,14 @@ lastName	string	mandatory	For people with single names the single name should be
 middleNames	[string]	optional	Field is mandatory but array may be empty
 prefix	string	optional	Also known as title or salutation. The prefix to the name (e.g. Mr, Mrs, Ms, Miss, Sir, etc)
 suffix	string	optional	Used for a trailing suffix to the name (e.g. Jr)
-TelcoAccountDetailPlans
-
-{
-  "nickname": "string",
-  "serviceIds": [
-    "string"
-  ],
-  "planOverview": {
-    "displayName": "string",
-    "startDate": "string",
-    "endDate": "string"
-  },
-  "planDetail": {
-    "charges": [
-      {
-        "displayName": "string",
-        "description": "string",
-        "minimumValue": "string",
-        "maximumValue": "string",
-        "period": "string"
-      }
-    ]
-  },
-  "authorisedContacts": [
-    {
-      "firstName": "string",
-      "lastName": "string",
-      "middleNames": [
-        "string"
-      ],
-      "prefix": "string",
-      "suffix": "string"
-    }
-  ]
-}
-
-Properties
-Name	Type	Required	Description
-nickname	string	optional	Optional display name for the plan provided by the customer to help differentiate multiple plans
-serviceIds	[string]	mandatory	The serviceId representing a unique service identifier such as a mobile MSISDN, FNN or internet service e.g NBN AVC Service ID. In accordance with CDR ID permanence requirement
-planOverview	TelcoAccountPlanOverview	conditional	Mandatory if openStatus is OPEN
-planDetail	TelcoAccountDetailPlanDetail	conditional	Detail on the plan applicable to this account. Mandatory if openStatus is OPEN
-authorisedContacts	[TelcoAccountDetailAuthorisedContacts]	optional	An array of additional contacts that are authorised to act on this account
 TelcoAccountDetail
 
 {
   "plans": [
     {
       "nickname": "string",
+      "type": "MOBILE",
+      "billingType": "PRE_PAID",
       "serviceIds": [
         "string"
       ],
@@ -26795,18 +27018,7 @@ TelcoAccountDetail
             "period": "string"
           }
         ]
-      },
-      "authorisedContacts": [
-        {
-          "firstName": "string",
-          "lastName": "string",
-          "middleNames": [
-            "string"
-          ],
-          "prefix": "string",
-          "suffix": "string"
-        }
-      ]
+      }
     }
   ]
 }
@@ -26815,7 +27027,15 @@ The array of plans containing services and associated plan details
 
 Properties
 Name	Type	Required	Description
-plans	[TelcoAccountDetailPlans]	mandatory	The array of plans containing services and associated plan details
+plans	[allOf]	mandatory	The array of plans containing services and associated plan details
+allOf
+
+Name	Type	Required	Description
+» anonymous	TelcoAccountPlan	mandatory	none
+and
+
+Name	Type	Required	Description
+» anonymous	TelcoAccountPlanDetail	mandatory	Detail on the plan applicable to this account. Mandatory if openStatus is OPEN
 TelcoPaymentScheduleCardDebit
 
 {
@@ -29743,13 +29963,13 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -29907,14 +30127,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Service Point
 404 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -30034,17 +30254,17 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Service Point
 404 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -30180,15 +30400,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Service Point
 422 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -30308,14 +30528,14 @@ Status	Meaning	Description	Schema
 400	Bad Request	The following error codes MUST be supported:
 400 - Invalid Field
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 404	Not Found	The following error codes MUST be supported:
 404 - Unavailable Service Point
 404 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -30464,15 +30684,15 @@ Status	Meaning	Description	Schema
 400 - Invalid Field
 400 - Invalid Page Size
 400 - Invalid Version
-ErrorListResponse
+ResponseErrorListV2
 406	Not Acceptable	The following error codes MUST be supported:
 406 - Unsupported Version
-ErrorListResponse
+ResponseErrorListV2
 422	Unprocessable Entity	The following error codes MUST be supported:
 422 - Invalid Page
 422 - Unavailable Service Point
 422 - Invalid Service Point
-ErrorListResponse
+ResponseErrorListV2
 Response Headers
 Status	Header	Type	Format	Description
 200	x-v	string		The version of the API end point that the data holder has responded with.
@@ -30822,8 +31042,8 @@ Properties
 Name	Type	Required	Description
 data	EnergyDerRecord	mandatory	none
 links	Links	mandatory	none
-meta	Meta	mandatory	none
-ErrorListResponse
+meta	Meta	optional	none
+ResponseErrorListV2
 
 {
   "errors": [
@@ -31048,7 +31268,7 @@ distributionLossFactor	object	mandatory	none
 » description	string	mandatory	Description of the data loss factor code and value
 » lossValue	string	mandatory	The value associated with the loss factor code
 relatedParticipants	[object]	mandatory	none
-» party	string	mandatory	The name of the party/orginsation related to this service point
+» party	string	mandatory	The name of the party/organisation related to this service point
 » role	string	mandatory	The role performed by this participant in relation to the service point. Note the details of enumeration values below:
 FRMP - Financially Responsible Market Participant
 LNSP - Local Network Service Provider or Embedded Network Manager for child connection points
@@ -31563,6 +31783,7 @@ Change Log
 The following table lists the changes made to these standards in reverse date order (most recent change is at the top).
 
 Change Date	Version	Description	Detail Of change
+22/03/2023	1.22.1	Patch release including updates to draft Telco standards	See release notes for details.
 22/12/2022	1.22.0	Changes arising from Decision 271 (Maintenance iteration 13)	See release notes and Decision 272 for details.
 16/12/2022	1.21.0	Changes arising from Decision 282	See release notes and Decision 282 for details.
 03/11/2022	1.20.0	Changes arising from Decision 259 (Maintenance iteration 12)	See release notes and Decision 259 for details. Also includes first draft of Telco standards
@@ -31670,6 +31891,7 @@ Archives
 The following table lists archived versions of the Consumer Data Standards. These are older versions of the standards that are available for reference only. They are not considered binding.
 
 Releases Date	Version	Description
+22/12/2022	1.22.0	Changes arising from Decision 271 (Maintenance iteration 13)
 16/12/2022	1.21.0	Changes arising from Decision 282
 13/11/2022	1.20.0	Changes arising from Decision 259 (Maintenance iteration 12)
 13/09/2022	1.19.0	Changes arising from Decision 260 (Energy Closed Accounts)
